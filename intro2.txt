@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mary is a Rejuve</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #4CAF50;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mary is a Rejuve</h1>
+
+    <p>One day, Mary woke up at Busy Beavers. Everything felt new and strange. Standing by her bed was a robot named Fuzzy. Mary didn’t know who Fuzzy was, so she got scared and started hitting him with her fists.</p>
+
+    <p><strong>“Pow pow pow!”</strong></p>
+
+    <p>But Fuzzy didn’t move. He just smiled and said, “Hello, Mary! I’m Fuzzy, your android assistant.”</p>
+
+    <p>Mary stopped and looked at Fuzzy. She didn’t feel so scared anymore. She tried to get up, but her legs were wobbly, and she fell down. Did Mary cry? Yes. But did she give up? Nope! She kept trying, and soon she was standing on her own.</p>
+
+    <p>Feeling a bit stronger, Mary decided to run. She made it pretty far before Fuzzy, quick and gentle, blocked her at the door.</p>
+
+    <p>“Miss, you can’t leave just yet,” Fuzzy said kindly.</p>
+
+    <p>Mary tried to get past him—climbing over, under, and around—but Fuzzy always stopped her. It was like he had eyes in the back of his head. And guess what? He did!</p>
+
+    <h2>The Boring Room</h2>
+
+    <p>Then, the doctors came in. Mary liked the doctors because they made Fuzzy move out of the way. They checked her over, making sure she was okay. Afterward, they told her she could explore. Mary was excited but wasn’t sure where to go. The doctors gently guided her to a room nearby.</p>
+
+    <p>This room was different. It had puzzles, blocks, and a big table with shapes that fit into holes. But it was kind of boring. Mary looked around, unsure of what to do. The doctors wanted to see what Mary would do next.</p>
+
+    <p>First, Mary picked up a shape and put it in a hole. It was very easy. She did it a few more times, but it wasn’t much fun. Next, she saw some puzzles. They looked tricky, and Mary wasn’t sure she could do them. But she gave it a try. The puzzles were hard, and after a while, Mary started to feel frustrated.</p>
+
+    <p>The room was quiet, and Mary realized she was all alone. She didn’t like being by herself, so she stopped working on the puzzles and began to look for something else to do. That’s when she found a broken toy car. Mary picked it up and started to push it along the carpet. But then the wheel popped off.</p>
+
+    <h2>The Fun Room</h2>
+
+    <p>Just then, the doctors came back. They saw what Mary had been doing and gave her a snack, just like they had promised. After she ate, they took her to a much more fun room. This one had art supplies, blocks, and a big pillow fort.</p>
+
+    <p>Mary climbed into the pillow fort and met some other kids. They were her new friends, and they played together all afternoon. Mary had so much fun that she forgot all about being scared.</p>
+
+    <h2>Time to Eat and Sleep</h2>
+
+    <p>Later, Mary started to feel hungry again, so she went to the lunchroom and had a good meal. When she was full, she went back to the pillow fort to play with her friends. They built towers with the blocks, drew pictures, and laughed together.</p>
+
+    <p>As the day went on, Mary grew tired. She had played so much that she was ready for bed. She said goodbye to her friends and headed off to sleep.</p>
+
+    <p>Mary learned that it’s okay to be scared sometimes. It’s okay to take out your feelings, even if you need to hit something like Fuzzy. But it’s also important to keep trying, eat a good meal, and get a good night’s sleep. Tomorrow is a new day, and who knows what fun adventures await?</p>
+</body>
+</html>
