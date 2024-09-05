@@ -1,5 +1,5 @@
 
-public class Equipment extends Item{
+public class Equipment extends Item {
 
     public Equipment(String name, String discription) {
         super(name, discription);

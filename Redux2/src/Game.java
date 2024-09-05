@@ -1,7 +1,9 @@
+
 public class Game {
-    private static  GUI gui;
-    public static  boolean running;
-    private  GameHandler gameHandler;
+
+    private static GUI gui;
+    public static boolean running;
+    private GameHandler gameHandler;
 
     public GameHandler getGameHandler() {
         return gameHandler;
@@ -18,9 +20,10 @@ public class Game {
 
     }
 
-    public static  GUI getGui() {
+    public static GUI getGui() {
         return gui;
     }
+
     public void beginGame(GameHandler gamehandler) {
         gamehandler.buildRooms();
         gamehandler.buildExits();
@@ -29,10 +32,12 @@ public class Game {
         gamehandler.playGame();
         gamehandler.endGame();
     }
-    public static  boolean isRunning() {
-        return running; 
+
+    public static boolean isRunning() {
+        return running;
     }
-    public static  void setRunning(boolean b) {
-       Game.running = b;
+
+    public static void setRunning(boolean b) {
+        Game.running = b;
     }
 }

@@ -1,10 +1,11 @@
 
-public class Container extends Item{
+public class Container extends Item {
 
     public Container(String name, String description, String type, boolean takable) {
         super(name, description, type, takable);
 
     }
+
     public void open() { // open the container
         if (this.isLocked()) {
             GameHandler.getGui().display("The container is locked.", "red");
@@ -18,8 +19,4 @@ public class Container extends Item{
         }
     }
 
-    }
-
-    
-    
-
+}

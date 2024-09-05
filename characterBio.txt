@@ -1,0 +1,26 @@
+<h1>Choose Your Name</h1>
+<p>You get to decide what people call you—pick any name you like!</p>
+
+<h2>Age and Stats</h2>
+<p>Your age is super important in the game! It affects your stats, abilities, and how much freedom you get. There are three main stages you can be in:</p>
+
+<h3>Ages 2-4: Preschoolers</h3>
+<ul>
+  <li>At this stage, your stats and abilities are the lowest, but so are your responsibilities.</li>
+  <li>There’s not much testing, and it’s easy to pass!</li>
+  <li>You’ll have the most free time to play, but there won’t be a lot of choices for activities.</li>
+</ul>
+
+<h3>Ages 5-7: The Middle Group</h3>
+<ul>
+  <li>You’re getting stronger and smarter here.</li>
+  <li>You still don’t have a lot of responsibilities, but you’ve got more freedom than younger kids.</li>
+  <li>You can do more things, but it’s all about finding the right balance.</li>
+</ul>
+
+<h3>Ages 8-12: Older Rejuves</h3>
+<ul>
+  <li>This is the closest the game gets to 'hard mode.'</li>
+  <li>You have the most freedom, but you also have the most responsibilities, like helping care for younger rejuves.</li>
+  <li>You’ll need to be smart with your time, and good social skills are key to getting things done.</li>
+</ul>

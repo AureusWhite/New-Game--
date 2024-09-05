@@ -1,5 +1,5 @@
-public class Consumable extends Item {
 
+public class Consumable extends Item {
 
     private int buffValue;
 
@@ -13,10 +13,13 @@ public class Consumable extends Item {
     }
 
     public void use(Character character) {
-        switch(this.getType()){
-            case "Food" -> character.setHunger(character.getHunger() + this.getBuffValue());
-            case "Drink" -> character.setThirst(character.getThirst() + this.getBuffValue());
-            case "Misc" -> this.getBuffValue();
+        switch (this.getType()) {
+            case "Food" ->
+                character.setHunger(character.getHunger() + this.getBuffValue());
+            case "Drink" ->
+                character.setThirst(character.getThirst() + this.getBuffValue());
+            case "Misc" ->
+                this.getBuffValue();
             default -> {
             }
 

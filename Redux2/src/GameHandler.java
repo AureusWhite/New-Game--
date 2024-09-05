@@ -5,24 +5,74 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 public class GameHandler {
+
     private static final Map<String, Room> rooms = new HashMap<>();
     private static final Map<String, NPC> npcs = new HashMap<>();
     private static final Map<String, Item> items = new HashMap<>();
+    private static Clock clock;
+    public static Room room;
+
+    private static GUI gui;
+
+    private static Game game;
+
+    public static Room getRoomByName(String name) {
+        return rooms.get(name);
+    }
+
+    public static Room getRoom() {
+        return GameHandler.room;
+    }
+
+    public static GUI getGui() {
+        return gui;
+    }
 
     static NPC getNPCByName(String person) {
-     return npcs.get(person);   
+        return npcs.get(person);
     }
 
     static Item getItemByName(String itemName) {
         return items.get(itemName);
     }
-private final Game game;
+
+    static String readFile(String fileName) {
+        File file = new File(fileName.concat(".txt"));
+        if (file.exists()) {
+            try {
+                StringBuilder content;
+                try (FileReader reader = new FileReader(file)) {
+                    int character;
+                    content = new StringBuilder();
+                    while ((character = reader.read()) != -1) {
+                        content.append((char) character);
+                    }
+                    getGui().display(content.toString(), "Black");
+                }
+                return content.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            getGui().display("File not found.", "Red");
+        }
+        return null;
+    }
+
+    private static Clock getClock() {
+        if (clock == null) {
+            clock = new Clock(game);
+        }
+        return clock;
+    }
     Item diaper;
     private Container box;
-    public static Room room;
     public Room recoveryRoom;
     public Room kitchen;
     public Room mainRoom;
@@ -60,13 +110,14 @@ private final Game game;
     public Room peddleToys;
     public Room lemonaidStand;
     public Room toolShed;
+
     public Room TRSRoom;
+
     public Room janitorialRoom;
     public Room foyer;
     public Room pantry;
-    public Room roof;
-    private static GUI gui;
 
+    public Room roof;
 
     public GameHandler(GUI gui1, Game game1) {
         game = game1;
@@ -77,22 +128,27 @@ private final Game game;
         Player.setRoom(room);
         return Player.room;
     }
-    public void setUpNPCs(){
+
+    public void setUpNPCs() {
         NPC mssagely = new NPC("Ms_Sagely", "A wise old owl who has been around for centuries.", foyer);
         npcs.put("Ms_Sagely", mssagely);
         NPC dawn = new NPC("Dawn", "An ECE student who is eager to learn.", foyer);
         npcs.put("Dawn", dawn);
 
     }
+
     public void moveItem(Item item, Room room) {
         room.getInventory().add(item);
     }
-    public void moveItems(){
+
+    public void moveItems() {
         moveItem(diaper, recoveryRoom);
     }
+
     public Game getGame() {
         return game;
     }
+
     public void buildRooms() {
         kitchen = new Room("Kitchen", "A room where you can cook food.");
         rooms.put("Kitchen", kitchen);
@@ -182,67 +238,37 @@ private final Game game;
         rooms.put("Pantry", pantry);
         recoveryRoom = new Room("Recovery_Room", "A room where you can recover.");
         rooms.put("Recovery_Room", recoveryRoom);
-        
-
-
-
     }
+
     public void createItems() {
         diaper = new Item("Diaper", "A diaper for you, a baby.");
         items.put("Diaper", diaper);
         diaper.setType("Equipment");
-        box = new Container("Box", "A box that contains a key.", "Container", true);
+        box = new Container("Box", "A simple cardboard box for storing items", "Container", true);
         items.put("Box", box);
         box.addItem(diaper);
         Player.addItem(diaper);
     }
+
     public void playIntro() {
         readFile("intro1");
         getGui().waitForInput();
         readFile("intro2");
-    }
-     static String readFile(String fileName) {
-        File file = new File(fileName.concat(".txt"));
-        if(file.exists()) {
-            try {
-                StringBuilder content;
-                try (FileReader reader = new FileReader(file)) {
-                    int character;
-                    content = new StringBuilder();
-                    while((character = reader.read()) != -1) {
-                        content.append((char) character);
-                    }   getGui().display(content.toString(), "Black");
-                }
-                return content.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            getGui().display("File not found.", "Red");
-        }
-        return null;
+        getGui().waitForInput();
+        readFile("intro3");
     }
 
     public void setupPlayer() {
         Item nothing = new Item("Nothing", "You have nothing in your pockets.");
         Player.addItem(nothing);
         nothing.setDroppable(false);
-
         setCharacterBio();
         setCharacterAlignment();
         setCharacterAbilities();
+        updateStatus();
         Game.setRunning(true);
     }
-    private void setCharacterAlignment() {
-        getGui().display("Choose your alignment: Rebel or Loyalist.", "Black");
-        readFile("alignments");
-        Player.setAlignment(getGui().getInput());
-    }
+
     public void playGame() {
         playTutorial();
         playChapter1();
@@ -252,19 +278,203 @@ private final Game game;
         playChapter5();
         playEnding();
     }
+
+    public void endGame() {
+        playOutro();
+    }
+
+    public void buildExits() {
+        //BackYard
+        backYard.addExit(deck);
+        backYard.addExit(patio);
+        backYard.addExit(playHouse);
+        backYard.addExit(pool);
+        backYard.addExit(shed);
+        backYard.addExit(toolShed);
+        backYard.addExit(treeHouse);
+        backYard.addExit(foyer);
+
+        //Bathroom
+        bathroom.addExit(changingRoom);
+
+        //BlueHall
+        blueHall.addExit(foyer);
+        blueHall.addExit(redHall);
+
+        //ChangingRoom
+        changingRoom.addExit(bathroom);
+
+        //Cubbies
+        cubbies.addExit(dramaArea);
+        cubbies.addExit(floorPlay);
+        cubbies.addExit(homeWorkArea);
+        cubbies.addExit(quietArea);
+        cubbies.addExit(storyBookVillage);
+        cubbies.addExit(mainRoom);
+        cubbies.addExit(pillowPile);
+
+        //Deck
+        deck.addExit(backYard);
+
+        //Dorms
+        dorms.addExit(foyer);
+        dorms.addExit(greenHall);
+
+        //DramaArea
+        dramaArea.addExit(cubbies);
+        dramaArea.addExit(floorPlay);
+        dramaArea.addExit(homeWorkArea);
+        dramaArea.addExit(quietArea);
+        dramaArea.addExit(storyBookVillage);
+        dramaArea.addExit(mainRoom);
+        dramaArea.addExit(pillowPile);
+
+        //FloorPlay
+        floorPlay.addExit(cubbies);
+        floorPlay.addExit(dramaArea);
+        floorPlay.addExit(homeWorkArea);
+        floorPlay.addExit(quietArea);
+        floorPlay.addExit(storyBookVillage);
+        floorPlay.addExit(mainRoom);
+        floorPlay.addExit(pillowPile);
+
+        //Foyer
+        foyer.addExit(backYard);
+        foyer.addExit(blueHall);
+        foyer.addExit(dorms);
+        foyer.addExit(frontYard);
+        foyer.addExit(greenHall);
+        foyer.addExit(kitchen);
+        foyer.addExit(mainRoom);
+        foyer.addExit(recoveryRoom);
+
+        //FrontYard
+        frontYard.addExit(foyer);
+        frontYard.addExit(lemonaidStand);
+        frontYard.addExit(porch);
+
+        //GreenHall
+        greenHall.addExit(dorms);
+        greenHall.addExit(foyer);
+
+        //HomeWorkArea
+        homeWorkArea.addExit(cubbies);
+        homeWorkArea.addExit(dramaArea);
+        homeWorkArea.addExit(floorPlay);
+        homeWorkArea.addExit(quietArea);
+        homeWorkArea.addExit(storyBookVillage);
+        homeWorkArea.addExit(mainRoom);
+        homeWorkArea.addExit(pillowPile);
+
+        //Kitchen
+        kitchen.addExit(foyer);
+        kitchen.addExit(pantry);
+
+        //LemonaidStand
+        lemonaidStand.addExit(frontYard);
+
+        //MainRoom
+        mainRoom.addExit(cubbies);
+        mainRoom.addExit(dramaArea);
+        mainRoom.addExit(floorPlay);
+        mainRoom.addExit(homeWorkArea);
+        mainRoom.addExit(pillowPile);
+        mainRoom.addExit(quietArea);
+        mainRoom.addExit(snackArea);
+        mainRoom.addExit(storyBookVillage);
+        mainRoom.addExit(foyer);
+
+        //Pantry
+        pantry.addExit(kitchen);
+
+        //Patio
+        patio.addExit(backYard);
+
+        //PillowPile
+        pillowPile.addExit(cubbies);
+        pillowPile.addExit(dramaArea);
+        pillowPile.addExit(floorPlay);
+        pillowPile.addExit(homeWorkArea);
+        pillowPile.addExit(quietArea);
+        pillowPile.addExit(storyBookVillage);
+        pillowPile.addExit(mainRoom);
+
+        //PlayHouse
+        playHouse.addExit(backYard);
+
+        //Pool
+        pool.addExit(backYard);
+
+        //Porch
+        porch.addExit(frontYard);
+
+        //QuietArea
+        quietArea.addExit(cubbies);
+        quietArea.addExit(dramaArea);
+        quietArea.addExit(floorPlay);
+        quietArea.addExit(homeWorkArea);
+        quietArea.addExit(storyBookVillage);
+        quietArea.addExit(mainRoom);
+        quietArea.addExit(pillowPile);
+
+        //RecoveryRoom
+        recoveryRoom.addExit(foyer);
+
+        //RedHall
+        redHall.addExit(blueHall);
+
+        //Shed
+        shed.addExit(backYard);
+
+        //SnackArea
+        snackArea.addExit(mainRoom);
+
+        //StoryBookVillage
+        storyBookVillage.addExit(cubbies);
+        storyBookVillage.addExit(dramaArea);
+        storyBookVillage.addExit(floorPlay);
+        storyBookVillage.addExit(homeWorkArea);
+        storyBookVillage.addExit(quietArea);
+        storyBookVillage.addExit(pillowPile);
+        storyBookVillage.addExit(mainRoom);
+
+        //ToolShed
+        toolShed.addExit(backYard);
+
+        //TreeHouse
+        treeHouse.addExit(backYard);
+    }
+
+    public void setUpgame() {
+
+    }
+
+    public void updateStatus() {
+        getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + GameHandler.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
+    }
+
+    private void setCharacterAlignment() {
+        getGui().display("Choose your alignment: Rebel or Loyalist.", "Black");
+        readFile("alignments");
+        Player.setAlignment(getGui().getInput());
+    }
+
     private void playChapter2() {
-        if(Player.alignment.equalsIgnoreCase("Rebel")){
+        if (Player.alignment.equalsIgnoreCase("Rebel")) {
             readFile("rebelChapter2");
         } else {
             readFile("loyalistChapter2");
         }
     }
-    public void endGame() {
-        playOutro();
-    }
 
     private void setCharacterBio() {
-        Player.setAge(getGui().getInput()); 
+        explainCharacterBio();
+        Player.setName(getGui().getInput());
+        Player.setAge(getGui().getInput());
+    }
+
+    private void explainCharacterBio() {
+        readFile("characterBio");
     }
 
     private void playTutorial() {
@@ -272,7 +482,7 @@ private final Game game;
     }
 
     private void playChapter1() {
-        if(Player.alignment.equalsIgnoreCase("Rebel")){
+        if (Player.alignment.equalsIgnoreCase("Rebel")) {
             readFile("rebelChapter1");
         } else {
             readFile("loyalistChapter1");
@@ -280,7 +490,7 @@ private final Game game;
     }
 
     private void playChapter3() {
-        if(Player.alignment.equalsIgnoreCase("Rebel")){
+        if (Player.alignment.equalsIgnoreCase("Rebel")) {
             readFile("rebelChapter3");
         } else {
             readFile("loyalistChapter3");
@@ -288,7 +498,7 @@ private final Game game;
     }
 
     private void playChapter4() {
-        if(Player.alignment.equalsIgnoreCase("Rebel")){
+        if (Player.alignment.equalsIgnoreCase("Rebel")) {
             readFile("rebelChapter4");
         } else {
             readFile("loyalistChapter4");
@@ -296,7 +506,7 @@ private final Game game;
     }
 
     private void playChapter5() {
-        if(Player.alignment.equalsIgnoreCase("Rebel")){
+        if (Player.alignment.equalsIgnoreCase("Rebel")) {
             readFile("rebelChapter5");
         } else {
             readFile("loyalistChapter5");
@@ -304,7 +514,7 @@ private final Game game;
     }
 
     private void playEnding() {
-        if(Player.alignment.equalsIgnoreCase("Rebel")){
+        if (Player.alignment.equalsIgnoreCase("Rebel")) {
             readFile("rebelEnding");
         } else {
             readFile("loyalistEnding");
@@ -317,178 +527,5 @@ private final Game game;
 
     private void setCharacterAbilities() {
         Player.setCharacterAbilities();
-    }
-    public void buildExits(){
-        //BackYard
-            backYard.addExit(deck);
-            backYard.addExit(patio);
-            backYard.addExit(playHouse);
-            backYard.addExit(pool);
-            backYard.addExit(shed);
-            backYard.addExit(toolShed);
-            backYard.addExit(treeHouse);
-            backYard.addExit(foyer);
-        
-        //Bathroom
-            bathroom.addExit(changingRoom);
-        
-        //BlueHall
-            blueHall.addExit(foyer);
-            blueHall.addExit(redHall);
-        
-        //ChangingRoom
-            changingRoom.addExit(bathroom);
-        
-        //Cubbies
-            cubbies.addExit(dramaArea);
-            cubbies.addExit(floorPlay);
-            cubbies.addExit(homeWorkArea);
-            cubbies.addExit(quietArea);
-            cubbies.addExit(storyBookVillage);
-            cubbies.addExit(mainRoom);
-            cubbies.addExit(pillowPile);
-        
-        //Deck
-            deck.addExit(backYard);
-        
-        //Dorms
-            dorms.addExit(foyer);
-            dorms.addExit(greenHall);
-        
-        //DramaArea
-            dramaArea.addExit(cubbies);
-            dramaArea.addExit(floorPlay);
-            dramaArea.addExit(homeWorkArea);
-            dramaArea.addExit(quietArea);
-            dramaArea.addExit(storyBookVillage);
-            dramaArea.addExit(mainRoom);
-            dramaArea.addExit(pillowPile);
-        
-        //FloorPlay
-            floorPlay.addExit(cubbies);
-            floorPlay.addExit(dramaArea);
-            floorPlay.addExit(homeWorkArea);
-            floorPlay.addExit(quietArea);
-            floorPlay.addExit(storyBookVillage);
-            floorPlay.addExit(mainRoom);
-            floorPlay.addExit(pillowPile);
-        
-        //Foyer
-            foyer.addExit(backYard);
-            foyer.addExit(blueHall);
-            foyer.addExit(dorms);
-            foyer.addExit(frontYard);
-            foyer.addExit(greenHall);
-            foyer.addExit(kitchen);
-            foyer.addExit(mainRoom);
-            foyer.addExit(recoveryRoom);
-        
-        //FrontYard
-            frontYard.addExit(foyer);
-            frontYard.addExit(lemonaidStand);
-            frontYard.addExit(porch);
-        
-        //GreenHall
-            greenHall.addExit(dorms);
-            greenHall.addExit(foyer);
-        
-        //HomeWorkArea
-            homeWorkArea.addExit(cubbies);
-            homeWorkArea.addExit(dramaArea);
-            homeWorkArea.addExit(floorPlay);
-            homeWorkArea.addExit(quietArea);
-            homeWorkArea.addExit(storyBookVillage);
-            homeWorkArea.addExit(mainRoom);
-            homeWorkArea.addExit(pillowPile);
-        
-        //Kitchen
-            kitchen.addExit(foyer);
-            kitchen.addExit(pantry);
-        
-        //LemonaidStand
-            lemonaidStand.addExit(frontYard);
-        
-        //MainRoom
-            mainRoom.addExit(cubbies);
-            mainRoom.addExit(dramaArea);
-            mainRoom.addExit(floorPlay);
-            mainRoom.addExit(homeWorkArea);
-            mainRoom.addExit(pillowPile);
-            mainRoom.addExit(quietArea);
-            mainRoom.addExit(snackArea);
-            mainRoom.addExit(storyBookVillage);
-            mainRoom.addExit(foyer);
-        
-        //Pantry
-            pantry.addExit(kitchen);
-        
-        //Patio
-            patio.addExit(backYard);
-        
-        //PillowPile
-            pillowPile.addExit(cubbies);
-            pillowPile.addExit(dramaArea);
-            pillowPile.addExit(floorPlay);
-            pillowPile.addExit(homeWorkArea);
-            pillowPile.addExit(quietArea);
-            pillowPile.addExit(storyBookVillage);
-            pillowPile.addExit(mainRoom);
-        
-        //PlayHouse
-            playHouse.addExit(backYard);
-        
-        //Pool
-            pool.addExit(backYard);
-        
-        //Porch
-            porch.addExit(frontYard);
-        
-        //QuietArea
-            quietArea.addExit(cubbies);
-            quietArea.addExit(dramaArea);
-            quietArea.addExit(floorPlay);
-            quietArea.addExit(homeWorkArea);
-            quietArea.addExit(storyBookVillage);
-            quietArea.addExit(mainRoom);
-            quietArea.addExit(pillowPile);
-        
-        //RecoveryRoom
-            recoveryRoom.addExit(foyer);
-        
-        //RedHall
-            redHall.addExit(blueHall);
-        
-        //Shed
-            shed.addExit(backYard);
-        
-        //SnackArea
-            snackArea.addExit(mainRoom);
-        
-        //StoryBookVillage
-            storyBookVillage.addExit(cubbies);
-            storyBookVillage.addExit(dramaArea);
-            storyBookVillage.addExit(floorPlay);
-            storyBookVillage.addExit(homeWorkArea);
-            storyBookVillage.addExit(quietArea);
-            storyBookVillage.addExit(pillowPile);
-            storyBookVillage.addExit(mainRoom);
-        
-        //ToolShed
-            toolShed.addExit(backYard);
-        
-        //TreeHouse
-            treeHouse.addExit(backYard);
-        }
-        public static Room getRoomByName(String name) {
-            return rooms.get(name);
-        }
-    public static Room getRoom() {
-        return GameHandler.room;
-    }
-    public void setUpgame() {
-
-    }
-    public static GUI getGui() {
-        return gui;
     }
 }

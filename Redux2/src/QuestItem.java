@@ -1,5 +1,6 @@
 
 public class QuestItem extends Item {
+
     private boolean redeemed;
 
     public QuestItem(String name, String description) {

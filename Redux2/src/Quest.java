@@ -2,6 +2,7 @@
 public class Quest {
 
     private String questName;
+
     public String getQuestName() {
         return questName;
     }
@@ -11,6 +12,7 @@ public class Quest {
     }
 
     private String questType;
+
     public String getQuestType() {
         return questType;
     }
@@ -34,7 +36,8 @@ public class Quest {
         this.questType = questType;
         this.requiredItem = requiredItem;
     }
-    public boolean isComplete(){
+
+    public boolean isComplete() {
         for (QuestItem item : Player.questItems) {
             if (item.getName().equals(requiredItem.getName())) {
                 return true;
