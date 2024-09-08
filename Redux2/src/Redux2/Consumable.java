@@ -1,4 +1,4 @@
-
+package Redux2;
 public class Consumable extends Item {
 
     private int buffValue;

@@ -1,4 +1,4 @@
-
+package Redux2;
 public class Clock {
 
     private int time;
@@ -28,6 +28,28 @@ public class Clock {
 
     public int getCurrentHour() {
         return time / 60;
+    }
+
+    public String formatByHourMinute(int minutes) {
+        int hours = minutes / 60;
+        int remainingMinutes = minutes % 60;
+        StringBuilder formattedTime = new StringBuilder();
+        if (hours > 0) {
+            formattedTime.append(hours).append(" hour");
+            if (hours > 1) {
+                formattedTime.append("s");
+            }
+            if (remainingMinutes > 0) {
+                formattedTime.append(" ");
+            }
+        }
+        if (remainingMinutes > 0) {
+            formattedTime.append(remainingMinutes).append(" minute");
+            if (remainingMinutes > 1) {
+                formattedTime.append("s");
+            }
+        }
+        return formattedTime.toString();
     }
 
     public String getTimeOfDay() {

@@ -1,4 +1,4 @@
-
+package Redux2;
 class Commands {
 
     public static void execute(String text) {
@@ -6,7 +6,11 @@ class Commands {
             GameHandler.getGui().display("", "Black");
         } else {
             switch (text) {
-                case "move" -> {
+                case "Equipment" -> {
+                    GameHandler.getGui().display("You checked your equipment", "Black");
+                    for (Equipment equips : Player.getEquipment().values()) {
+                        GameHandler.getGui().display(equips.getName(), "Black");
+                    }
                 }
                 case "look" ->
                     GameHandler.getGui().display("You looked", "Black");

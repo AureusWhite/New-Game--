@@ -1,62 +1,70 @@
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mary is a Rejuve</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        h1, h2 {
-            color: #4CAF50;
-        }
-        p {
-            margin-bottom: 15px;
+        .ascii-art {
+            font-family: monospace;
+            white-space: pre;
         }
     </style>
 </head>
 <body>
-    <h1>Mary is a Rejuve</h1>
+    <h1>The Revolutionary Impact of Rejuvenation</h1>
 
-    <p>One day, Mary woke up at Busy Beavers. Everything felt new and strange. Standing by her bed was a robot named Fuzzy. Mary didn’t know who Fuzzy was, so she got scared and started hitting him with her fists.</p>
+    <p>
+        The introduction of rejuvenation was nothing short of revolutionary, marking a seismic shift in the landscape of medical science. Despite its shortcomings, no other medical breakthrough has come close to offering what rejuvenation promises: functional immortality.
+    </p>
 
-    <p><strong>“Pow pow pow!”</strong></p>
+    <h2>Functional Immortality: A New Era</h2>
 
-    <p>But Fuzzy didn’t move. He just smiled and said, “Hello, Mary! I’m Fuzzy, your android assistant.”</p>
+    <p><strong>Don't mistake this—people still die; it's just a far more challenging endeavor now. The days of slow, inevitable decline have been consigned to history.</strong> Rejuvenation therapy renews each healthy cell, reverting it to its stem cell state, effectively transforming an old, damaged, or diseased body into one that is virtually new.</p>
 
-    <p>Mary stopped and looked at Fuzzy. She didn’t feel so scared anymore. She tried to get up, but her legs were wobbly, and she fell down. Did Mary cry? Yes. But did she give up? Nope! She kept trying, and soon she was standing on her own.</p>
+    <h3>Drawbacks of Rejuvenation</h3>
 
-    <p>Feeling a bit stronger, Mary decided to run. She made it pretty far before Fuzzy, quick and gentle, blocked her at the door.</p>
+    <p>However, the treatment's first major drawback is that these rejuvenated cells are as young as the body they form. The body of a rejuve is immature, having skipped the hormonal and epigenetic milestones that naturally occur over time.</p>
 
-    <p>“Miss, you can’t leave just yet,” Fuzzy said kindly.</p>
+    <h3>The Brain of a Rejuve</h3>
 
-    <p>Mary tried to get past him—climbing over, under, and around—but Fuzzy always stopped her. It was like he had eyes in the back of his head. And guess what? He did!</p>
+    <p>While the rejuve's brain is preserved as much as possible, it is adapted to fit within a smaller skull and body, with some unavoidable compromises in the frontal lobes. Although explicit memories remain intact, the rejuve loses procedural and implicit memories, leaving them as helpless as an infant initially. Though the pace of relearning is accelerated, it still takes years for a rejuve to reach their Chronological Equivalence (CE).</p>
 
-    <h2>The Boring Room</h2>
+    <h2>The Need for Formal Structure</h2>
 
-    <p>Then, the doctors came in. Mary liked the doctors because they made Fuzzy move out of the way. They checked her over, making sure she was okay. Afterward, they told her she could explore. Mary was excited but wasn’t sure where to go. The doctors gently guided her to a room nearby.</p>
+    <p>This developmental delay necessitated the creation of a formal structure to support rejuves, which was promptly established with research funding from human trials—driven, unsurprisingly, by the wealthy elite's desire to cheat death.</p>
 
-    <p>This room was different. It had puzzles, blocks, and a big table with shapes that fit into holes. But it was kind of boring. Mary looked around, unsure of what to do. The doctors wanted to see what Mary would do next.</p>
+    <h3>Rejuvenation Schools and Existing Structures</h3>
 
-    <p>First, Mary picked up a shape and put it in a hole. It was very easy. She did it a few more times, but it wasn’t much fun. Next, she saw some puzzles. They looked tricky, and Mary wasn’t sure she could do them. But she gave it a try. The puzzles were hard, and after a while, Mary started to feel frustrated.</p>
+    <p>Schools designed to accommodate rejuves emerged, initially within the laboratories of developmental psychology. The tests and procedures were heavily influenced by existing developmental psychology frameworks.</p>
 
-    <p>The room was quiet, and Mary realized she was all alone. She didn’t like being by herself, so she stopped working on the puzzles and began to look for something else to do. That’s when she found a broken toy car. Mary picked it up and started to push it along the carpet. But then the wheel popped off.</p>
+    <h3>Repurposing for Rejuves</h3>
 
-    <h2>The Fun Room</h2>
+    <p>These policies, largely pre-existing, generally proved effective: smaller desks, shorter facilities, and so on. With natural birth rates declining due to overpopulation, the educational industry found itself without a traditional target audience. Repurposing the existing structures for rejuves seemed logical.</p>
 
-    <p>Just then, the doctors came back. They saw what Mary had been doing and gave her a snack, just like they had promised. After she ate, they took her to a much more fun room. This one had art supplies, blocks, and a big pillow fort.</p>
+    <h2>Complex Realities</h2>
 
-    <p>Mary climbed into the pillow fort and met some other kids. They were her new friends, and they played together all afternoon. Mary had so much fun that she forgot all about being scared.</p>
+    <p>You might think that rejuves, with their retained adult memories, would find it humiliating to be spoon-fed or have their diapers changed. But the reality is far more complex and nuanced.</p>
 
-    <h2>Time to Eat and Sleep</h2>
+    <p>A soothing, harmonic but artificial voice gently beckons you to awaken. As you blink your newly minted eyes open, you see an android about three feet tall, covered in soft fur and resembling a cuddly teddy bear.</p>
 
-    <p>Later, Mary started to feel hungry again, so she went to the lunchroom and had a good meal. When she was full, she went back to the pillow fort to play with her friends. They built towers with the blocks, drew pictures, and laughed together.</p>
+    <p>
+        "Honey, you might be confused and not remember where you are," the surprisingly soft android says, wrapping its surprisingly strong arms around you and cooing in a melodic, sing-song tone. "You're safe. Fuzzy is here if you need me. Just tell me when you're ready to get dressed. Don't worry, my eyes are turned off."
+    </p>
 
-    <p>As the day went on, Mary grew tired. She had played so much that she was ready for bed. She said goodbye to her friends and headed off to sleep.</p>
+    <p>
+        The android acts silly, pretending he can't see. He bumps into a table, making you giggle, and then wheels off to give you some space. Eventually, you get up, and with a little help from Fuzzy, manage to get dressed.
+    </p>
 
-    <p>Mary learned that it’s okay to be scared sometimes. It’s okay to take out your feelings, even if you need to hit something like Fuzzy. But it’s also important to keep trying, eat a good meal, and get a good night’s sleep. Tomorrow is a new day, and who knows what fun adventures await?</p>
+    <p>
+        "Don't worry, everyone has trouble with the buttons at first," Fuzzy reassures you with a gentle smile.
+    </p>
+
+    <p>
+        Fuzzy's LCD screen displays a happy face, and then he prints out a shiny gold star from his finger, placing it on your hand with a flick. Dressed and adorned with your gold star, Fuzzy begins to read you a story as you wait for the doctors to arrive.
+    </p>
+
+    <p>
+        Maybe your memory will return, but for now, you're a child again, filled with the wonder of a brave new world. And maybe, just maybe, you don't want to spoil it by remembering too quickly.
+    </p>
+
+    <h3>Press enter in the text field to continue</h3>
 </body>
 </html>

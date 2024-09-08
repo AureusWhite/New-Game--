@@ -1,7 +1,9 @@
+package Redux2;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,9 +14,7 @@ public class GameHandler {
     private static final Map<String, Item> items = new HashMap<>();
     private static Clock clock;
     public static Room room;
-
     private static GUI gui;
-
     private static Game game;
 
     public static Room getRoomByName(String name) {
@@ -27,6 +27,78 @@ public class GameHandler {
 
     public static GUI getGui() {
         return gui;
+    }
+
+    public static void updateStatus() {
+        getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + GameHandler.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
+    }
+
+    public static void storyTime() {
+        String[] Choices = Player.getRoom().getItemsByType("Book");
+        if (Choices.length == 0) {
+            getGui().display("There are no books in this room.", "Black");
+        } else {
+            getGui().display("Which book would you like to read?", "Black");
+            for (String Choice : Choices) {
+                getGui().display(Choice, "Black");
+            }
+            String book = getGui().getInput();
+            readFile(book);
+        }
+    }
+
+    public static void artsCrafts() {
+        String Choices[] = Player.getRoom().getItemsByType("Crafts");
+        getGui().display("What would you like to make?", "Black");
+        for (String Choice : Choices) {
+            getGui().display(Choice, "Black");
+        }
+        String craft = getGui().getInput();
+        Player.doCraft(craft);
+    }
+
+    public static void educationalGames() {
+        String Choices[] = Player.getRoom().getItemsByType("Game");
+        getGui().display("Which game would you like to play?", "Black");
+        for (String Choice : Choices) {
+            getGui().display(Choice, "Black");
+        }
+        String game1 = getGui().getInput();
+        Player.playGame(game1);
+    }
+
+    public static void Learning() {
+        String Choices[] = {"ABCs", "Numbers", "Shapes", "Colors", "Animals", "Body Parts", "The Calender", "Opposites", "Safety", "Hygiene", "Nutrition"};
+        getGui().display("Which would you like to learn?", "Black");
+        for (String Choice : Choices) {
+            getGui().display(Choice + "<br>", "Black");
+        }
+        String choice = getGui().getInput();
+        Player.learn(choice);
+    }
+
+    public static void puzzles() {
+        String Choices[] = Player.getRoom().getItemsByType("Puzzle");
+        getGui().display("Which puzzle would you like to do?", "Black");
+        for (String Choice : Choices) {
+            getGui().display(Choice, "Black");
+        }
+        String puzzle = getGui().getInput();
+        Player.doPuzzle(puzzle);
+    }
+
+    public static void language() {
+        int outcome = (int) (Math.random() * 100);
+        if (outcome < 50) {
+            getGui().display("You learned something", "Black");
+            Player.setExperience(Player.getExperience() + 1);
+            Player.setResilience(Player.getResilience() + 1);
+
+        } else {
+            getGui().display("You didn't learn anything.", "Black");
+            Player.setResilience(Player.getResilience() - 1);
+            Player.setExperience(Player.getExperience() + 2);
+        }
     }
 
     static NPC getNPCByName(String person) {
@@ -52,24 +124,33 @@ public class GameHandler {
                 }
                 return content.toString();
             } catch (IOException e) {
-                e.printStackTrace();
+                GameHandler.getGui().display("Error reading file.", "Red");
             }
         } else {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                GameHandler.getGui().display("Error creating file.", "Red");
             }
             getGui().display("File not found.", "Red");
         }
         return null;
     }
 
-    private static Clock getClock() {
+    static Clock getClock() {
         if (clock == null) {
             clock = new Clock(game);
         }
         return clock;
+    }
+
+    static void help(ArrayList<NPC> npCs) {
+        for (NPC npc : npCs) {
+            if (npc.hasNewQuest()) {
+                getGui().display(npc.getName() + " has a new quest for you.", "Black");
+                npc.giveQuestToPlayer(npc.getQuests().get("TidyUp"));
+            }
+        }
     }
     Item diaper;
     private Container box;
@@ -103,21 +184,30 @@ public class GameHandler {
     public Room treeHouse;
     public Room storyBookVillage;
     public Room pillowPile;
+
     public Room snackArea;
+
     public Room greenHall;
     public Room blueHall;
     public Room redHall;
+
     public Room peddleToys;
     public Room lemonaidStand;
     public Room toolShed;
-
     public Room TRSRoom;
-
     public Room janitorialRoom;
+
     public Room foyer;
+
     public Room pantry;
 
     public Room roof;
+
+    private Equipment trainingPants;
+
+    private Item toy;
+    private Quest tidyUp;
+    public Room cogLabs;
 
     public GameHandler(GUI gui1, Game game1) {
         game = game1;
@@ -130,11 +220,25 @@ public class GameHandler {
     }
 
     public void setUpNPCs() {
-        NPC mssagely = new NPC("Ms_Sagely", "A wise old owl who has been around for centuries.", foyer);
+
+        NPC mssagely = new NPC("Ms_Sagely", "A wise old owl who has been around for centuries.", foyer, "adult");
+        tidyUp = new Quest("TidyUp", "Clean", getItemByName("Toy"));
+        mssagely.addQuest(tidyUp);
+        mssagely.setHasNewQuest(true);
+
         npcs.put("Ms_Sagely", mssagely);
-        NPC dawn = new NPC("Dawn", "An ECE student who is eager to learn.", foyer);
+        NPC dawn = new NPC("Dawn", "An ERE student who is eager to learn.", foyer, "child");
         npcs.put("Dawn", dawn);
 
+    }
+
+    public static void createQuests() {
+        Quest quest1 = new Quest("Quest1", "Find", getItemByName("Toy"));
+        Player.addQuest(quest1);
+        Quest quest2 = new Quest("Quest2", "Find", getItemByName("Diaper"));
+        Player.addQuest(quest2);
+        Quest quest3 = new Quest("Quest3", "Find", getItemByName("Training Pants"));
+        Player.addQuest(quest3);
     }
 
     public void moveItem(Item item, Room room) {
@@ -153,6 +257,7 @@ public class GameHandler {
         kitchen = new Room("Kitchen", "A room where you can cook food.");
         rooms.put("Kitchen", kitchen);
         kitchen.addNPC(npcs.get("Ms_Sagely"));
+        kitchen.addItem(toy);
         kitchen.addItem(box);
         mainRoom = new Room("Main_Room", "The main room of the daycare.");
         rooms.put("Main_Room", mainRoom);
@@ -179,8 +284,9 @@ public class GameHandler {
         rooms.put("Front_Yard", frontYard);
         backYard = new Room("Back_Yard", "The back yard of the daycare.");
         rooms.put("Back_Yard", backYard);
-        shed = new Room("Shed", "A shed where you can store tools.");
-        rooms.put("Shed", shed);
+        cogLabs = new Room("cogLabs", "A room with a sign that says \"Please do not take the box\"");
+        rooms.put("cogLabs", cogLabs);
+        cogLabs.addItem(box);
         pool = new Room("Pool", "A pool where you can swim.");
         rooms.put("Pool", pool);
         patio = new Room("Patio", "A patio where you can relax.");
@@ -241,13 +347,24 @@ public class GameHandler {
     }
 
     public void createItems() {
-        diaper = new Item("Diaper", "A diaper for you, a baby.");
+        toy = new Item("Toy", "A toy for you to play with.", "Toy", false);
+        items.put("Toy", toy);
+        toy.setType("QuestItem");
+
+        diaper = new Equipment("Diaper", "A diaper for you, a baby.", "Underpants");
         items.put("Diaper", diaper);
         diaper.setType("Equipment");
+
+        trainingPants = new Equipment("Training Pants", "Training Pants, for you, a toddler", "Underpants");
+        items.put("Training Pants", trainingPants);
+        trainingPants.setType("Equipment");
+
         box = new Container("Box", "A simple cardboard box for storing items", "Container", true);
+        box.setContraband(true);
         items.put("Box", box);
         box.addItem(diaper);
         Player.addItem(diaper);
+        Player.addItem(trainingPants);
     }
 
     public void playIntro() {
@@ -289,7 +406,6 @@ public class GameHandler {
         backYard.addExit(patio);
         backYard.addExit(playHouse);
         backYard.addExit(pool);
-        backYard.addExit(shed);
         backYard.addExit(toolShed);
         backYard.addExit(treeHouse);
         backYard.addExit(foyer);
@@ -347,6 +463,7 @@ public class GameHandler {
         foyer.addExit(kitchen);
         foyer.addExit(mainRoom);
         foyer.addExit(recoveryRoom);
+        foyer.addExit(cogLabs);
 
         //FrontYard
         frontYard.addExit(foyer);
@@ -408,6 +525,9 @@ public class GameHandler {
         //Porch
         porch.addExit(frontYard);
 
+        //laboratories
+        cogLabs.addExit(foyer);
+
         //QuietArea
         quietArea.addExit(cubbies);
         quietArea.addExit(dramaArea);
@@ -422,9 +542,6 @@ public class GameHandler {
 
         //RedHall
         redHall.addExit(blueHall);
-
-        //Shed
-        shed.addExit(backYard);
 
         //SnackArea
         snackArea.addExit(mainRoom);
@@ -447,10 +564,6 @@ public class GameHandler {
 
     public void setUpgame() {
 
-    }
-
-    public void updateStatus() {
-        getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + GameHandler.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
     }
 
     private void setCharacterAlignment() {
@@ -527,5 +640,9 @@ public class GameHandler {
 
     private void setCharacterAbilities() {
         Player.setCharacterAbilities();
+    }
+
+    public static HashMap<String, Quest> getQuests() {
+        return Player.getQuests();
     }
 }

@@ -1,4 +1,4 @@
-
+package Redux2;
 public class Game {
 
     private static GUI gui;

@@ -1,4 +1,4 @@
-
+package Redux2;
 import java.util.ArrayList;
 
 public class Item {
@@ -11,6 +11,9 @@ public class Item {
     private boolean broken;
     private ArrayList<Item> items;
     private boolean droppable;
+    private String slot;
+    private boolean contraband;
+    private boolean updated=false;
 
     public boolean isBroken() {
         return broken;
@@ -33,6 +36,9 @@ public class Item {
         this.description = description;
         this.type = type;
         this.takable = takable;
+        this.contraband = false;
+        this.droppable = true;
+        this.type = type;
         this.locked = false;
         this.broken = false;
         this.items = new ArrayList<>();
@@ -55,7 +61,7 @@ public class Item {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
@@ -71,8 +77,10 @@ public class Item {
         switch (this.type) {
             case "Consumable" ->
                 GameHandler.getGui().display("You used the " + this.name, "Black");
-            case "Equipment" ->
+            case "Equipment" -> {
                 GameHandler.getGui().display("You equipped the " + this.name, "Black");
+                Player.equip((Equipment) this, this.slot);
+            }
             case "QuestItem" ->
                 GameHandler.getGui().display("You used the " + this.name, "Black");
             default ->
@@ -113,7 +121,9 @@ public class Item {
     public Item getItemByIndex(int index) {
         return this.items.get(index);
     }
-
+    public void setContraband(boolean b) {
+        this.contraband = b;
+    }
     public void displayAllItems() {
         for (Item item : this.items) {
             System.out.println(item.getName());
@@ -171,6 +181,52 @@ public class Item {
 
     public void setDroppable(boolean b) {
         this.droppable = b;
+    }
+
+    public boolean isContraband() {
+        return this.contraband;
+    }
+
+    public void craft() {
+        if (this.type.equals("Crafts")) {
+            GameHandler.getGui().display("You crafted the " + this.name, "black");
+        } else {
+            GameHandler.getGui().display("You can't craft that item.", "red");
+        }
+    }
+
+    public void play() {
+        if (this.type.equals("Toy")) {
+            GameHandler.getGui().display("You played with the " + this.name, "black");
+        } else {
+            GameHandler.getGui().display("You can't play with that item.", "red");
+        }
+    }
+
+    public void study() {
+        if (this.type.equals("Workbook")) {
+            GameHandler.getGui().display("You studied the " + this.name, "black");
+        } else {
+            GameHandler.getGui().display("You can't study that item.", "red");
+        }
+    }
+
+    public void solve() {
+        if (this.type.equals("Puzzle")) {
+            GameHandler.getGui().display("You solved the " + this.name, "black");
+        } else {
+            GameHandler.getGui().display("You can't solve that item.", "red");
+        }
+    }
+
+    public void update() {
+        if(!updated){
+            GameHandler.getGui().display("You updated the " + this.name, "black");
+            updated = true;
+        } else {
+            GameHandler.getGui().display("Already Updated", "red");
+            updated = false;
+        }
     }
 
 }

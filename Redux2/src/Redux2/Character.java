@@ -1,4 +1,4 @@
-
+package Redux2;
 import java.util.ArrayList;
 
 public class Character {
@@ -38,7 +38,7 @@ public class Character {
     }
 
     public String getName() {
-        return name;
+        return name.replace("_", " ");
     }
 
     public String getDescription() {

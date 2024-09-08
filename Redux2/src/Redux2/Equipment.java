@@ -1,12 +1,18 @@
-
+package Redux2;
 public class Equipment extends Item {
 
-    public Equipment(String name, String discription) {
+    private String slot;
+
+    public Equipment(String name, String discription, String slot) {
         super(name, discription);
     }
 
     public void equip(Character character) {
         character.equipItem(this);
+    }
+
+    public String getSlot() {
+        return slot;
     }
 
 }
