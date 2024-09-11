@@ -262,15 +262,6 @@ public class Room {
     public void lead() {
         GameHandler.getGui().display("You led", "Black");
     }
-
-    public void help() {
-        for (NPC npc : this.getNPCs()) {
-            if (npc.hasNewQuest()) {
-                GameHandler.getGui().display(npc.getName() + " has a new quest for you", "Black");
-            }
-        }
-    }
-
     public void play(String selectedToy) {
         GameHandler.getGui().display("You played with " + selectedToy, "Black");
     }
@@ -310,15 +301,8 @@ public class Room {
         }
     }
 
-    public void sabotage(String selectedSabotage) {
-        String[] choises = this.getItemChoises();
-        if (choises.length == 0) {
-            GameHandler.getGui().display("There is nothing to sabotage", "Black");
-            return;
-        }
+    public void sabotage(Item item) {
         GameHandler.getGui().display("What do you want to sabotage?", "Black");
-        String choice = GameHandler.getGui().getInput();
-        Item item = this.getItemByName(choice);
         if (item == null) {
             GameHandler.getGui().display("That item does not exist", "Black");
         } else {
@@ -328,21 +312,14 @@ public class Room {
                 GameHandler.getGui().display("You successfully sabotaged " + item.getName(), "Black");
             } else {
                 GameHandler.getGui().display("You failed to sabotage " + item.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("Sabotage");
+                this.getFirstNPC().caughtPlayer("sabotage");
             }
         }
 
     }
 
-    public void vandalize(String selectedVandalize) {
-        String[] choises = this.getItemChoises();
-        if (choises.length == 0) {
-            GameHandler.getGui().display("There is nothing to vandalize", "Black");
-            return;
-        }
+    public void vandalize(Item item) {
         GameHandler.getGui().display("What do you want to vandalize?", "Black");
-        String choice = GameHandler.getGui().getInput();
-        Item item = this.getItemByName(choice);
         if (item == null) {
             GameHandler.getGui().display("That item does not exist", "Black");
         } else {
@@ -381,7 +358,7 @@ public class Room {
     }
 
     public NPC getFirstNPC() {
-        return this.npcs.get(1);
+        return this.npcs.get(0);
 
     }
 
@@ -428,24 +405,23 @@ public class Room {
     }
 
     public void update() {
-        for (NPC npc : this.getNPCs()) {
-                npc.update();
-            }
-        for (Item item : this.getArrayInventory()) {
-            item.update();
-        }
-        for (Room room : this.getExitS().values()) {
-            if (room.updated) {
-                room.setUpdated(false);
-            }   else {
-            room.setUpdated(true);
-        }
-    }
 }
     
 
     void setUpdated(boolean b) {
         GameHandler.getGui().display("Room updated to "+this.updated+" ", "Black");
         this.updated = b;
+    }
+
+    String listPeople() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    String listItems() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    String getType() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

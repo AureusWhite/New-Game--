@@ -1,7 +1,9 @@
 package Redux2;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +12,9 @@ import java.util.Map;
 public class GameHandler {
 
     private static final Map<String, Room> rooms = new HashMap<>();
-    private static final Map<String, NPC> npcs = new HashMap<>();
-    private static final Map<String, Item> items = new HashMap<>();
+    static final Map<String, NPC> npcs = new HashMap<>();
+    static final Map<String, Item> items = new HashMap<>();
+    private static final ArrayList<Quest> quests = new ArrayList<>();
     private static Clock clock;
     public static Room room;
     private static GUI gui;
@@ -28,7 +31,10 @@ public class GameHandler {
     public static GUI getGui() {
         return gui;
     }
-
+    static void giveQuestToPlayer(Quest quest){
+        Quest quest1 = quests.get(quests.indexOf(quest));
+        Player.addQuest(quest1);
+    }
     public static void updateStatus() {
         getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + GameHandler.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
     }
@@ -129,28 +135,22 @@ public class GameHandler {
         } else {
             try {
                 file.createNewFile();
+                        FileWriter fw = new FileWriter(fileName);
+                        try (BufferedWriter bw = new BufferedWriter(fw)) {
+                            bw.write("<html> <h1><center><Strong>"+room.getName()+"</h1></center></Stong><p style=\"font-size: 16;\">"+room.getDescription()+"</font><h2> Room Details </h2>"+room.getType()+"<br><br><Strong> Items in room</Strong><br>"+room.listItems()+"<br><Strong>People in room</Strong><br>"+room.listPeople()+"<br><br></html>");
+                        }
             } catch (IOException e) {
-                GameHandler.getGui().display("Error creating file.", "Red");
+                GameHandler.getGui().display("Error reading file.", "Red");
             }
-            getGui().display("File not found.", "Red");
         }
         return null;
     }
-
+    
     static Clock getClock() {
         if (clock == null) {
             clock = new Clock(game);
         }
         return clock;
-    }
-
-    static void help(ArrayList<NPC> npCs) {
-        for (NPC npc : npCs) {
-            if (npc.hasNewQuest()) {
-                getGui().display(npc.getName() + " has a new quest for you.", "Black");
-                npc.giveQuestToPlayer(npc.getQuests().get("TidyUp"));
-            }
-        }
     }
     Item diaper;
     private Container box;
@@ -206,8 +206,8 @@ public class GameHandler {
     private Equipment trainingPants;
 
     private Item toy;
-    private Quest tidyUp;
     public Room cogLabs;
+    private Item trash;
 
     public GameHandler(GUI gui1, Game game1) {
         game = game1;
@@ -222,23 +222,10 @@ public class GameHandler {
     public void setUpNPCs() {
 
         NPC mssagely = new NPC("Ms_Sagely", "A wise old owl who has been around for centuries.", foyer, "adult");
-        tidyUp = new Quest("TidyUp", "Clean", getItemByName("Toy"));
-        mssagely.addQuest(tidyUp);
-        mssagely.setHasNewQuest(true);
-
         npcs.put("Ms_Sagely", mssagely);
         NPC dawn = new NPC("Dawn", "An ERE student who is eager to learn.", foyer, "child");
         npcs.put("Dawn", dawn);
-
-    }
-
-    public static void createQuests() {
-        Quest quest1 = new Quest("Quest1", "Find", getItemByName("Toy"));
-        Player.addQuest(quest1);
-        Quest quest2 = new Quest("Quest2", "Find", getItemByName("Diaper"));
-        Player.addQuest(quest2);
-        Quest quest3 = new Quest("Quest3", "Find", getItemByName("Training Pants"));
-        Player.addQuest(quest3);
+        
     }
 
     public void moveItem(Item item, Room room) {
@@ -256,12 +243,9 @@ public class GameHandler {
     public void buildRooms() {
         kitchen = new Room("Kitchen", "A room where you can cook food.");
         rooms.put("Kitchen", kitchen);
-        kitchen.addNPC(npcs.get("Ms_Sagely"));
-        kitchen.addItem(toy);
-        kitchen.addItem(box);
         mainRoom = new Room("Main_Room", "The main room of the daycare.");
         rooms.put("Main_Room", mainRoom);
-        mainRoom.addNPC(npcs.get("Dawn"));
+        npcs.get("Dawn").setRoom(mainRoom);
         dorms = new Room("Dorms", "A room where you can sleep.");
         rooms.put("Dorms", dorms);
         bathroom = new Room("Bathroom", "A room where you can clean yourself.");
@@ -340,6 +324,9 @@ public class GameHandler {
         foyer = new Room("Foyer", "The foyer of the daycare.");
         rooms.put("Foyer", foyer);
         Player.setRoom(foyer);
+        npcs.get("Ms_Sagely").setRoom(foyer);
+        foyer.addItem(toy);
+        foyer.addItem(box);
         pantry = new Room("Pantry", "A room where you can store food.");
         rooms.put("Pantry", pantry);
         recoveryRoom = new Room("Recovery_Room", "A room where you can recover.");
@@ -349,17 +336,20 @@ public class GameHandler {
     public void createItems() {
         toy = new Item("Toy", "A toy for you to play with.", "Toy", false);
         items.put("Toy", toy);
-        toy.setType("QuestItem");
-
+        toy.setType("Toy");
+        trash = new Item("Trash", "Trash that needs to be thrown away.", "Trash", true);
+        items.put("Trash", trash);
+        trash.setType("Trash");
         diaper = new Equipment("Diaper", "A diaper for you, a baby.", "Underpants");
         items.put("Diaper", diaper);
         diaper.setType("Equipment");
 
-        trainingPants = new Equipment("Training Pants", "Training Pants, for you, a toddler", "Underpants");
+        trainingPants = new Equipment("Training Pants", "Training Pants, for you, a big kid", "Underpants");
         items.put("Training Pants", trainingPants);
         trainingPants.setType("Equipment");
 
-        box = new Container("Box", "A simple cardboard box for storing items", "Container", true);
+        box = new Container("Box", "A simple cardboard box for storing items", "Furniture", false);
+        box.setType("Furniture");
         box.setContraband(true);
         items.put("Box", box);
         box.addItem(diaper);
@@ -373,6 +363,7 @@ public class GameHandler {
         readFile("intro2");
         getGui().waitForInput();
         readFile("intro3");
+        getGui().waitForInput();
     }
 
     public void setupPlayer() {
@@ -579,7 +570,14 @@ public class GameHandler {
             readFile("loyalistChapter2");
         }
     }
-
+    public static Quest getQuest(String questName){
+        for(Quest quest: quests){
+            if(quest.getName().equalsIgnoreCase(questName)){
+                return quest;
+            }
+        }
+        return null;
+    }
     private void setCharacterBio() {
         explainCharacterBio();
         Player.setName(getGui().getInput());
@@ -641,8 +639,25 @@ public class GameHandler {
     private void setCharacterAbilities() {
         Player.setCharacterAbilities();
     }
+    static void createQuests(){
+        Quest fetchQuest = new Quest("Fetch Quest", "Fetch the item from the room", new Item[]{getItemByName("Toy")}, 10, 10, "Fetch", getItemByName("Toy"), getNPCByName("Ms_Sagely"), getRoomByName("Foyer"));
+        quests.add(fetchQuest);
+        fetchQuest.setType("fetch");
+        Quest escortQuest = new Quest("Escort Quest", "Escort the NPC to the room", new Item[]{getItemByName("Toy")}, 10, 10, "Escort", getItemByName("Toy"), getNPCByName("Dawn"), getRoomByName("Foyer"));
+        quests.add(escortQuest);
+        escortQuest.setType("escort");
+        Quest tidyUp = new Quest("Tidy Up", "Clean up the room", new Item[]{getItemByName("Toy")}, 10, 10, "Clean", getItemByName("Toy"), getNPCByName("Ms_Sagely"), getRoomByName("Foyer"));
+        quests.add(tidyUp);
+        tidyUp.setType("tidyUp");
+        npcs.get("Ms_Sagely").setQuest(tidyUp);
+    }
 
-    public static HashMap<String, Quest> getQuests() {
-        return Player.getQuests();
+    public static Quest getQuestByName(String string) {
+        for (Quest quest : quests) {
+            if (quest.getName().equalsIgnoreCase(string)) {
+                return quest;
+            }
+        }
+        return null;
     }
 }

@@ -27,8 +27,10 @@ public class Game {
     public void beginGame(GameHandler gamehandler) {
         gamehandler.buildRooms();
         gamehandler.buildExits();
+        GameHandler.createQuests();
         gamehandler.playIntro();
         gamehandler.setupPlayer();
+        Game.setRunning(true);
         gamehandler.playGame();
         gamehandler.endGame();
     }

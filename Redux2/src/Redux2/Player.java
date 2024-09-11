@@ -15,7 +15,7 @@ public class Player {
     public static ArrayList<Item> Pinventory = new ArrayList<>();
     public static ArrayList<Consumable> consumables = new ArrayList<>();
     public static HashMap<String, Equipment> equipment = new HashMap<>();
-    public static HashMap<String, Quest> quests = new HashMap<>();
+    public static ArrayList<Quest> quests = new ArrayList<>();
     private static boolean abilitiesSet;
     private static boolean ageSet;
     private static boolean alignmentSet;
@@ -165,11 +165,6 @@ public class Player {
     public static void setEquipment(HashMap<String, Equipment> equipment1) {
         equipment = equipment1;
     }
-
-    public static void setQuests(HashMap<String, Quest> quests1) {
-        quests = quests1;
-    }
-
     public static void setHunger(int hunger1) {
         hunger = hunger1;
     }
@@ -197,11 +192,6 @@ public class Player {
     public static void setLearning(String learning1) {
         learning = learning1;
     }
-
-    public static void addQuest(Quest quest) {
-        quests.put(quest.getQuestName(), quest);
-    }
-
     public static void setEmotional(String emotional1) {
         emotional = emotional1;
     }
@@ -365,16 +355,31 @@ public class Player {
     public static String getStatus() {
         return status;
     }
+    static void setLeader(boolean b) {
+        leader=b;
+    }
+    private static boolean leader=true;
 
-    static HashMap<String, Quest> getQuests() {
-        return quests;
+    static void addXP(int reward) {
+        experience += reward;
+    }
+
+    static void addQuest(Quest quest1) {
+        Player.quests.add(quest1);
     }
 
     static void displayQuests() {
-        for (Quest quest : quests.values()) {
-            GameHandler.getGui().display(quest.getQuestName(), "Black");
-            GameHandler.getGui().display(quest.isCompleted().toString(), "Black");
+        for (Quest quest : quests) {
+            GameHandler.getGui().display(quest.getName(), "Black");
         }
+    }
+
+    static ArrayList<Quest> getQuests() {
+        return quests;
+    }
+
+    static void removeQuest(Quest aThis) {
+        quests.remove(aThis);
     }
 
     public Player(String name, String discription, Room room) {
@@ -417,7 +422,7 @@ public class Player {
         }
     }
 
-    private static boolean hasItem(Item item2) {
+    static boolean hasItem(Item item2) {
         for (Item item : Pinventory) {
             if (item.getName().equals(item2.getName())) {
                 return true;
@@ -432,6 +437,10 @@ public class Player {
     }
 
     public static void sneak() {
+        if(motor == null){
+            GameHandler.getGui().display("You can't sneak.", "Black");
+            return;
+        }
         if (motor.contains("sneak")) {
             GameHandler.getGui().display("You attempt to sneak unseen", "Black");
             if (getRoom().getNPCs().size() == 1) {
@@ -479,9 +488,8 @@ public class Player {
         }
         return null;
     }
-
-    public static void removeQuest(Quest quest) {
-        quests.remove(quest.getQuestName());
-        quest.setCompleted(false);
+    public static boolean isLeader() {
+        return leader;
     }
+
 }

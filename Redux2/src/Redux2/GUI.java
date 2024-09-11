@@ -1,5 +1,4 @@
 package Redux2;
-
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
@@ -147,11 +146,16 @@ public class GUI extends JFrame {
                             null, exits, exits[0]);
 
                     if (selectedExit != null) {
+                        Room tempRoom = Player.getRoom();
                         GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
                         Player.setRoom(GameHandler.getRoomByName(selectedExit.replace(" ", "_")));
+                        for (NPC npc : tempRoom.getNPCs()) {
+                            if (npc.isFollower()) {
+                                npc.setRoom(Player.getRoom());
+                            }
+                        }
                         GameHandler.getGui().display(Player.getRoom().getDescription(), "Black");
                         Player.getRoom().update();
-
                     } else {
                         notify();
                     }
@@ -236,7 +240,7 @@ public class GUI extends JFrame {
             if (Game.isRunning()) {
                 synchronized (this) {
                     notify();
-                    String[] options = {"Use", "Drop", "Throw Away", "Put up"};
+                    String[] options = {"Use", "Drop", "Throw Away", "Put up", "Give"};
                     String[] inventory = Player.getItemChoises();
                     if (inventory.length == 0) {
                         GameHandler.getGui().display("You have nothing in your pockets", "Black");
@@ -308,6 +312,28 @@ public class GUI extends JFrame {
                                 Player.removeItem(GameHandler.getItemByName(selectedItem));
                                 GameHandler.getGui().display("You put up the " + selectedItem + ".", "Black");
                             }
+                            case 4 -> {
+                                notify();
+                                String[] npcs = Player.room.getNPCChoises();
+                                for (int i = 0; i < npcs.length; i++) {
+                                    npcs[i] = npcs[i].replace("_", " ");
+                                }
+                                String selectedNPC = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "Who do you want to give the " + selectedItem + " to?",
+                                        "Available NPCs",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        npcs,
+                                        npcs[0]);
+                                if (selectedNPC != null && !selectedNPC.equals("Nobody")) {
+                                    NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
+                                    Item item = GameHandler.getItemByName(selectedItem);
+                                    npc.reciveItem(item);
+                                } else {
+                                    notify();
+                                }
+                            }
                             default -> {
                                 notify();
                                 GameHandler.getGui().display("You have nothing in your pockets", "Black");
@@ -336,8 +362,7 @@ public class GUI extends JFrame {
                     if (selectedCare != null) {
                         switch (selectedCare) {
                             case "Nap" -> {
-                                GameHandler.getGui().display("You put the beaver to sleep", "Black");
-                                Player.nap();
+                                Player.displayQuests();
                             }
                             case "Potty" -> {
                                 GameHandler.getGui().display("You take the beaver to the potty", "Black");
@@ -401,24 +426,70 @@ public class GUI extends JFrame {
                             }
                             case "Help" -> {
                                 GameHandler.getGui().display("You help the beaver", "Black");
-                                GameHandler.help(Player.getRoom().getNPCs());
-                                for (Quest quest : Player.getQuests().values()) {
-                                    GameHandler.getGui().display(quest.getDescription(), "Black");
-                                    Player.displayQuests();
-                                }
                             }
                             case "Lead" -> {
-                                GameHandler.getGui().display("You lead the beaver", "Black");
-                                Player.giveItemToNPC(GameHandler.getItemByName("Toy"), GameHandler.getNPCByName("Ms_Sagely"));
+                                String[] choises = Player.room.getNPCChoises();
+                                if (choises.length == 0) {
+                                    GameHandler.getGui().display("There is no one to lead", "Black");
+                                    return;
+                                } else {
+                                    for (int i = 0; i < choises.length; i++) {
+                                        choises[i] = choises[i].replace("_", " ");
+                                    }
+                                    String selectedLead = (String) JOptionPane.showInputDialog(
+                                            null,
+                                            "Who do you want to lead?",
+                                            "Lead",
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,
+                                            choises,
+                                            choises[0]);
+                                    NPC npc = GameHandler.getNPCByName(selectedLead.replace(" ", "_"));
+                                    if (!selectedLead.equals("Nobody") && npc.getAge() < 5) {
+                                        if (npc.isFollower()) {
+                                            GameHandler.getGui().display("You stop leading " + selectedLead, "Black");
+                                            npc.follower = false;
+                                        } else {
+                                            GameHandler.getGui().display("You ask " + selectedLead + "to follow you. ", "Black");
+                                            NPC.followPlayer(GameHandler.getNPCByName(selectedLead.replace(" ", "_")));
+
+                                        }
+                                    } else {
+                                        notify();
+                                    }
+                                }
                             }
                             case "Pretend" -> {
-                                GameHandler.getGui().display("You pretend with the beaver", "Black");
-                                Player.getRoom().pretend();
-                            }
+                                if (Player.getQuests().contains(GameHandler.getQuest("Fetch Quest"))) {
+                                    GameHandler.getGui().display("You have already taken this quest", "Black");
+                                } else {
+                                    for(NPC npc : Player.room.getNPCs()){
+                                        GameHandler.giveQuestToPlayer(GameHandler.getQuest(npc.getQuest().getName()));
+                                        GameHandler.getGui().display("You have taken the "+npc.getQuest().getName(), "Black");
+                                        }
+                                    }
+
+                                    Player.displayQuests();
+                                }
+
+                            
                             case "Dance" -> {
-                                GameHandler.getGui().display("You dance with the beaver", "Black");
-                                GameHandler.getGui().display(Player.room.getDescription(), "Black");
+                                    Quest completedQuest = null;
+                                for (Quest quest : Player.getQuests()) {
+
+                                    if(quest.checkCompletion()){
+                                        GameHandler.getGui().display("You completed the "+quest.getName(), "Black");
+                                        completedQuest = quest;
+                                    } else {
+                                        GameHandler.getGui().display("You did not complete the quest", "Black");
+                                    }
+                                }
+                                GameHandler.getGui().display("removing quest", "Black");
+                                Player.removeQuest(completedQuest);
+                                Player.displayQuests();
+
                             }
+
                         }
                     } else {
                         notify();
@@ -496,7 +567,7 @@ public class GUI extends JFrame {
                                         choises[0]);
                                 if (selectedPrank != null) {
                                     GameHandler.getGui().display("You prank " + selectedPrank, "Black");
-                                    GameHandler.getNPCByName(selectedPrank).getPranked();
+                                    GameHandler.getNPCByName(selectedPrank.replace(" ", "_")).getPranked();
                                 } else {
                                     display("No one here to prank.", "Black");
                                     notify();
@@ -525,7 +596,7 @@ public class GUI extends JFrame {
                             }
                             case "Sabotage" -> {
                                 String[] choises = Player.room.getFurniture();
-                                if(choises.length == 0){
+                                if (choises.length == 0) {
                                     GameHandler.getGui().display("There is nothing to sabotage", "Black");
                                     return;
                                 }
@@ -537,16 +608,17 @@ public class GUI extends JFrame {
                                         null,
                                         choises,
                                         choises[0]);
-                                if (selectedSabotage != null) {
+                                Item item = GameHandler.getItemByName(selectedSabotage);
+                                if (item != null) {
                                     GameHandler.getGui().display("You sabotage something", "Black");
-                                    Player.getRoom().sabotage(selectedSabotage);
+                                    Player.getRoom().sabotage(item);
                                 } else {
                                     notify();
                                 }
                             }
                             case "Vandalize" -> {
                                 String[] choises = Player.room.getFurniture();
-                                if(choises.length == 0){
+                                if (choises.length == 0) {
                                     GameHandler.getGui().display("There is nothing to vandalize", "Black");
                                     return;
                                 }
@@ -558,9 +630,10 @@ public class GUI extends JFrame {
                                         null,
                                         choises,
                                         choises[0]);
-                                if (selectedVandalize != null) {
+                                Item item = GameHandler.getItemByName(selectedVandalize);
+                                if (item != null) {
                                     GameHandler.getGui().display("You vandalize something", "Black");
-                                    Player.getRoom().vandalize(selectedVandalize);
+                                    Player.getRoom().vandalize(item);
                                 } else {
                                     notify();
                                 }

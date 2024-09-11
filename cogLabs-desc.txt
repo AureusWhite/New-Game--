@@ -1,7 +1,0 @@
-<p>You step into a stark, minimalist room, eerily quiet save for the subtle hum of the lights above. The space is cold and clinical, designed with an almost unnerving simplicity. In the center, a single table stands like an island in a sea of emptiness. Atop the table sits an unremarkable box, nondescript and small. The box is sealed shut, its lid tightly fastened, though no lock is visible. Nothing adorns the room but this solitary object, and yet, it seems to command all attention.</p>
-
-<p>A sign on the door reads in bold letters: <strong>"Do not take the box."</strong></p>
-
-<p>Upon entering the room, you are prompted to affirm your compliance aloud: <em>"I will not take the box."</em></p>
-
-<h1>Items in this room</h1>

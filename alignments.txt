@@ -11,5 +11,9 @@
     <p>
         A Loyalist believes that extensive research must precede the widespread restoration of adult rights and privileges to rejuves. They argue that rights should be developmentally appropriate, matching the rejuve's chronological age rather than their mental recollections. Loyalists caution that the juxtaposition of mature thoughts within an immature brain presents unknown challenges and potential risks. For them, the focus should be on understanding the long-term implications of rejuvenation, ensuring that rejuves are not prematurely exposed to responsibilities and freedoms that their still-developing bodies and minds may not fully handle. Loyalists advocate for a cautious, science-driven approach that prioritizes the safety and well-being of rejuves and society as a whole.
     </p>
+
+    <h2>R.E.A.C.H</h2>
+    <p><strong>Motto:</strong> <em>Cooperation and understanding with respect to rights</em></p>
+    <p>TRejuve Equity and Advancement Coalition for Humanity is a moderate group making up the silent majority, they push for the resonable and responcilbe treatment of rejuves to maintain the dignity of the people undergoing the rejuve process. Their main goal is to keep the two opposing radical factions focused on achivable middle grounds realizing that the welfare of rejuves requires a delicate balance of policy, science and debate.</p>
 </body>
 </html>

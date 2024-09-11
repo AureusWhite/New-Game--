@@ -17,10 +17,6 @@ public class Character {
         this.room = room;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public Room getRoom() {
         return this.room;
     }

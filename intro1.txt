@@ -1,44 +1,69 @@
 <html lang="en">
-<head>
-    <style>
-        .ascii-art {
-            font-family: monospace;
-            white-space: pre;
-        }
-    </style>
-</head>
 <body>
-    <p><strong class="ascii-art">
-         .----------------. .----------------. .----------------. .----------------. <br>
-        | .--------------. | .--------------. | .--------------. | .--------------. |<br>
-        | |  _______     | | |      __      | | | _____  _____ | | |  _______     | |<br>
-        | | |_   __ \    | | |     /  \     | | ||_   _||_   _|| | | |_   __ \    | |<br>
-        | |   | |__) |   | | |    / /\ \    | | |  | | /\ | |  | | |   | |__) |   | |<br>
-        | |   |  __ /    | | |   / ____ \   | | |  | |/  \| |  | | |   |  __ /    | |<br>
-        | |  _| |  \ \_  | | | _/ /    \ \_ | | |  |   /\   |  | | |  _| |  \ \_  | |<br>
-        | | |____| |___| | | ||____|  |____|| | |  |__/  \__|  | | | |____| |___| | |<br>
-        | |              | | |              | | |              | | |              | |<br>
-        | '--------------' | '--------------' | '--------------' | '--------------' |<br>
-         '----------------' '----------------' '----------------' '----------------'<br>
-    </strong></p>
+    <pre class="ascii-art"><strong>
+                 .----------------. .----------------. .----------------. .----------------. 
+                | .--------------. | .--------------. | .--------------. | .--------------. |
+                | |  _______     | | |      __      | | | _____  _____ | | |  _______     | |
+                | | |_   __ \    | | |     /  \     | | ||_   _||_   _|| | | |_   __ \    | |
+                | |   | |__) |   | | |    / /\ \    | | |  | | /\ | |  | | |   | |__) |   | |
+                | |   |  __ /    | | |   / ____ \   | | |  | |/  \| |  | | |   |  __ /    | |
+                | |  _| |  \ \_  | | | _/ /    \ \_ | | |  |   /\   |  | | |  _| |  \ \_  | |
+                | | |____| |___| | | ||____|  |____|| | |  |__/  \__|  | | | |____| |___| | |
+                | |              | | |              | | |              | | |              | |
+                | '--------------' | '--------------' | '--------------' | '--------------' |
+                 '----------------' '----------------' '----------------' '----------------'
+    <h1>A Text Adventure Game by JackalFac:E Games</h1>
     
-    <h2>A text adventure game by JackalFac:E Games.</h2>
-    
-    <h3>Introduction and Prologue:</h3>
-    
+    <h2>Introduction and Prologue</h2>
     <p>
-        In a not-so-distant future, a groundbreaking technology was developed that could revert cells into stem cells, effectively 'rejuvenating' the body. This miraculous advancement, however, came at a significant cost—wars were waged, and many lives were lost in its pursuit.
+        In the not-so-distant future, humanity achieved a medical breakthrough: the ability to revert cells into stem cells, 
+        effectively rejuvenating the body. This miracle of science, however, came at a steep price. Early on, poorer nations 
+        and marginalized peoples rebelled against the notion of the wealthy buying their way to immortality, while the 
+        disadvantaged were left to suffer and die. Initially, the rejuvenation process was expensive and rare, but with global 
+        funding pouring in, a multinational effort was undertaken to complete the treatment within the lifetime of its very creators.
+    </p>
+    <p>
+        Researchers were among the first to test rejuvenation, ensuring that fresh young minds could continue to perfect the technology. 
+        Eventually, under the auspices of the <strong>United Nations of Earth (UNE)</strong>, the rejuvenation process became universally 
+        accessible and free for all. However, with functional immortality came unforeseen challenges.
+    </p>
+    <p>
+        The concept of prison as a punishment, which once subtracted precious years from one's finite lifespan, became obsolete. 
+        Incarceration no longer served as an effective deterrent in this new world. So, an unusual solution was devised: instead of 
+        imprisonment, criminals and 'undesirables' were regressed into children, shrinking in both size and stature, making them 
+        easier to manage. They became known as <strong>rejuves</strong>.
+    </p>
+    <p>
+        However, this method led to yet another crisis: overpopulation. The UNE’s response was to introduce a maturity-inhibiting mechanism 
+        in the rejuvenation process, halting physical growth until individuals could prove their readiness for adult responsibilities. 
+        As a result, the world saw very few naturally born children. Society found its lost youth in us—the rejuvenated.
+    </p>
+    <p>
+        But this system wasn’t without problems. The question of whether rejuves should be allowed to return to their adult lives 
+        stirred heated debates. While their adult memories remained, the rejuves’ physical immaturity often caused behavioral complications. 
+        Many mistakenly believed their retained adult memories gave them wisdom, but their emotional maturity often betrayed their youthful appearance.
     </p>
 
+    <h2>The Revolutionary Impact of Rejuvenation</h2>
     <p>
-        Ultimately, peace was restored through the United Nations of Earth's (UNE) ruling, which mandated that rejuvenation technology be made available to every person, free of charge. Yet, with this newfound functional immortality, society faced unforeseen challenges. The concept of prison, designed to subtract from a finite lifetime, lost its deterrent effect. With the ability to rejuvenate at will, incarceration became an obsolete punishment.
+        The introduction of rejuvenation marked a seismic shift in medical science, offering something no other advancement ever had: 
+        <strong>functional immortality</strong>. While people still died, it became a much rarer occurrence. The days of slow, inevitable 
+        aging were left behind, as rejuvenation therapy reverted each cell to its stem cell state, transforming old, diseased bodies 
+        into virtually new ones.
+    </p>
+    <p>
+        However, there was a significant drawback to this seemingly miraculous treatment. The rejuvenated cells were as young as the bodies 
+        they created, skipping the natural hormonal and epigenetic milestones that occur with age. The mind of a rejuve, while preserved to 
+        the best of the process’s abilities, had to adapt to a smaller body and compromised brain structure—particularly in the frontal lobes. 
+        Though explicit memories remained, much of the procedural knowledge (like motor skills and instinctual reactions) was lost. Rejuves 
+        initially found themselves as helpless as infants.
     </p>
 
+    <h2>The Need for Formal Structure</h2>
     <p>
-        A peculiar solution emerged: prisoners and other undesirables were reduced in size and 'cycled' back into childhood rather than being confined to jails. This approach made them easier to house and feed. However, overpopulation quickly became a pressing issue, requiring delicate management to avoid infringing on individual rights. As part of the UNE's ruling, the rejuvenation treatment included a mechanism to inhibit maturity until individuals proved themselves capable of living adult lives. One of the many consequences of this was a lack of naturally born children.
+        To address these developmental gaps, a formal structure was put in place to support rejuves, funded by wealthy elites eager to cheat death. 
+        Schools were established to help them regain skills, repurposing old developmental psychology frameworks to fit their unique needs.
     </p>
-
-    <h1>Society found its missing 'children' in us, the rejuvenated.</h1>
-
-    <p>
-        This led to yet another complex problem: the rights of the rejuvenated to resume their previous adult activities. When individuals regained their adult memories within immature brains, the results were mixed, to say the least. Initially, rejuvenated adults were allowed to continue
+    <h3>Press enter in the text field to continue</h3>
+</body>
+</html>
