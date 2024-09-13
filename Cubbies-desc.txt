@@ -1,0 +1,7 @@
+<div class="room-description">
+    <p>This circular room is thoughtfully designed with letterbox-style cubbies arranged around the perimeter. Each cubby features a small wooden shutter, adding a touch of charm and privacy. Above the cubbies, a sign reads, "Please do not open any cubby other than your own," ensuring that everyone respects each other’s space.</p>
+
+    <p>Directly above each cubby, there’s a designated coat hook for the rejuve to hang their outerwear. Additionally, a shoe box is placed beneath each coat hook, providing a convenient spot to store shoes. Since shoes are not worn inside, these boxes are almost always neatly organized and available for use.</p>
+
+    <p>The room’s circular layout and well-organized cubbies make it easy for rejuves to find their personal belongings while maintaining a clean and orderly environment. The thoughtful design ensures that everyone has a designated space for their items, contributing to a sense of personal ownership and responsibility.</p>
+</div>

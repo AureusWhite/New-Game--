@@ -1,0 +1,5 @@
+<div class="room-description">
+    <p>Day or night, this place never really quiets down. The constant commotion and steady hum of activity make it easy to blend in, as most people are too preoccupied to notice much beyond their tasks. Those who do notice you barely offer more than a nod as they rush past, busy with their work.</p>
+
+    <p>Something about the way other rejuves are bustling around gives you a hint—if you linger too long, you might just find yourself 'volentold' for dish duty. The floors squeak underfoot, and some areas are noticeably slippery, making you tread carefully. A few fruits are scattered on the prep tables, though the knives remain securely locked into their butcher blocks, requiring a key to access. Best not to stay unnoticed for too long here.</p>
+</div>

@@ -1,0 +1,5 @@
+<div class="room-description">
+    <p>The large veranda stretches around the entire front half of the house, enclosed by tall screened windows that let in the gentle breeze. The floor is lightly dusted with sand, carried in from the sensory play areas scattered outside. Along the walls, bench swings and small side tables invite you to sit and relax, all while surrounded by a beautiful forest motif. Trees are painted onto the pillars that hold up the awning and support the screen windows, making you feel like you're tucked away in a woodland retreat.</p>
+
+    <p>The door leading out is securely locked from the outside, meaning you can only enter the porch from the front yard. It’s a quiet, peaceful space—perfect for taking in the scenery or simply enjoying the fresh air.</p>
+</div>

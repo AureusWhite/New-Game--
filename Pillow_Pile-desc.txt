@@ -1,0 +1,5 @@
+<div class="room-description">
+    <p>The 'pillow pile' is exactly what it sounds like—an open, inviting space with a large screen TV hanging from the ceiling. Plushies and pillows are stacked neatly to one side, except for a few that have been recently used. The cozy chaos of soft cushions makes it a perfect spot for relaxing or playful lounging.</p>
+
+    <p>A sign hanging nearby gently reminds, "If play results in tears, it’s not play," discouraging excessive roughhousing. Beneath the TV, a game console and controllers sit on a small coffee table, surrounded by a few scattered books. These books are meant for entertainment, offering lighthearted reads rather than anything too serious.</p>
+</div>

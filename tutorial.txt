@@ -1,1 +1,73 @@
-tutorial :)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tutorial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        ul {
+            font-size: 1.2em;
+            margin-left: 20px;
+        }
+        strong {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Rejuvenation Care Home Tutorial</h1>
+
+    <p>This game is all about exploring your little side in a special fictional world, where amazing 'rejuvenation' technology lets people experience life as a child again. During your adventure, you will be staying in a cozy care home for two weeks. Don’t worry too much—it’s not a test you can fail! The staff will simply be checking on how you develop and how mature you seem.</p>
+
+    <p>But, if there are any hiccups along the way, like needing to work on certain skills, your stay might be extended by an extra week. So, take your time and enjoy everything there is to explore!</p>
+
+    <h2>What You Can Do</h2>
+
+    <p>During your stay, you will use the skills you learn to complete challenges, solve fun puzzles, take important tests, make new friends, and even lead other rejuves to achieve big goals together! Which goals you go after is completely up to you, so feel free to make your own choices.</p>
+
+    <h2>Easy Commands</h2>
+
+    <p>Below, you'll see some buttons that will help you do common actions in the game, making things easier to navigate. But if you'd prefer, you can always type commands into the text bar just below them. This text bar is also where you’ll enter things like your name and any special abilities you want to create for yourself!</p>
+
+    <h2>Exploring the World</h2>
+
+    <p>Make sure to explore each room at different times of the day! Depending on the time, new people might show up, different activities could be happening, and special events might unfold! The day is broken into three sections of the clock, each with its own colors:</p>
+
+    <ul>
+        <li><strong>Green:</strong> During green times, you can explore the green areas of the campus, like the outdoor spaces, the main room, dormitories, and all the hallways in between. Feel free to roam around and enjoy!</li>
+        <li><strong>Blue:</strong> During blue times, you can enter blue areas like classrooms and laboratories. This is when you’re encouraged to attend classes and practice your skills, which will help you graduate even faster (you’ll earn double experience points!).</li>
+        <li><strong>Red:</strong> During red times, you need to stay either in the main room or the dormitories. You can stay up if you like, but if you fall asleep, someone will take you back to your dorm and you’ll have to stay there until red time is over. No sneaking out!</li>
+    </ul>
+
+    <h2>Mischief and Misbehavior</h2>
+
+    <p>As fun as it is to explore, be careful not to get into trouble! If you enter off-limits areas or sneak into classrooms, laboratories, or offices when you’re not supposed to, you will be caught for <strong>trespassing</strong> and taken out of those places. You'll also get a warning!</p>
+
+    <p>Other things that might get you into trouble include:</p>
+
+    <ul>
+        <li>Littering</li>
+        <li>Swearing</li>
+        <li>Hitting or biting</li>
+        <li>Lying</li>
+        <li>And other not-so-nice behavior</li>
+    </ul>
+
+    <p>If you keep getting into trouble, you may lose certain privileges or even be assigned extra coursework in <strong>morality and ethics</strong> to help you learn from your mistakes. So, be mindful and try to behave—at least most of the time!</p>
+
+</body>
+</html>

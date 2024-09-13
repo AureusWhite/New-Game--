@@ -1,0 +1,5 @@
+<div class="room-description">
+    <p>Large steel racks meant for storing canned goods dominate the space, their shelves lined with an assortment of foods. Toward the back, dry bulk items are carefully stacked, while anything that might attract pests is placed higher up, out of reach. The dry, almost arid air stings your nose as you stand here, preserved by the room's climate control.</p>
+
+    <p>Above you, a harsh fluorescent light runs the length of the room, casting an oversaturated glow that makes the already plain space feel even more drab and utilitarian. There's nothing decorative or welcoming about this room—just shelves, food, and the quiet hum of the light. Are you here to grab something specific, or are you simply wandering?</p>
+</div>

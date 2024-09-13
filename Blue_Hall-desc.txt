@@ -1,0 +1,11 @@
+<div class="room-description">
+    <p>The Blue Hall serves as the administrative and academic heart of the facility, a corridor lined with essential rooms and offices, each designed for both function and comfort. The hall is painted in calming shades of blue, creating a serene and orderly atmosphere that complements its purpose.</p>
+
+    <p>Classrooms are neatly organized along one side of the hall. Each classroom is equipped with desks and chairs arranged for optimal learning, while bright, educational posters adorn the walls. The rooms are designed to be welcoming and conducive to study, featuring interactive whiteboards and ample natural light from large windows.</p>
+
+    <p>Opposite the classrooms are the administration offices, including the headmaster's office. The headmaster’s office is a distinguished space, furnished with a large desk, comfortable chairs, and bookshelves filled with academic and administrative resources. The decor is professional yet inviting, providing a space where important decisions are made and individual concerns are addressed.</p>
+
+    <p>The detention hall is situated further down the hall, designed to be a quiet and reflective space. The room features individual desks separated by partitions, allowing rejuves to focus on their tasks without distraction. The decor is subdued, with a focus on functionality and fostering a sense of responsibility.</p>
+
+    <p>Throughout the Blue Hall, clear signage helps guide visitors and rejuves to their destinations, ensuring that everyone can navigate the space with ease. The hall’s design emphasizes organization and accessibility, reflecting its role as a central hub for both academic and administrative functions.</p>
+</div>

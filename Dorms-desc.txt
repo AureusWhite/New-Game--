@@ -1,0 +1,9 @@
+<div class="room-description">
+    <p>The dorms are designed with comfort and practicality in mind, offering a cozy retreat for rejuves. Each dorm room features a series of neatly arranged beds, each equipped with soft, colorful bedding that adds a touch of warmth and cheer to the space. The walls are painted in soothing tones, with a mix of light colors that create a calm and relaxing atmosphere.</p>
+
+    <p>Alongside the beds, each room includes personal storage cubbies for keeping belongings organized. These cubbies are built into the walls, providing ample space for clothing, personal items, and school supplies. A small desk and chair are also provided, giving each rejuve a quiet spot to work on homework or engage in creative activities.</p>
+
+    <p>Windows in each dorm allow for natural light to brighten the rooms, and curtains can be drawn for privacy or to create a more restful environment. The flooring is practical and easy to clean, with soft rugs adding a touch of comfort underfoot. There are also small, colorful rugs placed around the beds to add a bit of extra coziness.</p>
+
+    <p>The dorms are well-ventilated, ensuring a fresh and pleasant environment. Each room is designed to be both functional and inviting, creating a space where rejuves can feel at home while they rest and recharge for the day ahead.</p>
+</div>

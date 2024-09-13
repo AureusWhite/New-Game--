@@ -187,6 +187,31 @@ public class GUI extends JFrame {
                         GameHandler.getGui().display("You talk to the " + selectedNPC + ".", "Black");
                         NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
                         GameHandler.getGui().display(npc.getDialog(), "Black");
+                        String[] options = {"Sarcastic", "Nice", "Mean", "Neutral"};
+                        int selectedOption = JOptionPane.showOptionDialog(null,
+                                "What do you want to say?",
+                                "Dialog",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                options,
+                                options[0]);
+                        switch (selectedOption) {
+                            case 0 -> {
+                                GameHandler.getGui().display(npc.getResponse("Sarcastic"), "Black");
+                            }
+                            case 1 -> {
+                                GameHandler.getGui().display(npc.getResponse("Nice"), "Black");
+                            }
+                            case 2 -> {
+                                GameHandler.getGui().display(npc.getResponse("Mean"), "Black");
+                            }
+                            case 3 -> {
+                                GameHandler.getGui().display(npc.getResponse("Neutral"), "Black");
+                            }
+                        }
+    
+
                     } else {
                         notify();
                     }

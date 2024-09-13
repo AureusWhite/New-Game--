@@ -1,0 +1,9 @@
+<div class="room-description">
+    <p>The cognition labs are designed with a vintage, mid-20th century aesthetic, reminiscent of the classic Stanford experiments. The room is lined with neat, clean walls and simple, functional furnishings. Each lab station is equipped with a sturdy table and a few chairs, all reflecting the minimalist style of the 1960s research environment.</p>
+
+    <p>In the center of the room, each station features a small table with a single item placed before the rejuves. These items, such as a marshmallow or a piece of candy, are used in various tests designed to measure impulse control and cognitive development. The simplicity of the setup is intentional, minimizing distractions and focusing attention on the task at hand.</p>
+
+    <p>The room’s atmosphere is calm and controlled, with soft lighting and muted colors creating a serene environment. Behind the glass walls, observers monitor the rejuves through a one-way mirror, recording reactions and behaviors with precision. The rooms are equipped with simple recording equipment reminiscent of the era, adding to the authentic feel of the space.</p>
+
+    <p>Each testing station is meticulously prepared to ensure consistency, with every detail from the placement of the items to the arrangement of the chairs following a precise protocol. The environment reflects the era’s dedication to scientific rigor and the pursuit of understanding human behavior, providing a space where rejuves can participate in experiments that continue to explore the boundaries of cognitive development.</p>
+</div>

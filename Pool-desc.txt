@@ -1,0 +1,5 @@
+<div class="room-description">
+    <p>You stand outside the fence surrounding the pool, noticing something different about this off-limits area compared to others. Cameras are positioned along the perimeter—ones that are actively being monitored. As you approach the fence, a voice crackles over the PA system. It’s Ms. Sagely, her tone firm but kind, "Little one, the pool is closed. If you want to get wet, you can always have a bath."</p>
+    
+    <p>The camera tracks your movements as you walk back and forth, following your every step. It's clear that someone is watching, ensuring that the pool stays off-limits for now.</p>
+</div>

@@ -1,0 +1,7 @@
+<div class="room-description">
+    <p>This section of the main room is designed as an interactive play area, featuring a variety of engaging structures and setups. Large house play structures dominate one side, allowing rejuves to immerse themselves in imaginative play. Nearby, a vibrant kitchen setup boasts colorful and functional plates and bowls, encouraging culinary creativity.</p>
+
+    <p>A grocery store setup adds a touch of realism with both actual and shelf-stable produce, including lemons for the stand out front and candy for those with a sweet tooth. The store accepts real money, and prices are clearly marked, making it an educational experience as well as a fun one.</p>
+
+    <p>In addition, there's a construction zone with a large manual crane that operates with hand-cranks. This crane is used to move large foam blocks, each equipped with a metal plate glued on. The blocks can be stacked to build structures, reaching nearly to the ceiling of the room. It’s a hands-on activity that allows for the creation of impressive skyscrapers and other towering constructions.</p>
+</div>

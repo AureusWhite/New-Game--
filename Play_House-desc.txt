@@ -1,0 +1,5 @@
+<div class="room-description">
+    <p>This cozy, renovated garden shed has been transformed into a charming storybook-style cabin in the woods. At one end sits a nonfunctional fireplace, complete with carefully stacked wood logs that add to the rustic feel. A large, inviting armchair rests nearby, perfect for sinking into with a good book. The kitchenette, though small, features a working sink and a few neatly arranged dishes, adding a touch of practicality to the space.</p>
+
+    <p>In the center of the room, a small table is set with a delicate tea set, surrounding a chess board with the pieces lined up perfectly in their starting positions. The whole place has an air of quaintness and care, noticeably cleaner and more closed-in than the nearby treehouse. It feels well-kept and peaceful, like a little hideaway where time slows down.</p>
+</div>
