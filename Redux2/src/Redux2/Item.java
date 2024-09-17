@@ -229,4 +229,55 @@ public class Item {
         }
     }
 
+    void setBuff(String buff) {
+        switch(buff){
+            case "Motor" -> {
+                Player.stats.put("Motor", Player.stats.get("Motor")+1);
+                GameHandler.getGui().display("You have increased your Motor skill by 1", "black");
+                GameHandler.getGui().display(String.valueOf(Player.stats.get("Motor")), "black");
+            }
+            case "Imagenation" -> {
+                Player.stats.put("Imagenation", Player.stats.get("Imagenation")+1);
+                GameHandler.getGui().display("You have increased your Imagenation skill by 1", "black");
+                GameHandler.getGui().display(String.valueOf(Player.stats.get("Imagenation")), "black");
+            }
+            case "Social" -> {
+                Player.stats.put("Social", Player.stats.get("Social")+1);
+                GameHandler.getGui().display("You have increased your Social skill by 1", "black");
+                GameHandler.getGui().display(String.valueOf(Player.stats.get("Social")), "black");
+            }
+            case "Emotional" -> {
+                Player.stats.put("Emotional", Player.stats.get("Emotional")+1);
+                GameHandler.getGui().display("You have increased your Emotional skill by 1", "black");
+                GameHandler.getGui().display(String.valueOf(Player.stats.get("Emotional")), "black");
+            }
+            case "Learning" -> {
+                Player.stats.put("Learning", Player.stats.get("Learning")+1);
+                GameHandler.getGui().display("You have increased your Learning skill by 1", "black");
+                GameHandler.getGui().display(String.valueOf(Player.stats.get("Learning")), "black");
+            }
+            case "Study Buddy" -> {
+                Player.perks.put("Study Buddy", true);
+                GameHandler.getGui().display("You have unlocked the Study Buddy perk", "black");
+            }
+            case "Tea Party Guest" -> {
+                Player.perks.put("Tea Party Guest", true);
+                GameHandler.getGui().display("You have unlocked the Tea Party Guest perk", "black");
+            }
+            case "Imagenary Friend" -> {
+                Player.perks.put("Imagenary Friend", true);
+                GameHandler.getGui().display("You have unlocked the Imagenary Friend perk", "black");
+            }
+            case "Dress Up" -> {
+                Player.perks.put("Dress Up", true);
+                GameHandler.getGui().display("You have unlocked the Dress Up perk", "black");
+            }
+            case "Soothing" -> {
+                Player.perks.put("Soothing", true);
+                GameHandler.getGui().display("You have unlocked the Soothing perk", "black");
+            }
+        }
+        
+    }
+
 }

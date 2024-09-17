@@ -1,5 +1,5 @@
-<div class="room-description">
+
     <p>The room is well-lit and cheerful, striking a balance between a classroom and a lounge. The desks are surprisingly comfortable, each equipped with a data pad embedded into the wooden surface. A thick protective layer covers the screens, but you can still interact with the touch displays easily. It’s a modern setup designed for both comfort and functionality.</p>
 
     <p>Rather than assigning school books to each rejuve, there’s a shared pool of books that remain here for everyone to use. Signs posted around the room remind you, "Please check out any books before you leave." Near the door, you'll find a data kiosk where books are scanned in and out, ensuring everyone has access when they need it.</p>
-</div>
+

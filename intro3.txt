@@ -1,15 +1,3 @@
-<html lang="en">
-
-<head>
-    <style>
-        .ascii-art {
-            font-family: monospace;
-            white-space: pre;
-        }
-    </style>
-</head>
-<body>
-
     <h1>Mary is a Rejuve</h1>
 
     <p>
@@ -80,5 +68,3 @@
         Mary learned that it’s okay to be scared sometimes. It’s okay to take out your feelings, even if you need to hit something like Fuzzy. But it’s also important to keep trying, eat a good meal, and get a good night’s sleep. Tomorrow is a new day, and who knows what fun adventures await?
     </p>
     <h3>Press enter in the text field to continue</h3>
-</body>
-</html>

@@ -1,7 +1,7 @@
-<div class="room-description">
+
     <p>The deck is an exclusive area designated for staff use, providing a comfortable and separate space away from the rejuves. It features a mix of seating arrangements including lounge chairs and small tables, creating an ideal setting for staff to unwind or have informal meetings.</p>
 
     <p>On one side of the deck, there is a designated smoking area, marked clearly to ensure that it remains separate from the rest of the deck. This area is equipped with ashtrays and is designed to be well-ventilated, minimizing smoke exposure to other parts of the deck.</p>
 
     <p>The deck offers a view of the surrounding grounds, providing a pleasant and relaxed atmosphere. It’s designed to be a serene spot for staff to take breaks, with ample space and comfortable seating that encourages relaxation and socializing. The overall ambiance is one of calm and separation from the activity of the rejuves' areas, ensuring that staff have a designated retreat of their own.</p>
-</div>
+

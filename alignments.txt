@@ -1,5 +1,4 @@
-<html lang="en">
-<body>
+
     <h2>Rebel:</h2>
     <p><strong>Motto:</strong> <em>Rights first, Science and Policy after.</em></p>
     <p>
@@ -15,5 +14,3 @@
     <h2>R.E.A.C.H</h2>
     <p><strong>Motto:</strong> <em>Cooperation and understanding with respect to rights</em></p>
     <p>TRejuve Equity and Advancement Coalition for Humanity is a moderate group making up the silent majority, they push for the resonable and responcilbe treatment of rejuves to maintain the dignity of the people undergoing the rejuve process. Their main goal is to keep the two opposing radical factions focused on achivable middle grounds realizing that the welfare of rejuves requires a delicate balance of policy, science and debate.</p>
-</body>
-</html>

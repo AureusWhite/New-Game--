@@ -2,6 +2,7 @@ package Redux2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Player {
 
@@ -16,6 +17,8 @@ public class Player {
     public static ArrayList<Consumable> consumables = new ArrayList<>();
     public static HashMap<String, Equipment> equipment = new HashMap<>();
     public static ArrayList<Quest> quests = new ArrayList<>();
+    public static HashMap<String, Integer> stats = new HashMap<>();
+    public static HashMap<String, Boolean> perks = new HashMap<>();
     private static boolean abilitiesSet;
     private static boolean ageSet;
     private static boolean alignmentSet;
@@ -28,6 +31,9 @@ public class Player {
     private static int hunger = 100;
     private static int energy;
     private static String status;
+    private static String[] pronouns;
+    private static String[] favorites;
+
 
     public static void setEnergy(int energy) {
         Player.energy = energy;
@@ -90,6 +96,8 @@ public class Player {
             ageSet = true;
         }
         GameHandler.getGui().display("You are " + age + " years old.", "Black");
+        setUpStats();
+        setStats(age);
     }
 
     public static void equip(Equipment equipment1, String slot) {
@@ -165,6 +173,7 @@ public class Player {
     public static void setEquipment(HashMap<String, Equipment> equipment1) {
         equipment = equipment1;
     }
+
     public static void setHunger(int hunger1) {
         hunger = hunger1;
     }
@@ -192,6 +201,7 @@ public class Player {
     public static void setLearning(String learning1) {
         learning = learning1;
     }
+
     public static void setEmotional(String emotional1) {
         emotional = emotional1;
     }
@@ -355,10 +365,11 @@ public class Player {
     public static String getStatus() {
         return status;
     }
+
     static void setLeader(boolean b) {
-        leader=b;
+        leader = b;
     }
-    private static boolean leader=true;
+    private static boolean leader = true;
 
     static void addXP(int reward) {
         experience += reward;
@@ -382,6 +393,172 @@ public class Player {
         quests.remove(aThis);
     }
 
+    static void setPronouns() {
+        GameHandler.getGui().display("Please enter your subjective pronoun choose any you like (he/she/they/other)", "Black");
+        GameHandler.getGui().waitForInput();
+        String subjective = GameHandler.getGui().getInput();
+        GameHandler.getGui().getJTextField().setText("");
+        GameHandler.getGui().display("Please enter your objective pronoun choose any you like (him/her/them/other)", "Black");
+        GameHandler.getGui().waitForInput();
+        String objective = GameHandler.getGui().getInput();
+        GameHandler.getGui().getJTextField().setText("");
+        GameHandler.getGui().display("Please enter your possessive pronoun choose any you like (his/her/their/other)", "Black");
+        GameHandler.getGui().waitForInput();
+        String possessive = GameHandler.getGui().getInput();
+        GameHandler.getGui().getJTextField().setText("");
+        GameHandler.getGui().display("Please enter your prefered reference phrase if any (Young Lady, Young Man, Young one, Youngin, Little one. etc)", "Black");
+        GameHandler.getGui().waitForInput();
+        String reference = GameHandler.getGui().getInput();
+        GameHandler.getGui().getJTextField().setText("");
+        Player.pronouns = new String[]{subjective, objective, possessive, reference};
+        GameHandler.getGui().display("Your pronouns are: " + subjective + ", " + objective + ", " + possessive + ", " + reference, "Black");
+    }
+    private static void setStats(int age) {
+        int totalStats = 0;
+
+        do {
+            for (int i = 0; i < 5; i++) {
+                Random random = new Random();
+                switch (i) {
+                    case 0 -> {
+                        int tempStat = random.nextInt(age+3)+3;
+                        stats.put("Social", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 1 -> {
+                        int tempStat = random.nextInt(age+3)+3;
+                        stats.put("Motor", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 2 -> {
+                        int tempStat = random.nextInt(age+3)+3;
+                        stats.put("Imagenation", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 3 -> {
+                        int tempStat = random.nextInt(age+3)+3;
+                        stats.put("Learning", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 4 -> {
+                        int tempStat = random.nextInt(age)+3;
+                        stats.put("Emotional", tempStat);
+                        totalStats += tempStat;
+                    }
+                    default -> { 
+                    } 
+                }
+
+            }
+        } while (totalStats <= age * 4 && totalStats>=age*2);
+        GameHandler.getGui().display("Your stats are: " + stats.get("Social") + ", " + stats.get("Motor") + ", " + stats.get("Imagenation") + ", " + stats.get("Learning") + ", " + stats.get("Emotional"), "Black");
+    }
+
+
+    private static void setUpStats() {
+        for (int i = 0; i < 5; i++) {
+            stats.put("Social", 0);
+            stats.put("Motor", 0);
+            stats.put("Imagenation", 0);
+            stats.put("Learning", 0);
+            stats.put("Emotional", 0);
+        }
+    }
+    public static void setUpPerks() {
+        perks.put("Social", false);
+        perks.put("Motor", false);
+        perks.put("Imagenation", false);
+        perks.put("Learning", false);
+        perks.put("Emotional", false);
+    }
+    public static boolean playerHasPerk(String perk) {
+        return perks.get(perk);
+    }
+    public static void addPerk(String perk) {
+        perks.put(perk, false);
+    }
+    public static void removePerk(String perk) {
+        perks.remove(perk);
+    }
+    public static void setPerk(String perk) {
+        perks.put(perk, true);
+    }
+    public static void removeXP(int reward) {
+        experience -= reward;
+    }
+    public static void addMoney(int reward) {
+        money += reward;
+    }
+    public static void removeMoney(int reward) {
+        money -= reward;
+    }
+    public static void addResilience(int reward) {
+        resilience += reward;
+    }
+    public static void removeResilience(int reward) {
+        resilience -= reward;
+    }
+    public static void addHunger(int reward) {
+        hunger += reward;
+    }
+    public static void removeHunger(int reward) {
+        hunger -= reward;
+    }
+    public static void addThirst(int reward) {
+        thirst += reward;
+    }
+    public static void removeThirst(int reward) {
+        thirst -= reward;
+    }
+    public static void addEnergy(int reward) {
+        energy += reward;
+    }
+    public static void removeEnergy(int reward) {
+        energy -= reward;
+    }
+    public static void addSocial(int reward) {
+        stats.put("Social", stats.get("Social") + reward);
+    }
+    public static void removeSocial(int reward) {
+        stats.put("Social", stats.get("Social") - reward);
+    }
+    public static void addMotor(int reward) {
+        stats.put("Motor", stats.get("Motor") + reward);
+    }
+    public static void removeMotor(int reward) {
+        stats.put("Motor", stats.get("Motor") - reward);
+    }
+    public static void addImagenation(int reward) {
+        stats.put("Imagenation", stats.get("Imagenation") + reward);
+    }
+    public static void removeImagenation(int reward) {
+        stats.put("Imagenation", stats.get("Imagenation") - reward);
+    }
+    public static void addLearning(int reward) {
+        stats.put("Learning", stats.get("Learning") + reward);
+    }
+    public static void removeLearning(int reward) {
+        stats.put("Learning", stats.get("Learning") - reward);
+    }
+    public static void addEmotional(int reward) {
+        stats.put("Emotional", stats.get("Emotional") + reward);
+    }
+    public static void removeEmotional(int reward) {
+        stats.put("Emotional", stats.get("Emotional") - reward);
+    }
+    public static void addPronouns(String[] pronouns1) {
+        pronouns = pronouns1;
+    }
+    public static String[] getPronouns() {
+        return pronouns;
+    }
+    public static void setFavorites(String[] favorites1) {
+        favorites = favorites1;
+    }
+    public static String[] getFavorites() {
+        return favorites;
+    }
+    
     public Player(String name, String discription, Room room) {
 
     }
@@ -437,7 +614,7 @@ public class Player {
     }
 
     public static void sneak() {
-        if(motor == null){
+        if (motor == null) {
             GameHandler.getGui().display("You can't sneak.", "Black");
             return;
         }
@@ -488,8 +665,14 @@ public class Player {
         }
         return null;
     }
+
     public static boolean isLeader() {
         return leader;
+    }
+
+    public static void setFavorites(String color, String food, String toy, String game, String book, String subject, String activity) {
+        favorites = new String[]{color, food, toy, game, book, subject, activity};
+
     }
 
 }

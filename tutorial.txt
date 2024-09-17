@@ -1,34 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Tutorial</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        p {
-            font-size: 1.2em;
-            line-height: 1.6;
-        }
-        ul {
-            font-size: 1.2em;
-            margin-left: 20px;
-        }
-        strong {
-            color: #2980b9;
-        }
-    </style>
-</head>
-<body>
-
     <h1>Welcome to the Rejuvenation Care Home Tutorial</h1>
 
     <p>This game is all about exploring your little side in a special fictional world, where amazing 'rejuvenation' technology lets people experience life as a child again. During your adventure, you will be staying in a cozy care home for two weeks. Don’t worry too much—it’s not a test you can fail! The staff will simply be checking on how you develop and how mature you seem.</p>
@@ -68,6 +37,3 @@
     </ul>
 
     <p>If you keep getting into trouble, you may lose certain privileges or even be assigned extra coursework in <strong>morality and ethics</strong> to help you learn from your mistakes. So, be mindful and try to behave—at least most of the time!</p>
-
-</body>
-</html>

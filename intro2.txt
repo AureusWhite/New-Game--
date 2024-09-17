@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Introduction and Prologue - Part 2</title>
-</head>
-<body>
     <h2>Rejuvenation Schools and Existing Structures</h2>
     <p>
         Schools designed to accommodate rejuves emerged, initially within the laboratories of developmental psychology. The tests and procedures 
@@ -46,5 +38,3 @@
         you don't want to spoil it by remembering too quickly.
     </p>
     <h3>Press enter in the text field to continue</h3>
-</body>
-</html>

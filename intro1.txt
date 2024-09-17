@@ -1,5 +1,3 @@
-<html lang="en">
-<body>
     <pre class="ascii-art"><strong>
                  .----------------. .----------------. .----------------. .----------------. 
                 | .--------------. | .--------------. | .--------------. | .--------------. |
@@ -65,5 +63,3 @@
         Schools were established to help them regain skills, repurposing old developmental psychology frameworks to fit their unique needs.
     </p>
     <h3>Press enter in the text field to continue</h3>
-</body>
-</html>

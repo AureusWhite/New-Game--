@@ -1,5 +1,4 @@
-<div class="room-description">
+
     <p>This 'room' isn’t exactly a room in the traditional sense, but rather a long hall that branches off into several distinct sections. The front area features themed spaces like the storybook village, a homework zone, and a quiet corner for those looking to relax. As you walk further down, the atmosphere begins to change.</p>
 
     <p>Beyond the quieter zones, a narrower stretch of soundproof barriers separates the more rambunctious parts of the hall. The sounds grow louder as you continue, eventually blending into a general clamor. The hall finally opens up into the lively pillow pile area, with cubbies neatly lined up, marking the transition from the Green Hall dorms.</p>
-</div>

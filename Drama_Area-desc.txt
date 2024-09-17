@@ -1,5 +1,5 @@
-<div class="room-description">
+
     <p>Set back in the noisier section of the main room, a small stage awaits performance and play. The stage is equipped with a puppet crate, providing an opportunity for creative puppet shows. There’s also a modest wench system designed for dramatic moments, though it only lifts a rejuve a few inches off the stage for added effect.</p>
 
     <p>The audience area is designed for fun and engagement, featuring plastic fruit for throwing at the stage during particularly corny performances. These playful elements often come into play when the sillier personalities take to the stage, adding a humorous and interactive twist to the performances.</p>
-</div>
+

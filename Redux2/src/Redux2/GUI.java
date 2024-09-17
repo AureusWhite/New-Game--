@@ -154,7 +154,6 @@ public class GUI extends JFrame {
                                 npc.setRoom(Player.getRoom());
                             }
                         }
-                        GameHandler.getGui().display(Player.getRoom().getDescription(), "Black");
                         Player.getRoom().update();
                     } else {
                         notify();

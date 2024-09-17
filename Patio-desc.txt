@@ -1,5 +1,5 @@
-<div class="room-description">
+
     <p>A flagstone patio extends from the corner of the house, furnished for both rejuves and adults. Scattered around are various seating options, alongside a few details that hint at mixed-use, like an unused ashtray and a fire pit poker resting beside the fire pit that centers the patio. The area feels lived-in, yet thoughtfully arranged.</p>
 
     <p>Yard toys are carefully placed on racks and secured against the wind with bungee cords. Among them are large plastic tricycles, a skateboard, and other wheeled toys, though the uneven flagstone surface makes riding them here less than ideal. It’s a space that invites both relaxation and a bit of outdoor play, even if the stone beneath your feet isn’t the smoothest for wheels.</p>
-</div>
+

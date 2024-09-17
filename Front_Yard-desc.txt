@@ -1,5 +1,4 @@
-<div class="room-description">
+
     <p>The front yard offers a view of the home from the public side, bursting with bright colors and whimsical charm that clearly mark it as a rejuve residence. The whimsical decor contrasts with the practical fences designed to keep unauthorized visitors off the campus. The lawn is neatly manicured, contributing to the inviting appearance of the property.</p>
 
     <p>As people stroll by, some wave and exchange cheerful chatter. Others stop by the front-facing lemonade stand, which serves both as a play area and a means of generating income. Selling lemonade is part of the fun—and a reminder that sometimes, even the most charming setups have their practical side. You’ve got to make it through, after all.</p>
-</div>

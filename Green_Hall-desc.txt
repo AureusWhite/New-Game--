@@ -1,5 +1,5 @@
-<div class="room-description">
+
     <p>The hallway is inviting and straightforward, with all doors featuring pull-style handles and no locks. The majority of doors have a green tint or color, creating a uniform and calming atmosphere. However, the door at the end of the hall stands out with its blue hue and push-style handle, and it may be locked depending on the time of day.</p>
 
     <p>To the right, you'll find doors leading to the Toilets, Diaper Changing Rooms, Dorms, and the Nurse's Office. On the left, doors open to the Main Room, Foyer, and Cafeteria. Each door is clearly labeled and pictographed, ensuring easy navigation and helping everyone find their way without getting lost.</p>
-</div>
+

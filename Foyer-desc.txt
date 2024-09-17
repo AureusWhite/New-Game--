@@ -1,5 +1,5 @@
-<div class="room-description">
+
     <p>This large room features vaulted ceilings, creating an open and inviting space that serves as the central thoroughfare of the facility. From here, you can access various rooms, including the kitchen, main hall, backyard, and more. It’s essentially the hub of activity, making it easy to navigate to other areas or end up here by chance.</p>
 
     <p>A receptionist or research student is always stationed at the desk, ensuring there’s someone available around the clock to assist with directions or inquiries. Despite the clear signage on the doors, the bustling nature of this central space means that getting lost is as likely as finding your way here. Additionally, a color-coded map of the facility hangs on the side wall to the right of the steps, providing a handy reference to help you find your way.</p>
-</div>
+

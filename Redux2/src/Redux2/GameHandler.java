@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 public class GameHandler {
 
     private static final Map<String, Room> rooms = new HashMap<>();
@@ -208,6 +210,8 @@ public class GameHandler {
     private Item toy;
     public Room cogLabs;
     private Item trash;
+    private String[] toyBuffs = {"Social","Motor","Imagenation","Learning","Emotional"};
+    private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I wrestle with it"};
 
     public GameHandler(GUI gui1, Game game1) {
         game = game1;
@@ -580,10 +584,97 @@ public class GameHandler {
     }
     private void setCharacterBio() {
         explainCharacterBio();
-        Player.setName(getGui().getInput());
-        Player.setAge(getGui().getInput());
+        dialogWithFuzzy();
+        
+        
     }
+    private void dialogWithFuzzy() {
+        getGui().display("Fuzzy: What is your name?", "Black");
+        getGui().waitForInput();
+        Player.setName(getGui().getInput());
+        getGui().display("Fuzzy: How old are you?", "Black");
+        getGui().waitForInput();
+        Player.setAge(getGui().getInput());
 
+
+        getGui().display("Fuzzy: What is your favorite color?", "Black");
+        getGui().waitForInput();
+        String color = getGui().getInput();
+        getGui().display("Fuzzy: What is your favorite toy?", "Black");
+        getGui().waitForInput();
+        String toy1 = getGui().getInput();
+        Item playersToy = new Item(color+" "+toy1, "A "+color+" "+toy1+" ", "Toy", false);
+        items.put(color+" "+toy1, playersToy);
+        playersToy.setType("Toy");
+        Player.addItem(playersToy);
+        getGui().display("Fuzzy: What does your "+color+" "+toy1+" do? ", "Black");
+        String toyFuction = (String) JOptionPane.showInputDialog(null,
+        "Choose an exit",
+        "Exits",
+        JOptionPane.QUESTION_MESSAGE,
+        null, toyBuffs, toyBuffs[0]);
+        if(toyFuction.equalsIgnoreCase("Motor")){
+            playersToy.setBuff("Motor");
+        }else if(toyFuction.equalsIgnoreCase("Social")){
+            playersToy.setBuff("Social");
+        }else if(toyFuction.equalsIgnoreCase("Emotional")){
+            playersToy.setBuff("Emotional");
+        }else if(toyFuction.equalsIgnoreCase("Imagenation")){
+            playersToy.setBuff("Imagenation");
+        }else if(toyFuction.equalsIgnoreCase("Learning")){
+            playersToy.setBuff("Learning");
+        }        
+        getGui().display(playersToy.getName()+" "+playersToy.getDescription(), "Black");
+
+        getGui().display("What is your favorite animal?", "Black");
+        getGui().waitForInput();
+        String animal = getGui().getInput();
+        getGui().display(animal, color);
+        Item stuffy = new Item(animal, "A "+color+" "+animal+" stuffy", "Toy", true);
+        items.put(animal, stuffy);
+        stuffy.setType("Toy");
+        Player.addItem(stuffy);
+        getGui().display("Fuzzy: What does your "+color+" "+animal+" do? ", "Black");
+        String stuffyFuction = (String) JOptionPane.showInputDialog(null,
+        "Choose an exit",
+        "Exits",
+        JOptionPane.QUESTION_MESSAGE,
+        null, stuffyBuffs, stuffyBuffs[0]);
+        if(stuffyFuction.equalsIgnoreCase("Calms me down")){
+            stuffy.setBuff("Soothing");
+        }else if(stuffyFuction.equalsIgnoreCase("Helps me play pretend")){
+            stuffy.setBuff("Imagenary Friend");
+        }else if(stuffyFuction.equalsIgnoreCase("Helps me make friends")){
+            stuffy.setBuff("Tea Party Guest");
+        }else if(stuffyFuction.equalsIgnoreCase("Keeps me focused")){
+            stuffy.setBuff("Study Buddy");
+        }else if(stuffyFuction.equalsIgnoreCase("I dress it")){
+            stuffy.setBuff("Dress Up");
+        }
+        getGui().display(stuffy.getName()+" "+stuffy.getDescription(), "Black");
+        getGui().display("Fuzzy: What is your favorite food?", "Black");
+        getGui().waitForInput();
+        String food = getGui().getInput();
+        getGui().display("Fuzzy: What is your favorite game?", "Black");
+        getGui().waitForInput();
+        String game1 = getGui().getInput();
+        getGui().display("Fuzzy: What is your favorite book?", "Black");
+        getGui().waitForInput();
+        String book = getGui().getInput();
+        getGui().display("Fuzzy: What is your favorite subject?", "Black");
+        getGui().waitForInput();
+        String subject = getGui().getInput();
+        getGui().display("Fuzzy: What is your favorite activity?", "Black");
+        getGui().waitForInput();
+        String activity = getGui().getInput();
+        getGui().display(color+" "+food+" "+toy1+" "+game1+" "+book+" "+subject+" "+activity, "Black");
+        Player.setFavorites(color, food, toy1, game1, book, subject, activity);
+        getGui().display("Fuzzy: Do you have perfered pronouns?", "Black");
+        Player.setPronouns();
+
+
+        
+    }
     private void explainCharacterBio() {
         readFile("characterBio");
     }

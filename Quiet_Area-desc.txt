@@ -1,5 +1,5 @@
-<div class="room-description">
+
     <p>The walls here are covered with soundproofing that would make the room eerily silent, if not for the soft pink noise humming from the vents. That barely perceptible sound fills the space, creating a soothing background. The walls are painted a light, flat purple, while the rugs and bedding introduce contrasting colors—nothing that clashes, though. It’s a cozy, peaceful space, and you can feel a calm wash over you as soon as you enter. Maybe it’s the perfect place for a nap?</p>
     
     <p>In one corner, a few soft toys, coloring supplies, and books are neatly arranged, inviting quiet activities. The room clearly encourages relaxation and winding down. It would feel almost like a shame to disturb the tranquility by making any loud noises or causing a ruckus here.</p>
-</div>
+
