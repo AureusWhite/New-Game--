@@ -90,6 +90,7 @@ public class NPC extends Character {
         return this.playerRep;
     }
 
+    @Override
     public void setRoom(Room room) {
         room.addNPC(this);
         this.room = room;
@@ -128,6 +129,7 @@ public class NPC extends Character {
     public void setPlayerRep(String playerRep) {
         this.playerRep = playerRep;
     }
+
     public boolean isLoyalist() {
         return faction;
     }
@@ -147,9 +149,11 @@ public class NPC extends Character {
     public void setAlignment(String string) {
         this.alignment = string;
     }
+
     public String getAlignment() {
         return alignment;
     }
+
     public void update() {
         String blargh = getPlayerRep();
         switch (blargh) {
@@ -165,8 +169,102 @@ public class NPC extends Character {
     public boolean isFollower() {
         return follower;
     }
+
+    public Quest getQuest() {
+        return quest;
+    }
+
+    public String getResponse(String responce) {
+        switch (responce) {
+            case "Sarcastic" -> {
+                switch (this.getName()) {
+                    case "Ms Sagely" -> {
+                        this.adjustPlayerRep(2, -2, 2, -2);
+                        return "Ms Sagely: Young one, please do not be sarcastic with me, I have seen this behaviour before and it never ends well";
+                    }
+                    case "Dawn" -> {
+                        this.adjustPlayerRep(-1, 1, 2, -2);
+                        return "Dawn: Haha, very funny. I invented the bratty child act, you can't fool me";
+                    }
+                    case "Dr_White" -> {
+                        this.adjustPlayerRep(1, -1, 1, -1);
+                        return "Dr White: 'humm' I see *Writes in notebook*";
+                    }
+                    case "Susy" -> {
+                        this.adjustPlayerRep(2, -1, 1, -2);
+                        return "Susy: Why would you say that?";
+                    }
+                    case "Aang" -> {
+                        this.adjustPlayerRep(1, -1, 1, -1);
+                        return "Aang: *Adjust his spectacles* I am very familiar with the rhetorical technique of sarcasm. Your attempt is lackluster at best";
+                    }
+                    case "Taliber" -> {
+                        this.adjustPlayerRep(-1, 1, 2, -2);
+                        return "Taliber: *Rolls eyes*";
+                    }
+                    case "Aureus" -> {
+                        this.adjustPlayerRep(2, -1, 1, -2);
+                        return "Aureus: *laughs loudly and claps* \"Nice one, I like you\"";
+                    }
+                    case "Reaserch_Student M" -> {
+                        this.adjustPlayerRep(-1, 1, 2, -2);
+                        return "*Writes in notebook*";
+                    }
+                    case "Reaserch_Student F" -> {
+                        this.adjustPlayerRep(1, -1, -2, 2);
+                        return "*Writes in notebook*";
+                    }
+                    case "Casidy" -> {
+                        return "Casidy: Whoa, I don't want any trouble from you. I am just trying to get by";
+                    }
+                    case "Farah" -> {
+                        return "Farah: You what? Listen that attitude is not going to get you anywhere";
+                    }
+                    case "Danelle" -> {
+                        return "Danelle: *Rolls eyes* seen it before kid, no one likes a smart ass";
+                    }
+                    case "Timmy" -> {
+                        return "*Cries* You are a meanie";
+                    }
+                    case "Mrs_White" -> {
+                        return "Mrs White: Have you spoken to my husband about that, I am sure he would love to hear all about it from you, I am sure you won't mind doing a few tests while you're in his office filing a complaint?";
+                    }
+                    default ->
+                        throw new AssertionError();
+                }
+            }
+            case "Nice" -> {
+                return "Thank you";
+
+            }
+            case "Mean" -> {
+                return "You are a jerk";
+            }
+            case "Neutral" -> {
+                return "I am not sure how to respond to that";
+            }
+        }
+        return "I am not sure how to respond to that";
+    }
+
+    public boolean isFaction() {
+        return faction;
+    }
+
+    public Map<Integer, Double> getpRep() {
+        return pRep;
+    }
+
+    public void setFollower(boolean follower) {
+        this.follower = follower;
+    }
+
     int getAge() {
         return this.npcAge;
+    }
+
+    void setQuest(Quest quest1) {
+        this.quest = quest1;
     }
 
     private void tattle(String act) {
@@ -364,104 +462,24 @@ public class NPC extends Character {
         this.dialog = string;
     }
 
-    public Quest getQuest() {
-        return quest;
-    }
-
-    void setQuest(Quest quest1) {
-        this.quest = quest1;
-    }
-
-    public String getResponse(String responce) {
-        switch(responce){
-            case "Sarcastic" -> {
-                switch (this.getName()) {
-                    case "Ms Sagely" -> {
-                        this.adjustPlayerRep(2,-2,2,-2);
-                        return "Ms Sagely: Young one, please do not be sarcastic with me, I have seen this behaviour before and it never ends well";
-                }
-                    case "Dawn" -> {
-                        this.adjustPlayerRep(-1,1,2,-2);
-                        return "Dawn: Haha, very funny. I invented the bratty child act, you can't fool me";
-                }
-                    case "Dr_White" -> {
-                        this.adjustPlayerRep(1,-1,1,-1);
-                        return "Dr White: 'humm' I see *Writes in notebook*";
-                }
-                    case "Susy" -> {
-                        this.adjustPlayerRep(2,-1,1,-2);
-                        return "Susy: Why would you say that?";
-                }
-                    case "Aang" -> {
-                        this.adjustPlayerRep(1,-1,1,-1);
-                        return "Aang: *Adjust his spectacles* I am very familiar with the rhetorical technique of sarcasm. Your attempt is lack luster at best";
-                }
-                    case "Taliber" -> {
-                        this.adjustPlayerRep(-1,1,2,-2);
-                        return "Taliber: *Rolls eyes*";
-                }
-                    case "Aureus" -> {
-                        this.adjustPlayerRep(2,-1,1,-2);
-                        return "Aureus: *laughs loudly and claps* \"Nice one, I like you\"";
-                }
-                    case "Reaserch_Student M" -> {
-                        this.adjustPlayerRep(-1,1,2,-2);
-                        return "*Writes in notebook*";
-                }
-                    case "Reaserch_Student F" -> {
-                        this.adjustPlayerRep(1,-1,-2,2);
-                        return "*Writes in notebook*";
-                }
-                    case "Casidy" -> {
-                        return "Casidy: Whoa, I don't want any trouble from you. I am just trying to get by";
-                }
-                    case "Farah" -> {
-                        return "Farah: You what? Listen that attitude is not going to get you anywhere";
-                }
-                    case "Danelle" -> {
-                        return "Danelle: *Rolls eyes* seen it before kid, no one likes a smart ass";
-                }
-                    case "Timmy" -> {
-                        return "*Cries* You are a meanie";
-                }
-                    case "Mrs_White" -> {
-                        return "Mrs White: Have you spoken to my husband about that, I am sure he would love to hear all about it from you, I am sure you won't mind doing a few tests while you're in his office filing a complaint?";
-                }
-                    default -> throw new AssertionError();
-                }
-            }
-            case "Nice" -> {
-                return "Thank you";
-
-            }
-            case "Mean" -> {
-                return "You are a jerk";
-            }
-            case "Neutral" -> {
-                return "I am not sure how to respond to that";
-            }
-        }
-        return "I am not sure how to respond to that";
-    }
-
     private void adjustPlayerRep(int i, int i0, int i1, int i2) {
         for (Map.Entry<Integer, Double> entry : this.pRep.entrySet()) {
             int key = entry.getKey();
             double value = entry.getValue();
             if (key == 0) {
-                value += i*1.25;
+                value += i * 1.25;
             }
             if (key == 1) {
-                 
-                value += i0*1.25;
+
+                value += i0 * 1.25;
             }
             if (key == 2) {
-                 
-                value += i1*1.25;
+
+                value += i1 * 1.25;
             }
             if (key == 3) {
-                 
-                value += i2*1.25;
+
+                value += i2 * 1.25;
             }
             this.pRep.put(key, value);
         }

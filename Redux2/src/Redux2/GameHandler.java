@@ -33,10 +33,7 @@ public class GameHandler {
     public static GUI getGui() {
         return gui;
     }
-    static void giveQuestToPlayer(Quest quest){
-        Quest quest1 = quests.get(quests.indexOf(quest));
-        Player.addQuest(quest1);
-    }
+
     public static void updateStatus() {
         getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + GameHandler.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
     }
@@ -109,6 +106,61 @@ public class GameHandler {
         }
     }
 
+    public static Quest getQuest(String questName) {
+        for (Quest quest : quests) {
+            if (quest.getName().equalsIgnoreCase(questName)) {
+                return quest;
+            }
+        }
+        return null;
+    }
+
+    public static Quest getQuestByName(String string) {
+        for (Quest quest : quests) {
+            if (quest.getName().equalsIgnoreCase(string)) {
+                return quest;
+            }
+        }
+        return null;
+    }
+
+    public static Map<String, Room> getRooms() {
+        return rooms;
+    }
+
+    public static Map<String, NPC> getNpcs() {
+        return npcs;
+    }
+
+    public static Map<String, Item> getItems() {
+        return items;
+    }
+
+    public static ArrayList<Quest> getQuests() {
+        return quests;
+    }
+
+    public static void setClock(Clock clock) {
+        GameHandler.clock = clock;
+    }
+
+    public static void setRoom(Room room) {
+        GameHandler.room = room;
+    }
+
+    public static void setGui(GUI gui) {
+        GameHandler.gui = gui;
+    }
+
+    public static void setGame(Game game) {
+        GameHandler.game = game;
+    }
+
+    static void giveQuestToPlayer(Quest quest) {
+        Quest quest1 = quests.get(quests.indexOf(quest));
+        Player.addQuest(quest1);
+    }
+
     static NPC getNPCByName(String person) {
         return npcs.get(person);
     }
@@ -137,22 +189,35 @@ public class GameHandler {
         } else {
             try {
                 file.createNewFile();
-                        FileWriter fw = new FileWriter(fileName);
-                        try (BufferedWriter bw = new BufferedWriter(fw)) {
-                            bw.write("<html> <h1><center><Strong>"+room.getName()+"</h1></center></Stong><p style=\"font-size: 16;\">"+room.getDescription()+"</font><h2> Room Details </h2>"+room.getType()+"<br><br><Strong> Items in room</Strong><br>"+room.listItems()+"<br><Strong>People in room</Strong><br>"+room.listPeople()+"<br><br></html>");
-                        }
+                FileWriter fw = new FileWriter(fileName);
+                try (BufferedWriter bw = new BufferedWriter(fw)) {
+                    bw.write("<html> <h1><center><Strong>" + room.getName() + "</h1></center></Stong><p style=\"font-size: 16;\">" + room.getDescription() + "</font><h2> Room Details </h2>" + room.getType() + "<br><br><Strong> Items in room</Strong><br>" + room.listItems() + "<br><Strong>People in room</Strong><br>" + room.listPeople() + "<br><br></html>");
+                }
             } catch (IOException e) {
                 GameHandler.getGui().display("Error reading file.", "Red");
             }
         }
         return null;
     }
-    
+
     static Clock getClock() {
         if (clock == null) {
             clock = new Clock(game);
         }
         return clock;
+    }
+
+    static void createQuests() {
+        Quest fetchQuest = new Quest("Fetch Quest", "Fetch the item from the room", new Item[]{getItemByName("Toy")}, 10, 10, "Fetch", getItemByName("Toy"), getNPCByName("Ms_Sagely"), getRoomByName("Foyer"));
+        quests.add(fetchQuest);
+        fetchQuest.setType("fetch");
+        Quest escortQuest = new Quest("Escort Quest", "Escort the NPC to the room", new Item[]{getItemByName("Toy")}, 10, 10, "Escort", getItemByName("Toy"), getNPCByName("Dawn"), getRoomByName("Foyer"));
+        quests.add(escortQuest);
+        escortQuest.setType("escort");
+        Quest tidyUp = new Quest("Tidy Up", "Clean up the room", new Item[]{getItemByName("Toy")}, 10, 10, "Clean", getItemByName("Toy"), getNPCByName("Ms_Sagely"), getRoomByName("Foyer"));
+        quests.add(tidyUp);
+        tidyUp.setType("tidyUp");
+        npcs.get("Ms_Sagely").setQuest(tidyUp);
     }
     Item diaper;
     private Container box;
@@ -175,28 +240,35 @@ public class GameHandler {
     public Room patio;
     public Room deck;
     public Room porch;
+
     public Room balcony;
+
     public Room cubbies;
     public Room dramaArea;
     public Room changingRoom;
+
     public Room floorPlay;
     public Room quietArea;
     public Room homeWorkArea;
     public Room playHouse;
     public Room treeHouse;
+
     public Room storyBookVillage;
+
     public Room pillowPile;
 
     public Room snackArea;
 
     public Room greenHall;
+
     public Room blueHall;
     public Room redHall;
-
     public Room peddleToys;
     public Room lemonaidStand;
     public Room toolShed;
+
     public Room TRSRoom;
+
     public Room janitorialRoom;
 
     public Room foyer;
@@ -208,10 +280,14 @@ public class GameHandler {
     private Equipment trainingPants;
 
     private Item toy;
+
     public Room cogLabs;
+
     private Item trash;
-    private String[] toyBuffs = {"Social","Motor","Imagenation","Learning","Emotional"};
-    private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I wrestle with it"};
+
+    private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
+
+    private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
 
     public GameHandler(GUI gui1, Game game1) {
         game = game1;
@@ -229,7 +305,7 @@ public class GameHandler {
         npcs.put("Ms_Sagely", mssagely);
         NPC dawn = new NPC("Dawn", "An ERE student who is eager to learn.", foyer, "child");
         npcs.put("Dawn", dawn);
-        
+
     }
 
     public void moveItem(Item item, Room room) {
@@ -561,6 +637,406 @@ public class GameHandler {
 
     }
 
+    public Item getDiaper() {
+        return diaper;
+    }
+
+    public void setDiaper(Item diaper) {
+        this.diaper = diaper;
+    }
+
+    public Container getBox() {
+        return box;
+    }
+
+    public void setBox(Container box) {
+        this.box = box;
+    }
+
+    public Room getRecoveryRoom() {
+        return recoveryRoom;
+    }
+
+    public void setRecoveryRoom(Room recoveryRoom) {
+        this.recoveryRoom = recoveryRoom;
+    }
+
+    public Room getKitchen() {
+        return kitchen;
+    }
+
+    public void setKitchen(Room kitchen) {
+        this.kitchen = kitchen;
+    }
+
+    public Room getMainRoom() {
+        return mainRoom;
+    }
+
+    public void setMainRoom(Room mainRoom) {
+        this.mainRoom = mainRoom;
+    }
+
+    public Room getDorms() {
+        return dorms;
+    }
+
+    public void setDorms(Room dorms) {
+        this.dorms = dorms;
+    }
+
+    public Room getBathroom() {
+        return bathroom;
+    }
+
+    public void setBathroom(Room bathroom) {
+        this.bathroom = bathroom;
+    }
+
+    public Room getHallway() {
+        return hallway;
+    }
+
+    public void setHallway(Room hallway) {
+        this.hallway = hallway;
+    }
+
+    public Room getStairs() {
+        return stairs;
+    }
+
+    public void setStairs(Room stairs) {
+        this.stairs = stairs;
+    }
+
+    public Room getBasement() {
+        return basement;
+    }
+
+    public void setBasement(Room basement) {
+        this.basement = basement;
+    }
+
+    public Room getAttic() {
+        return attic;
+    }
+
+    public void setAttic(Room attic) {
+        this.attic = attic;
+    }
+
+    public Room getGarage() {
+        return garage;
+    }
+
+    public void setGarage(Room garage) {
+        this.garage = garage;
+    }
+
+    public Room getGarden() {
+        return garden;
+    }
+
+    public void setGarden(Room garden) {
+        this.garden = garden;
+    }
+
+    public Room getDriveway() {
+        return driveway;
+    }
+
+    public void setDriveway(Room driveway) {
+        this.driveway = driveway;
+    }
+
+    public Room getFrontYard() {
+        return frontYard;
+    }
+
+    public void setFrontYard(Room frontYard) {
+        this.frontYard = frontYard;
+    }
+
+    public Room getBackYard() {
+        return backYard;
+    }
+
+    public void setBackYard(Room backYard) {
+        this.backYard = backYard;
+    }
+
+    public Room getShed() {
+        return shed;
+    }
+
+    public void setShed(Room shed) {
+        this.shed = shed;
+    }
+
+    public Room getPool() {
+        return pool;
+    }
+
+    public void setPool(Room pool) {
+        this.pool = pool;
+    }
+
+    public Room getPatio() {
+        return patio;
+    }
+
+    public void setPatio(Room patio) {
+        this.patio = patio;
+    }
+
+    public Room getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Room deck) {
+        this.deck = deck;
+    }
+
+    public Room getPorch() {
+        return porch;
+    }
+
+    public void setPorch(Room porch) {
+        this.porch = porch;
+    }
+
+    public Room getBalcony() {
+        return balcony;
+    }
+
+    public void setBalcony(Room balcony) {
+        this.balcony = balcony;
+    }
+
+    public Room getCubbies() {
+        return cubbies;
+    }
+
+    public void setCubbies(Room cubbies) {
+        this.cubbies = cubbies;
+    }
+
+    public Room getDramaArea() {
+        return dramaArea;
+    }
+
+    public void setDramaArea(Room dramaArea) {
+        this.dramaArea = dramaArea;
+    }
+
+    public Room getChangingRoom() {
+        return changingRoom;
+    }
+
+    public void setChangingRoom(Room changingRoom) {
+        this.changingRoom = changingRoom;
+    }
+
+    public Room getFloorPlay() {
+        return floorPlay;
+    }
+
+    public void setFloorPlay(Room floorPlay) {
+        this.floorPlay = floorPlay;
+    }
+
+    public Room getQuietArea() {
+        return quietArea;
+    }
+
+    public void setQuietArea(Room quietArea) {
+        this.quietArea = quietArea;
+    }
+
+    public Room getHomeWorkArea() {
+        return homeWorkArea;
+    }
+
+    public void setHomeWorkArea(Room homeWorkArea) {
+        this.homeWorkArea = homeWorkArea;
+    }
+
+    public Room getPlayHouse() {
+        return playHouse;
+    }
+
+    public void setPlayHouse(Room playHouse) {
+        this.playHouse = playHouse;
+    }
+
+    public Room getTreeHouse() {
+        return treeHouse;
+    }
+
+    public void setTreeHouse(Room treeHouse) {
+        this.treeHouse = treeHouse;
+    }
+
+    public Room getStoryBookVillage() {
+        return storyBookVillage;
+    }
+
+    public void setStoryBookVillage(Room storyBookVillage) {
+        this.storyBookVillage = storyBookVillage;
+    }
+
+    public Room getPillowPile() {
+        return pillowPile;
+    }
+
+    public void setPillowPile(Room pillowPile) {
+        this.pillowPile = pillowPile;
+    }
+
+    public Room getSnackArea() {
+        return snackArea;
+    }
+
+    public void setSnackArea(Room snackArea) {
+        this.snackArea = snackArea;
+    }
+
+    public Room getGreenHall() {
+        return greenHall;
+    }
+
+    public void setGreenHall(Room greenHall) {
+        this.greenHall = greenHall;
+    }
+
+    public Room getBlueHall() {
+        return blueHall;
+    }
+
+    public void setBlueHall(Room blueHall) {
+        this.blueHall = blueHall;
+    }
+
+    public Room getRedHall() {
+        return redHall;
+    }
+
+    public void setRedHall(Room redHall) {
+        this.redHall = redHall;
+    }
+
+    public Room getPeddleToys() {
+        return peddleToys;
+    }
+
+    public void setPeddleToys(Room peddleToys) {
+        this.peddleToys = peddleToys;
+    }
+
+    public Room getLemonaidStand() {
+        return lemonaidStand;
+    }
+
+    public void setLemonaidStand(Room lemonaidStand) {
+        this.lemonaidStand = lemonaidStand;
+    }
+
+    public Room getToolShed() {
+        return toolShed;
+    }
+
+    public void setToolShed(Room toolShed) {
+        this.toolShed = toolShed;
+    }
+
+    public Room getTRSRoom() {
+        return TRSRoom;
+    }
+
+    public void setTRSRoom(Room tRSRoom) {
+        TRSRoom = tRSRoom;
+    }
+
+    public Room getJanitorialRoom() {
+        return janitorialRoom;
+    }
+
+    public void setJanitorialRoom(Room janitorialRoom) {
+        this.janitorialRoom = janitorialRoom;
+    }
+
+    public Room getFoyer() {
+        return foyer;
+    }
+
+    public void setFoyer(Room foyer) {
+        this.foyer = foyer;
+    }
+
+    public Room getPantry() {
+        return pantry;
+    }
+
+    public void setPantry(Room pantry) {
+        this.pantry = pantry;
+    }
+
+    public Room getRoof() {
+        return roof;
+    }
+
+    public void setRoof(Room roof) {
+        this.roof = roof;
+    }
+
+    public Equipment getTrainingPants() {
+        return trainingPants;
+    }
+
+    public void setTrainingPants(Equipment trainingPants) {
+        this.trainingPants = trainingPants;
+    }
+
+    public Item getToy() {
+        return toy;
+    }
+
+    public void setToy(Item toy) {
+        this.toy = toy;
+    }
+
+    public Room getCogLabs() {
+        return cogLabs;
+    }
+
+    public void setCogLabs(Room cogLabs) {
+        this.cogLabs = cogLabs;
+    }
+
+    public Item getTrash() {
+        return trash;
+    }
+
+    public void setTrash(Item trash) {
+        this.trash = trash;
+    }
+
+    public String[] getToyBuffs() {
+        return toyBuffs;
+    }
+
+    public void setToyBuffs(String[] toyBuffs) {
+        this.toyBuffs = toyBuffs;
+    }
+
+    public String[] getStuffyBuffs() {
+        return stuffyBuffs;
+    }
+
+    public void setStuffyBuffs(String[] stuffyBuffs) {
+        this.stuffyBuffs = stuffyBuffs;
+    }
+
     private void setCharacterAlignment() {
         getGui().display("Choose your alignment: Rebel or Loyalist.", "Black");
         readFile("alignments");
@@ -574,20 +1050,13 @@ public class GameHandler {
             readFile("loyalistChapter2");
         }
     }
-    public static Quest getQuest(String questName){
-        for(Quest quest: quests){
-            if(quest.getName().equalsIgnoreCase(questName)){
-                return quest;
-            }
-        }
-        return null;
-    }
+
     private void setCharacterBio() {
         explainCharacterBio();
         dialogWithFuzzy();
-        
-        
+
     }
+
     private void dialogWithFuzzy() {
         getGui().display("Fuzzy: What is your name?", "Black");
         getGui().waitForInput();
@@ -596,62 +1065,61 @@ public class GameHandler {
         getGui().waitForInput();
         Player.setAge(getGui().getInput());
 
-
         getGui().display("Fuzzy: What is your favorite color?", "Black");
         getGui().waitForInput();
         String color = getGui().getInput();
         getGui().display("Fuzzy: What is your favorite toy?", "Black");
         getGui().waitForInput();
         String toy1 = getGui().getInput();
-        Item playersToy = new Item(color+" "+toy1, "A "+color+" "+toy1+" ", "Toy", false);
-        items.put(color+" "+toy1, playersToy);
+        Item playersToy = new Item(color + " " + toy1, "A " + color + " " + toy1 + " ", "Toy", false);
+        items.put(color + " " + toy1, playersToy);
         playersToy.setType("Toy");
         Player.addItem(playersToy);
-        getGui().display("Fuzzy: What does your "+color+" "+toy1+" do? ", "Black");
+        getGui().display("Fuzzy: What does your " + color + " " + toy1 + " do? ", "Black");
         String toyFuction = (String) JOptionPane.showInputDialog(null,
-        "Choose an exit",
-        "Exits",
-        JOptionPane.QUESTION_MESSAGE,
-        null, toyBuffs, toyBuffs[0]);
-        if(toyFuction.equalsIgnoreCase("Motor")){
+                "Choose an exit",
+                "Exits",
+                JOptionPane.QUESTION_MESSAGE,
+                null, toyBuffs, toyBuffs[0]);
+        if (toyFuction.equalsIgnoreCase("Motor")) {
             playersToy.setBuff("Motor");
-        }else if(toyFuction.equalsIgnoreCase("Social")){
+        } else if (toyFuction.equalsIgnoreCase("Social")) {
             playersToy.setBuff("Social");
-        }else if(toyFuction.equalsIgnoreCase("Emotional")){
+        } else if (toyFuction.equalsIgnoreCase("Emotional")) {
             playersToy.setBuff("Emotional");
-        }else if(toyFuction.equalsIgnoreCase("Imagenation")){
+        } else if (toyFuction.equalsIgnoreCase("Imagenation")) {
             playersToy.setBuff("Imagenation");
-        }else if(toyFuction.equalsIgnoreCase("Learning")){
+        } else if (toyFuction.equalsIgnoreCase("Learning")) {
             playersToy.setBuff("Learning");
-        }        
-        getGui().display(playersToy.getName()+" "+playersToy.getDescription(), "Black");
+        }
+        getGui().display(playersToy.getName() + " " + playersToy.getDescription(), "Black");
 
         getGui().display("What is your favorite animal?", "Black");
         getGui().waitForInput();
         String animal = getGui().getInput();
         getGui().display(animal, color);
-        Item stuffy = new Item(animal, "A "+color+" "+animal+" stuffy", "Toy", true);
+        Item stuffy = new Item(animal, "A " + color + " " + animal + " stuffy", "Toy", true);
         items.put(animal, stuffy);
         stuffy.setType("Toy");
         Player.addItem(stuffy);
-        getGui().display("Fuzzy: What does your "+color+" "+animal+" do? ", "Black");
+        getGui().display("Fuzzy: What does your " + color + " " + animal + " do? ", "Black");
         String stuffyFuction = (String) JOptionPane.showInputDialog(null,
-        "Choose an exit",
-        "Exits",
-        JOptionPane.QUESTION_MESSAGE,
-        null, stuffyBuffs, stuffyBuffs[0]);
-        if(stuffyFuction.equalsIgnoreCase("Calms me down")){
+                "Choose an exit",
+                "Exits",
+                JOptionPane.QUESTION_MESSAGE,
+                null, stuffyBuffs, stuffyBuffs[0]);
+        if (stuffyFuction.equalsIgnoreCase("Calms me down")) {
             stuffy.setBuff("Soothing");
-        }else if(stuffyFuction.equalsIgnoreCase("Helps me play pretend")){
+        } else if (stuffyFuction.equalsIgnoreCase("Helps me play pretend")) {
             stuffy.setBuff("Imagenary Friend");
-        }else if(stuffyFuction.equalsIgnoreCase("Helps me make friends")){
+        } else if (stuffyFuction.equalsIgnoreCase("Helps me make friends")) {
             stuffy.setBuff("Tea Party Guest");
-        }else if(stuffyFuction.equalsIgnoreCase("Keeps me focused")){
+        } else if (stuffyFuction.equalsIgnoreCase("Keeps me focused")) {
             stuffy.setBuff("Study Buddy");
-        }else if(stuffyFuction.equalsIgnoreCase("I dress it")){
+        } else if (stuffyFuction.equalsIgnoreCase("I dress it")) {
             stuffy.setBuff("Dress Up");
         }
-        getGui().display(stuffy.getName()+" "+stuffy.getDescription(), "Black");
+        getGui().display(stuffy.getName() + " " + stuffy.getDescription(), "Black");
         getGui().display("Fuzzy: What is your favorite food?", "Black");
         getGui().waitForInput();
         String food = getGui().getInput();
@@ -667,14 +1135,13 @@ public class GameHandler {
         getGui().display("Fuzzy: What is your favorite activity?", "Black");
         getGui().waitForInput();
         String activity = getGui().getInput();
-        getGui().display(color+" "+food+" "+toy1+" "+game1+" "+book+" "+subject+" "+activity, "Black");
+        getGui().display(color + " " + food + " " + toy1 + " " + game1 + " " + book + " " + subject + " " + activity, "Black");
         Player.setFavorites(color, food, toy1, game1, book, subject, activity);
         getGui().display("Fuzzy: Do you have perfered pronouns?", "Black");
         Player.setPronouns();
 
-
-        
     }
+
     private void explainCharacterBio() {
         readFile("characterBio");
     }
@@ -729,26 +1196,5 @@ public class GameHandler {
 
     private void setCharacterAbilities() {
         Player.setCharacterAbilities();
-    }
-    static void createQuests(){
-        Quest fetchQuest = new Quest("Fetch Quest", "Fetch the item from the room", new Item[]{getItemByName("Toy")}, 10, 10, "Fetch", getItemByName("Toy"), getNPCByName("Ms_Sagely"), getRoomByName("Foyer"));
-        quests.add(fetchQuest);
-        fetchQuest.setType("fetch");
-        Quest escortQuest = new Quest("Escort Quest", "Escort the NPC to the room", new Item[]{getItemByName("Toy")}, 10, 10, "Escort", getItemByName("Toy"), getNPCByName("Dawn"), getRoomByName("Foyer"));
-        quests.add(escortQuest);
-        escortQuest.setType("escort");
-        Quest tidyUp = new Quest("Tidy Up", "Clean up the room", new Item[]{getItemByName("Toy")}, 10, 10, "Clean", getItemByName("Toy"), getNPCByName("Ms_Sagely"), getRoomByName("Foyer"));
-        quests.add(tidyUp);
-        tidyUp.setType("tidyUp");
-        npcs.get("Ms_Sagely").setQuest(tidyUp);
-    }
-
-    public static Quest getQuestByName(String string) {
-        for (Quest quest : quests) {
-            if (quest.getName().equalsIgnoreCase(string)) {
-                return quest;
-            }
-        }
-        return null;
     }
 }

@@ -262,6 +262,7 @@ public class Room {
     public void lead() {
         GameHandler.getGui().display("You led", "Black");
     }
+
     public void play(String selectedToy) {
         GameHandler.getGui().display("You played with " + selectedToy, "Black");
     }
@@ -405,11 +406,10 @@ public class Room {
     }
 
     public void update() {
-}
-    
+    }
 
     void setUpdated(boolean b) {
-        GameHandler.getGui().display("Room updated to "+this.updated+" ", "Black");
+        GameHandler.getGui().display("Room updated to " + this.updated + " ", "Black");
         this.updated = b;
     }
 
@@ -423,5 +423,17 @@ public class Room {
 
     String getType() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ArrayList<NPC> getNpcs() {
+        return npcs;
+    }
+
+    public void setNpcs(ArrayList<NPC> npcs) {
+        this.npcs = npcs;
+    }
+
+    public boolean isUpdated() {
+        return updated;
     }
 }

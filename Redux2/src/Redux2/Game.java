@@ -1,15 +1,33 @@
 package Redux2;
+
 public class Game {
 
     private static GUI gui;
     public static boolean running;
+
+    public static GUI getGui() {
+        return gui;
+    }
+
+    public static boolean isRunning() {
+        return running;
+    }
+
+    public static void setRunning(boolean b) {
+        Game.running = b;
+    }
+
+    public static void setGui(GUI gui) {
+        Game.gui = gui;
+    }
+
     private GameHandler gameHandler;
+
+    public Game() {
+    }
 
     public GameHandler getGameHandler() {
         return gameHandler;
-    }
-
-    public Game() {
     }
 
     public void start(GameHandler gameHandler2) {
@@ -18,10 +36,6 @@ public class Game {
         gameHandler.setUpNPCs();
         beginGame(gameHandler);
 
-    }
-
-    public static GUI getGui() {
-        return gui;
     }
 
     public void beginGame(GameHandler gamehandler) {
@@ -35,11 +49,7 @@ public class Game {
         gamehandler.endGame();
     }
 
-    public static boolean isRunning() {
-        return running;
-    }
-
-    public static void setRunning(boolean b) {
-        Game.running = b;
+    public void setGameHandler(GameHandler gameHandler) {
+        this.gameHandler = gameHandler;
     }
 }

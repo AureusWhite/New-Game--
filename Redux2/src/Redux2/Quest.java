@@ -1,6 +1,5 @@
 package Redux2;
 
-
 public class Quest {
 
     private String name;
@@ -14,7 +13,7 @@ public class Quest {
     private NPC requiredEscort;
     private Room requiredRoom;
 
-    public Quest(String name, String description, Item[] itemReward, int moneyReward, int expReward, String type, Item requiredItem, NPC requiredEscort,Room requiredRoom) {
+    public Quest(String name, String description, Item[] itemReward, int moneyReward, int expReward, String type, Item requiredItem, NPC requiredEscort, Room requiredRoom) {
         this.name = name;
         this.description = description;
         this.itemReward = itemReward;
@@ -106,11 +105,12 @@ public class Quest {
     public void setRequiredRoom(Room requiredRoom) {
         this.requiredRoom = requiredRoom;
     }
-    public boolean checkCompletion(){
+
+    public boolean checkCompletion() {
         GameHandler.getGui().display("Checking completion", this.getName());
-        switch(this.type){
+        switch (this.type) {
             case "fetch" -> {
-                if(Player.hasItem(this.requiredItem)){
+                if (Player.hasItem(this.requiredItem)) {
                     this.completed = true;
                     GameHandler.getGui().display("You did the thing", this.getName());
                     Player.removeItem(requiredItem);
@@ -120,8 +120,8 @@ public class Quest {
                 break;
             }
             case "escort" -> {
-                if(requiredEscort.getRoom() == requiredRoom){
-                    GameHandler.getGui().display(requiredEscort.getName()+" is in "+requiredRoom.getName(), "black");
+                if (requiredEscort.getRoom() == requiredRoom) {
+                    GameHandler.getGui().display(requiredEscort.getName() + " is in " + requiredRoom.getName(), "black");
                     this.completed = true;
                     GameHandler.getGui().display("You did the thing", this.getName());
                 } else {
@@ -130,14 +130,14 @@ public class Quest {
                 break;
             }
             case "tidyUp" -> {
-                GameHandler.getGui().display("Checking for"+this.requiredItem.getName(),"black");
-                if(!requiredRoom.getInventory().contains(this.requiredItem)){
+                GameHandler.getGui().display("Checking for" + this.requiredItem.getName(), "black");
+                if (!requiredRoom.getInventory().contains(this.requiredItem)) {
                     this.completed = true;
                     GameHandler.getGui().display("You did the thing", this.getName());
-                    GameHandler.getGui().display("You found a "+this.requiredItem, "black");
+                    GameHandler.getGui().display("You found a " + this.requiredItem, "black");
                 } else {
                     GameHandler.getGui().display("You did not do the thing", "black");
-                  
+
                 }
                 break;
 

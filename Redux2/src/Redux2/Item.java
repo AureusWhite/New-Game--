@@ -1,4 +1,5 @@
 package Redux2;
+
 import java.util.ArrayList;
 
 public class Item {
@@ -13,7 +14,25 @@ public class Item {
     private boolean droppable;
     private String slot;
     private boolean contraband;
-    private boolean updated=false;
+    private boolean updated = false;
+
+    public Item(String name, String description, String type, boolean takable) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.takable = takable;
+        this.contraband = false;
+        this.droppable = true;
+        this.type = type;
+        this.locked = false;
+        this.broken = false;
+        this.items = new ArrayList<>();
+    }
+
+    public Item(String name, String discription) {
+        this.name = name;
+        this.description = discription;
+    }
 
     public boolean isBroken() {
         return broken;
@@ -29,19 +48,6 @@ public class Item {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
-    }
-
-    public Item(String name, String description, String type, boolean takable) {
-        this.name = name;
-        this.description = description;
-        this.type = type;
-        this.takable = takable;
-        this.contraband = false;
-        this.droppable = true;
-        this.type = type;
-        this.locked = false;
-        this.broken = false;
-        this.items = new ArrayList<>();
     }
 
     public ArrayList<Item> getItems() {
@@ -66,11 +72,6 @@ public class Item {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Item(String name, String discription) {
-        this.name = name;
-        this.description = discription;
     }
 
     public void use() {
@@ -121,9 +122,11 @@ public class Item {
     public Item getItemByIndex(int index) {
         return this.items.get(index);
     }
+
     public void setContraband(boolean b) {
         this.contraband = b;
     }
+
     public void displayAllItems() {
         for (Item item : this.items) {
             System.out.println(item.getName());
@@ -220,7 +223,7 @@ public class Item {
     }
 
     public void update() {
-        if(!updated){
+        if (!updated) {
             GameHandler.getGui().display("You updated the " + this.name, "black");
             updated = true;
         } else {
@@ -229,30 +232,46 @@ public class Item {
         }
     }
 
+    public String getSlot() {
+        return slot;
+    }
+
+    public void setSlot(String slot) {
+        this.slot = slot;
+    }
+
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
+
     void setBuff(String buff) {
-        switch(buff){
+        switch (buff) {
             case "Motor" -> {
-                Player.stats.put("Motor", Player.stats.get("Motor")+1);
+                Player.stats.put("Motor", Player.stats.get("Motor") + 1);
                 GameHandler.getGui().display("You have increased your Motor skill by 1", "black");
                 GameHandler.getGui().display(String.valueOf(Player.stats.get("Motor")), "black");
             }
             case "Imagenation" -> {
-                Player.stats.put("Imagenation", Player.stats.get("Imagenation")+1);
+                Player.stats.put("Imagenation", Player.stats.get("Imagenation") + 1);
                 GameHandler.getGui().display("You have increased your Imagenation skill by 1", "black");
                 GameHandler.getGui().display(String.valueOf(Player.stats.get("Imagenation")), "black");
             }
             case "Social" -> {
-                Player.stats.put("Social", Player.stats.get("Social")+1);
+                Player.stats.put("Social", Player.stats.get("Social") + 1);
                 GameHandler.getGui().display("You have increased your Social skill by 1", "black");
                 GameHandler.getGui().display(String.valueOf(Player.stats.get("Social")), "black");
             }
             case "Emotional" -> {
-                Player.stats.put("Emotional", Player.stats.get("Emotional")+1);
+                Player.stats.put("Emotional", Player.stats.get("Emotional") + 1);
                 GameHandler.getGui().display("You have increased your Emotional skill by 1", "black");
                 GameHandler.getGui().display(String.valueOf(Player.stats.get("Emotional")), "black");
             }
             case "Learning" -> {
-                Player.stats.put("Learning", Player.stats.get("Learning")+1);
+                Player.stats.put("Learning", Player.stats.get("Learning") + 1);
                 GameHandler.getGui().display("You have increased your Learning skill by 1", "black");
                 GameHandler.getGui().display(String.valueOf(Player.stats.get("Learning")), "black");
             }
@@ -277,7 +296,7 @@ public class Item {
                 GameHandler.getGui().display("You have unlocked the Soothing perk", "black");
             }
         }
-        
+
     }
 
 }

@@ -1,4 +1,5 @@
 package Redux2;
+
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
@@ -11,14 +12,29 @@ import javax.swing.text.html.HTMLEditorKit;
 public class GUI extends JFrame {
 
     private static JTextField jTextField;
+
+    public static JTextField getJTextField() {
+        return jTextField;
+    }
+
+    public static JTextField getjTextField() {
+        return jTextField;
+    }
+
+    public static void setjTextField(JTextField jTextField) {
+        GUI.jTextField = jTextField;
+    }
     private final JTextPane jTextPane;
     private JPanel statsPanel;
     private final JPanel inputPanel;
     private final JPanel btnPanel;
     private final JLabel statsLabel;
     private final Color periwinkle = new Color(204, 204, 255);
+
     private Color lightBlue;
+
     private Color lightPink;
+
     private final JButton takeButton, moveButton, dialogButton, learnButton, inventoryButton, carebutton, socializeButton, mischiefButton;
 
     public GUI() {
@@ -209,7 +225,6 @@ public class GUI extends JFrame {
                                 GameHandler.getGui().display(npc.getResponse("Neutral"), "Black");
                             }
                         }
-    
 
                     } else {
                         notify();
@@ -487,22 +502,21 @@ public class GUI extends JFrame {
                                 if (Player.getQuests().contains(GameHandler.getQuest("Fetch Quest"))) {
                                     GameHandler.getGui().display("You have already taken this quest", "Black");
                                 } else {
-                                    for(NPC npc : Player.room.getNPCs()){
+                                    for (NPC npc : Player.room.getNPCs()) {
                                         GameHandler.giveQuestToPlayer(GameHandler.getQuest(npc.getQuest().getName()));
-                                        GameHandler.getGui().display("You have taken the "+npc.getQuest().getName(), "Black");
-                                        }
+                                        GameHandler.getGui().display("You have taken the " + npc.getQuest().getName(), "Black");
                                     }
-
-                                    Player.displayQuests();
                                 }
 
-                            
+                                Player.displayQuests();
+                            }
+
                             case "Dance" -> {
-                                    Quest completedQuest = null;
+                                Quest completedQuest = null;
                                 for (Quest quest : Player.getQuests()) {
 
-                                    if(quest.checkCompletion()){
-                                        GameHandler.getGui().display("You completed the "+quest.getName(), "Black");
+                                    if (quest.checkCompletion()) {
+                                        GameHandler.getGui().display("You completed the " + quest.getName(), "Black");
                                         completedQuest = quest;
                                     } else {
                                         GameHandler.getGui().display("You did not complete the quest", "Black");
@@ -700,10 +714,6 @@ public class GUI extends JFrame {
 
     }
 
-    public static JTextField getJTextField() {
-        return jTextField;
-    }
-
     public void waitForInput() { //waits for the user to input something
         synchronized (this) {
             try {
@@ -713,6 +723,82 @@ public class GUI extends JFrame {
             }
         }
 
+    }
+
+    public JLabel getStatsLabel() {
+        return statsLabel;
+    }
+
+    public JTextPane getjTextPane() {
+        return jTextPane;
+    }
+
+    public JPanel getStatsPanel() {
+        return statsPanel;
+    }
+
+    public void setStatsPanel(JPanel statsPanel) {
+        this.statsPanel = statsPanel;
+    }
+
+    public JPanel getInputPanel() {
+        return inputPanel;
+    }
+
+    public JPanel getBtnPanel() {
+        return btnPanel;
+    }
+
+    public Color getPeriwinkle() {
+        return periwinkle;
+    }
+
+    public Color getLightBlue() {
+        return lightBlue;
+    }
+
+    public void setLightBlue(Color lightBlue) {
+        this.lightBlue = lightBlue;
+    }
+
+    public Color getLightPink() {
+        return lightPink;
+    }
+
+    public void setLightPink(Color lightPink) {
+        this.lightPink = lightPink;
+    }
+
+    public JButton getTakeButton() {
+        return takeButton;
+    }
+
+    public JButton getMoveButton() {
+        return moveButton;
+    }
+
+    public JButton getDialogButton() {
+        return dialogButton;
+    }
+
+    public JButton getLearnButton() {
+        return learnButton;
+    }
+
+    public JButton getInventoryButton() {
+        return inventoryButton;
+    }
+
+    public JButton getCarebutton() {
+        return carebutton;
+    }
+
+    public JButton getSocializeButton() {
+        return socializeButton;
+    }
+
+    public JButton getMischiefButton() {
+        return mischiefButton;
     }
 
     private void showPopupWithContent(String content) {
@@ -730,9 +816,5 @@ public class GUI extends JFrame {
         dialog.pack();
         dialog.setLocationRelativeTo(null); // Center the dialog
         dialog.setVisible(true);
-    }
-
-    public JLabel getStatsLabel() {
-        return statsLabel;
     }
 }

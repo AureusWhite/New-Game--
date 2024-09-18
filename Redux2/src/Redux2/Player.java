@@ -34,6 +34,7 @@ public class Player {
     private static String[] pronouns;
     private static String[] favorites;
 
+    private static boolean leader = true;
 
     public static void setEnergy(int energy) {
         Player.energy = energy;
@@ -298,172 +299,20 @@ public class Player {
         GameHandler.getGui().display("You reflected on your day.", "Black");
     }
 
-    static void displayInventory() {
+    public static void displayInventory() {
         for (Item item : Pinventory) {
             GameHandler.getGui().display(item.getName() + "in your pockets", "Black");
         }
-    }
-
-    static void setName(String input) {
-        GameHandler.getGui().display("Please enter your name.", "Black");
-        GameHandler.getGui().waitForInput();
-        input = GameHandler.getGui().getInput();
-        GUI.getJTextField().setText("");
-        GameHandler.getGui().display("Hello," + input, "Black");
-        name = input;
-    }
-
-    static String getName() {
-        return Player.name;
-    }
-
-    static int getAge() {
-        return Player.age;
-    }
-
-    static void removeItem(Item item) {
-        Pinventory.remove(item);
-    }
-
-    static void addItem(Item item) {
-        Pinventory.add(item);
-    }
-
-    private static int getEnergy() {
-        return energy;
-    }
-
-    private static boolean isAlignmentSet() {
-        return alignmentSet;
-    }
-
-    private static boolean checkItem() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private static int getHunger() {
-        return hunger;
-    }
-
-    private static int getThirst() {
-        return thirst;
-    }
-
-    static void getPunished(String act, int i) {
-        timeOut(i);
-    }
-
-    private static void setStatus(String status1) {
-        status = status1;
-    }
-
-    private static void timeOut(int i) {
-        GameHandler.getClock().moveTime(i * 10);
-        GameHandler.getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
     }
 
     public static String getStatus() {
         return status;
     }
 
-    static void setLeader(boolean b) {
-        leader = b;
-    }
-    private static boolean leader = true;
-
-    static void addXP(int reward) {
+    public static void addXP(int reward) {
         experience += reward;
     }
 
-    static void addQuest(Quest quest1) {
-        Player.quests.add(quest1);
-    }
-
-    static void displayQuests() {
-        for (Quest quest : quests) {
-            GameHandler.getGui().display(quest.getName(), "Black");
-        }
-    }
-
-    static ArrayList<Quest> getQuests() {
-        return quests;
-    }
-
-    static void removeQuest(Quest aThis) {
-        quests.remove(aThis);
-    }
-
-    static void setPronouns() {
-        GameHandler.getGui().display("Please enter your subjective pronoun choose any you like (he/she/they/other)", "Black");
-        GameHandler.getGui().waitForInput();
-        String subjective = GameHandler.getGui().getInput();
-        GameHandler.getGui().getJTextField().setText("");
-        GameHandler.getGui().display("Please enter your objective pronoun choose any you like (him/her/them/other)", "Black");
-        GameHandler.getGui().waitForInput();
-        String objective = GameHandler.getGui().getInput();
-        GameHandler.getGui().getJTextField().setText("");
-        GameHandler.getGui().display("Please enter your possessive pronoun choose any you like (his/her/their/other)", "Black");
-        GameHandler.getGui().waitForInput();
-        String possessive = GameHandler.getGui().getInput();
-        GameHandler.getGui().getJTextField().setText("");
-        GameHandler.getGui().display("Please enter your prefered reference phrase if any (Young Lady, Young Man, Young one, Youngin, Little one. etc)", "Black");
-        GameHandler.getGui().waitForInput();
-        String reference = GameHandler.getGui().getInput();
-        GameHandler.getGui().getJTextField().setText("");
-        Player.pronouns = new String[]{subjective, objective, possessive, reference};
-        GameHandler.getGui().display("Your pronouns are: " + subjective + ", " + objective + ", " + possessive + ", " + reference, "Black");
-    }
-    private static void setStats(int age) {
-        int totalStats = 0;
-
-        do {
-            for (int i = 0; i < 5; i++) {
-                Random random = new Random();
-                switch (i) {
-                    case 0 -> {
-                        int tempStat = random.nextInt(age+3)+3;
-                        stats.put("Social", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 1 -> {
-                        int tempStat = random.nextInt(age+3)+3;
-                        stats.put("Motor", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 2 -> {
-                        int tempStat = random.nextInt(age+3)+3;
-                        stats.put("Imagenation", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 3 -> {
-                        int tempStat = random.nextInt(age+3)+3;
-                        stats.put("Learning", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 4 -> {
-                        int tempStat = random.nextInt(age)+3;
-                        stats.put("Emotional", tempStat);
-                        totalStats += tempStat;
-                    }
-                    default -> { 
-                    } 
-                }
-
-            }
-        } while (totalStats <= age * 4 && totalStats>=age*2);
-        GameHandler.getGui().display("Your stats are: " + stats.get("Social") + ", " + stats.get("Motor") + ", " + stats.get("Imagenation") + ", " + stats.get("Learning") + ", " + stats.get("Emotional"), "Black");
-    }
-
-
-    private static void setUpStats() {
-        for (int i = 0; i < 5; i++) {
-            stats.put("Social", 0);
-            stats.put("Motor", 0);
-            stats.put("Imagenation", 0);
-            stats.put("Learning", 0);
-            stats.put("Emotional", 0);
-        }
-    }
     public static void setUpPerks() {
         perks.put("Social", false);
         perks.put("Motor", false);
@@ -471,123 +320,121 @@ public class Player {
         perks.put("Learning", false);
         perks.put("Emotional", false);
     }
+
     public static boolean playerHasPerk(String perk) {
         return perks.get(perk);
     }
+
     public static void addPerk(String perk) {
         perks.put(perk, false);
     }
+
     public static void removePerk(String perk) {
         perks.remove(perk);
     }
+
     public static void setPerk(String perk) {
         perks.put(perk, true);
     }
+
     public static void removeXP(int reward) {
         experience -= reward;
     }
+
     public static void addMoney(int reward) {
         money += reward;
     }
+
     public static void removeMoney(int reward) {
         money -= reward;
     }
+
     public static void addResilience(int reward) {
         resilience += reward;
     }
+
     public static void removeResilience(int reward) {
         resilience -= reward;
     }
+
     public static void addHunger(int reward) {
         hunger += reward;
     }
+
     public static void removeHunger(int reward) {
         hunger -= reward;
     }
+
     public static void addThirst(int reward) {
         thirst += reward;
     }
+
     public static void removeThirst(int reward) {
         thirst -= reward;
     }
+
     public static void addEnergy(int reward) {
         energy += reward;
     }
+
     public static void removeEnergy(int reward) {
         energy -= reward;
     }
+
     public static void addSocial(int reward) {
         stats.put("Social", stats.get("Social") + reward);
     }
+
     public static void removeSocial(int reward) {
         stats.put("Social", stats.get("Social") - reward);
     }
+
     public static void addMotor(int reward) {
         stats.put("Motor", stats.get("Motor") + reward);
     }
+
     public static void removeMotor(int reward) {
         stats.put("Motor", stats.get("Motor") - reward);
     }
+
     public static void addImagenation(int reward) {
         stats.put("Imagenation", stats.get("Imagenation") + reward);
     }
+
     public static void removeImagenation(int reward) {
         stats.put("Imagenation", stats.get("Imagenation") - reward);
     }
+
     public static void addLearning(int reward) {
         stats.put("Learning", stats.get("Learning") + reward);
     }
+
     public static void removeLearning(int reward) {
         stats.put("Learning", stats.get("Learning") - reward);
     }
+
     public static void addEmotional(int reward) {
         stats.put("Emotional", stats.get("Emotional") + reward);
     }
+
     public static void removeEmotional(int reward) {
         stats.put("Emotional", stats.get("Emotional") - reward);
     }
+
     public static void addPronouns(String[] pronouns1) {
         pronouns = pronouns1;
     }
+
     public static String[] getPronouns() {
         return pronouns;
     }
+
     public static void setFavorites(String[] favorites1) {
         favorites = favorites1;
     }
+
     public static String[] getFavorites() {
         return favorites;
-    }
-    
-    public Player(String name, String discription, Room room) {
-
-    }
-
-    public void calculateAttributes() {
-        int pAge = getAge();
-        switch (pAge) {
-            case 2, 3, 4 -> {
-                setSocial("Expressive");
-                setMotor("sneak");
-                setImagenation("Pretend Play");
-                setLearning("Exploration");
-                setEmotional("Unregulated");
-            }
-            case 5, 6, 7 -> {
-                setSocial("Mixed Cooperative");
-                setMotor("Walk, Run, Jump");
-                setImagenation("Pretend Play, Drawing, Building");
-                setLearning("Passive Learning");
-                setEmotional("Semiregulated");
-            }
-            case 8, 9, 10, 11, 12 -> {
-                setSocial("Cooperative");
-                setMotor("Walk, Run, Jump, Skip, Hop");
-                setImagenation("Pretend Play, Storytelling, Drawing, Building");
-                setLearning("Active Learning");
-                setEmotional("Regulated");
-            }
-        }
     }
 
     public static void giveItemToNPC(Item item, NPC npc) {
@@ -597,20 +444,6 @@ public class Player {
         } else {
             GameHandler.getGui().display("You don't have that item.", "Black");
         }
-    }
-
-    static boolean hasItem(Item item2) {
-        for (Item item : Pinventory) {
-            if (item.getName().equals(item2.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void dropItem(Item item) {
-        getRoom().addItem(item);
-        removeItem(item);
     }
 
     public static void sneak() {
@@ -673,6 +506,263 @@ public class Player {
     public static void setFavorites(String color, String food, String toy, String game, String book, String subject, String activity) {
         favorites = new String[]{color, food, toy, game, book, subject, activity};
 
+    }
+
+    public static String getSocial() {
+        return social;
+    }
+
+    public static String getMotor() {
+        return motor;
+    }
+
+    public static String getImagenation() {
+        return imagenation;
+    }
+
+    public static String getLearning() {
+        return learning;
+    }
+
+    public static String getEmotional() {
+        return emotional;
+    }
+
+    public static ArrayList<Item> getPinventory() {
+        return Pinventory;
+    }
+
+    public static void setPinventory(ArrayList<Item> pinventory) {
+        Pinventory = pinventory;
+    }
+
+    public static ArrayList<Consumable> getConsumables() {
+        return consumables;
+    }
+
+    public static void setQuests(ArrayList<Quest> quests) {
+        Player.quests = quests;
+    }
+
+    public static HashMap<String, Integer> getStats() {
+        return stats;
+    }
+
+    public static void setStats(HashMap<String, Integer> stats) {
+        Player.stats = stats;
+    }
+
+    public static HashMap<String, Boolean> getPerks() {
+        return perks;
+    }
+
+    public static void setPerks(HashMap<String, Boolean> perks) {
+        Player.perks = perks;
+    }
+
+    public static boolean isAgeSet() {
+        return ageSet;
+    }
+
+    public static void setPronouns(String[] pronouns) {
+        Player.pronouns = pronouns;
+    }
+
+    static void setName(String input) {
+        GameHandler.getGui().display("Please enter your name.", "Black");
+        GameHandler.getGui().waitForInput();
+        input = GameHandler.getGui().getInput();
+        GUI.getJTextField().setText("");
+        GameHandler.getGui().display("Hello," + input, "Black");
+        name = input;
+    }
+
+    static String getName() {
+        return Player.name;
+    }
+
+    static int getAge() {
+        return Player.age;
+    }
+
+    static void removeItem(Item item) {
+        Pinventory.remove(item);
+    }
+
+    static void addItem(Item item) {
+        Pinventory.add(item);
+    }
+
+    static void getPunished(String act, int i) {
+        timeOut(i);
+    }
+
+    static void setLeader(boolean b) {
+        leader = b;
+    }
+
+    static void addQuest(Quest quest1) {
+        Player.quests.add(quest1);
+    }
+
+    static void displayQuests() {
+        for (Quest quest : quests) {
+            GameHandler.getGui().display(quest.getName(), "Black");
+        }
+    }
+
+    static ArrayList<Quest> getQuests() {
+        return quests;
+    }
+
+    static void removeQuest(Quest aThis) {
+        quests.remove(aThis);
+    }
+
+    static void setPronouns() {
+        GameHandler.getGui().display("Please enter your subjective pronoun choose any you like (he/she/they/other)", "Black");
+        GameHandler.getGui().waitForInput();
+        String subjective = GameHandler.getGui().getInput();
+        GUI.getJTextField().setText("");
+        GameHandler.getGui().display("Please enter your objective pronoun choose any you like (him/her/them/other)", "Black");
+        GameHandler.getGui().waitForInput();
+        String objective = GameHandler.getGui().getInput();
+        GUI.getJTextField().setText("");
+        GameHandler.getGui().display("Please enter your possessive pronoun choose any you like (his/her/their/other)", "Black");
+        GameHandler.getGui().waitForInput();
+        String possessive = GameHandler.getGui().getInput();
+        GUI.getJTextField().setText("");
+        GameHandler.getGui().display("Please enter your prefered reference phrase if any (Young Lady, Young Man, Young one, Youngin, Little one. etc)", "Black");
+        GameHandler.getGui().waitForInput();
+        String reference = GameHandler.getGui().getInput();
+        GUI.getJTextField().setText("");
+        Player.pronouns = new String[]{subjective, objective, possessive, reference};
+        GameHandler.getGui().display("Your pronouns are: " + subjective + ", " + objective + ", " + possessive + ", " + reference, "Black");
+    }
+
+    static boolean hasItem(Item item2) {
+        for (Item item : Pinventory) {
+            if (item.getName().equals(item2.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int getEnergy() {
+        return energy;
+    }
+
+    private static boolean isAlignmentSet() {
+        return alignmentSet;
+    }
+
+    private static boolean checkItem() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private static int getHunger() {
+        return hunger;
+    }
+
+    private static int getThirst() {
+        return thirst;
+    }
+
+    private static void setStatus(String status1) {
+        status = status1;
+    }
+
+    private static void timeOut(int i) {
+        GameHandler.getClock().moveTime(i * 10);
+        GameHandler.getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
+    }
+
+    private static void setStats(int age) {
+        int totalStats = 0;
+
+        do {
+            for (int i = 0; i < 5; i++) {
+                Random random = new Random();
+                switch (i) {
+                    case 0 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Social", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 1 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Motor", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 2 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Imagenation", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 3 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Learning", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 4 -> {
+                        int tempStat = random.nextInt(age) + 3;
+                        stats.put("Emotional", tempStat);
+                        totalStats += tempStat;
+                    }
+                    default -> {
+                    }
+                }
+
+            }
+        } while (totalStats <= age * 4 && totalStats >= age * 2);
+        GameHandler.getGui().display("Your stats are: " + stats.get("Social") + ", " + stats.get("Motor") + ", " + stats.get("Imagenation") + ", " + stats.get("Learning") + ", " + stats.get("Emotional"), "Black");
+    }
+
+    private static void setUpStats() {
+        for (int i = 0; i < 5; i++) {
+            stats.put("Social", 0);
+            stats.put("Motor", 0);
+            stats.put("Imagenation", 0);
+            stats.put("Learning", 0);
+            stats.put("Emotional", 0);
+        }
+    }
+
+    public Player(String name, String discription, Room room) {
+
+    }
+
+    public void calculateAttributes() {
+        int pAge = getAge();
+        switch (pAge) {
+            case 2, 3, 4 -> {
+                setSocial("Expressive");
+                setMotor("sneak");
+                setImagenation("Pretend Play");
+                setLearning("Exploration");
+                setEmotional("Unregulated");
+            }
+            case 5, 6, 7 -> {
+                setSocial("Mixed Cooperative");
+                setMotor("Walk, Run, Jump");
+                setImagenation("Pretend Play, Drawing, Building");
+                setLearning("Passive Learning");
+                setEmotional("Semiregulated");
+            }
+            case 8, 9, 10, 11, 12 -> {
+                setSocial("Cooperative");
+                setMotor("Walk, Run, Jump, Skip, Hop");
+                setImagenation("Pretend Play, Storytelling, Drawing, Building");
+                setLearning("Active Learning");
+                setEmotional("Regulated");
+            }
+        }
+    }
+
+    public void dropItem(Item item) {
+        getRoom().addItem(item);
+        removeItem(item);
     }
 
 }

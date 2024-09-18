@@ -1,4 +1,5 @@
 package Redux2;
+
 class Commands {
 
     public static void execute(String text) {

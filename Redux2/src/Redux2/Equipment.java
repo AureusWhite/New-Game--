@@ -1,4 +1,5 @@
 package Redux2;
+
 public class Equipment extends Item {
 
     private String slot;
@@ -11,8 +12,14 @@ public class Equipment extends Item {
         character.equipItem(this);
     }
 
+    @Override
     public String getSlot() {
         return slot;
+    }
+
+    @Override
+    public void setSlot(String slot) {
+        this.slot = slot;
     }
 
 }

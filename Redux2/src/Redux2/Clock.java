@@ -1,4 +1,5 @@
 package Redux2;
+
 public class Clock {
 
     private int time;

@@ -1,4 +1,5 @@
 package Redux2;
+
 public class Consumable extends Item {
 
     private int buffValue;
@@ -28,5 +29,9 @@ public class Consumable extends Item {
 
     private int getBuffValue() {
         return buffValue;
+    }
+
+    public void setBuffValue(int buffValue) {
+        this.buffValue = buffValue;
     }
 }

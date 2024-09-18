@@ -1,4 +1,5 @@
 package Redux2;
+
 import java.util.ArrayList;
 
 public class Character {
@@ -80,6 +81,10 @@ public class Character {
 
     public void setThirst(int i) {
         this.thirst = i;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
 }
