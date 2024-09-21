@@ -2,6 +2,7 @@ package Redux2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Player {
@@ -31,13 +32,323 @@ public class Player {
     private static int hunger = 100;
     private static int energy;
     private static String status;
-    private static String[] pronouns;
+    static String[] pronouns;
     private static String[] favorites;
+    private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
+    private static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
 
     private static boolean leader = true;
 
     public static void setEnergy(int energy) {
         Player.energy = energy;
+    }
+
+    public static void initializeSkills() {
+        for (Skill skill : Skill.values()) {
+            skillLevels.put(skill, 1);
+        }
+        Map<Ability, Effect> socialAbilities = new HashMap<>();
+        Map<Ability, Effect> motorAbilities = new HashMap<>();
+        Map<Ability, Effect> imaginationAbilities = new HashMap<>();
+        Map<Ability, Effect> learningAbilities = new HashMap<>();
+        Map<Ability, Effect> emotionalAbilities = new HashMap<>();
+
+        socialAbilities.put(Ability.CRY, new Effect("Cries", (argument) -> {
+            for(NPC npc : room.getNPCs()){
+                if(npc.getName().equals(argument)){
+                npc.persuade(Ability.CRY);
+                }
+                
+            }
+        }));
+        socialAbilities.put(Ability.POINT, new Effect("Points", (argument) -> {
+            System.out.println("Pointing...");
+        }));
+        socialAbilities.put(Ability.NAME, new Effect("Names", (argument) -> {
+            System.out.println("Naming...");
+        }));
+        socialAbilities.put(Ability.ASK, new Effect("Asks", (argument) -> {
+            System.out.println("Asking...");
+        }));
+        socialAbilities.put(Ability.NEGOTIATE, new Effect("Negotiates", (argument) -> {
+            System.out.println("Negotiating...");
+        }));
+        socialAbilities.put(Ability.MEDIATE, new Effect("Mediates", (argument) -> {
+            System.out.println("Mediating...");
+        }));
+        abilities.put(Skill.SOCIAL, socialAbilities);
+        motorAbilities.put(Ability.CRAWL, new Effect("Crawls", (argument) -> {
+            System.out.println("Crawling...");
+        }));
+        motorAbilities.put(Ability.WALK, new Effect("Walks", (argument) -> {
+            System.out.println("Walking...");
+        }));
+        motorAbilities.put(Ability.RUN, new Effect("Runs", (argument) -> {
+            System.out.println("Running...");
+        }));
+        motorAbilities.put(Ability.CLIMB, new Effect("Climbs", (argument) -> {
+            System.out.println("Climbing...");
+        }));
+        motorAbilities.put(Ability.SNEAK, new Effect("Sneaks", (argument) -> {
+            System.out.println("Sneaking...");
+        }));
+        motorAbilities.put(Ability.KICK, new Effect("Kicks", (argument) -> {
+            System.out.println("Kicking...");
+        }));
+        motorAbilities.put(Ability.SKIP, new Effect("Skips", (argument) -> {
+            System.out.println("Skipping...");
+        }));
+        abilities.put(Skill.MOTOR, motorAbilities);
+        imaginationAbilities.put(Ability.IMITATE, new Effect("Imitates", (argument) -> {
+            System.out.println("Imitating...");
+        }));
+        imaginationAbilities.put(Ability.DOLLS, new Effect("Plays with dolls", (argument) -> {
+            System.out.println("Playing with dolls...");
+        }));
+        imaginationAbilities.put(Ability.PRODUCE, new Effect("Produces", (argument) -> {
+            System.out.println("Producing...");
+        }));
+        imaginationAbilities.put(Ability.DIRECT, new Effect("Directs", (argument) -> {
+            System.out.println("Directing...");
+        }));
+        imaginationAbilities.put(Ability.PLAY_ALONG, new Effect("Plays along", (argument) -> {
+            System.out.println("Playing along...");
+        }));
+        abilities.put(Skill.IMAGINATION, imaginationAbilities);
+        learningAbilities.put(Ability.READ, new Effect("Reads", (argument) -> {
+            System.out.println("Reading...");
+        }));
+        learningAbilities.put(Ability.WRITE, new Effect("Writes", (argument) -> {
+            System.out.println("Writing...");
+        }));
+        learningAbilities.put(Ability.BASICS, new Effect("Learns the basics", (argument) -> {
+            System.out.println("Learning the basics...");
+        }));
+        learningAbilities.put(Ability.INTERMEDIATE, new Effect("Learns intermediate concepts", (argument) -> {
+            System.out.println("Learning intermediate concepts...");
+        }));
+        learningAbilities.put(Ability.ADVANCED, new Effect("Learns advanced concepts", (argument) -> {
+            System.out.println("Learning advanced concepts...");
+        }));
+        learningAbilities.put(Ability.REMEDIATED, new Effect("Revisits and relearns", (argument) -> {
+            System.out.println("Revisiting and relearning...");
+        }));
+        abilities.put(Skill.LEARNING, learningAbilities);
+        emotionalAbilities.put(Ability.EXPRESS, new Effect("Expresses emotions", (argument) -> {
+            System.out.println("Expressing emotions...");
+        }));
+        emotionalAbilities.put(Ability.INTERPRET, new Effect("Interprets emotions", (argument) -> {
+            System.out.println("Interpreting emotions...");
+        }));
+        emotionalAbilities.put(Ability.SELF_SOOTHE, new Effect("Soothes themselves", (argument) -> {
+            System.out.println("Soothing themselves...");
+        }));
+        emotionalAbilities.put(Ability.SOOTHE_OTHERS, new Effect("Soothes others", (argument) -> {
+            System.out.println("Soothing others...");
+        }));
+        emotionalAbilities.put(Ability.RESILIENCE, new Effect("Builds resilience", (argument) -> {
+            System.out.println("Building resilience...");
+        }));
+        emotionalAbilities.put(Ability.TEMPERANCE, new Effect("Practices temperance", (argument) -> {
+            System.out.println("Practicing temperance...");
+        }));
+        abilities.put(Skill.EMOTIONAL, emotionalAbilities);
+
+    }
+
+    public static void performAction(Skill skill, Ability ability, String argument) {
+        if (canPerform(skill, ability)) {
+            // Retrieve and apply the effect associated with the ability
+            Effect effect = abilities.get(skill).get(ability);
+            if (effect != null) {
+                effect.applyEffect(argument);
+            } else {
+                System.out.println("No effect available for this ability.");
+            }
+        } else {
+            System.out.println("Skill level too low to perform this action.");
+        }
+    }
+
+    public static int getSkillLevel(Skill skill) {
+        return skillLevels.get(skill);
+    }
+
+    public static void levelUpSkill(Skill skill) {
+        skillLevels.put(skill, skillLevels.get(skill) + 1);
+    }
+
+    public void levelDownSkill(Skill skill) {
+        skillLevels.put(skill, skillLevels.get(skill) - 1);
+    }
+
+    public void setSkillLevel(Skill skill, int level) {
+        skillLevels.put(skill, level);
+    }
+
+    public void setSkillLevels(Map<Skill, Integer> skillLevels) {
+        Player.skillLevels = skillLevels;
+    }
+
+    public Map<Skill, Integer> getSkillLevels() {
+        return skillLevels;
+    }
+
+    public void setAbilities(Map<Skill, Map<Ability, Effect>> abilities) {
+        Player.abilities = abilities;
+    }
+
+    public Map<Skill, Map<Ability, Effect>> getAbilities() {
+        return abilities;
+    }
+
+    public void addAbility(Skill skill, Ability ability, Effect effect) {
+        abilities.get(skill).put(ability, effect);
+    }
+
+    public void removeAbility(Skill skill, Ability ability) {
+        abilities.get(skill).remove(ability);
+    }
+
+    public void setAbility(Skill skill, Ability ability, Effect effect) {
+        abilities.get(skill).put(ability, effect);
+    }
+
+    public void setPronouns(String subjective, String objective, String possessive, String reference) {
+        pronouns = new String[]{subjective, objective, possessive, reference};
+    }
+
+    private static boolean canPerform(Skill skill, Ability ability) {
+        // Check if the player has enough skill level to use the ability
+        // You can define thresholds based on skill and ability
+        int levelRequired = determineLevelRequired(skill, ability);
+        return getSkillLevel(skill) >= levelRequired;
+    }
+
+    private static int determineLevelRequired(Skill skill, Ability ability) {
+        switch (skill) {
+            case SOCIAL -> {
+                switch (ability) {
+                    case CRY -> {
+                        return 0;
+                    }
+                    case POINT -> {
+                        return 1;
+                    }
+                    case NAME -> {
+                        return 2;
+                    }
+                    case ASK -> {
+                        return 3;
+                    }
+                    case NEGOTIATE -> {
+                        return 4;
+                    }
+                    case MEDIATE -> {
+                        return 5;
+                    }
+                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case MOTOR -> {
+                switch (ability) {
+                    case CRAWL -> {
+                        return 0;
+                    }
+                    case WALK -> {
+                        return 1;
+                    }
+                    case RUN -> {
+                        return 2;
+                    }
+                    case CLIMB -> {
+                        return 3;
+                    }
+                    case SNEAK -> {
+                        return 4;
+                    }
+                    case KICK -> {
+                        return 5;
+                    }
+                    case SKIP -> {
+                        return 6;
+                    }
+                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case IMAGINATION -> {
+                switch (ability) {
+                    case IMITATE -> {
+                        return 0;
+                    }
+                    case DOLLS -> {
+                        return 1;
+                    }
+                    case PRODUCE -> {
+                        return 2;
+                    }
+                    case DIRECT -> {
+                        return 3;
+                    }
+                    case PLAY_ALONG -> {
+                        return 4;
+                    }
+                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case LEARNING -> {
+                switch (ability) {
+                    case READ -> {
+                        return 0;
+                    }
+                    case WRITE -> {
+                        return 1;
+                    }
+                    case BASICS -> {
+                        return 2;
+                    }
+                    case INTERMEDIATE -> {
+                        return 3;
+                    }
+                    case ADVANCED -> {
+                        return 4;
+                    }
+                    case REMEDIATED -> {
+                        return 5;
+                    }
+                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case EMOTIONAL -> {
+                switch (ability) {
+                    case EXPRESS -> {
+                        return 0;
+                    }
+                    case INTERPRET -> {
+                        return 1;
+                    }
+                    case SELF_SOOTHE -> {
+                        return 2;
+                    }
+                    case SOOTHE_OTHERS -> {
+                        return 3;
+                    }
+                    case RESILIENCE -> {
+                        return 4;
+                    }
+                    case TEMPERANCE -> {
+                        return 5;
+                    }
+                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+        }
+        return -1;
     }
 
     public static void useEnergy(int energy) {
@@ -72,6 +383,9 @@ public class Player {
     public static void setRoom(Room room1) {
         room = room1;
         room.initializeRoomFiles();
+        if(room==GameHandler.getRoomByName("Demo_Room")){
+            GameHandler.demo();
+        }
     }
 
     public static Room getRoom() {
@@ -99,6 +413,7 @@ public class Player {
         GameHandler.getGui().display("You are " + age + " years old.", "Black");
         setUpStats();
         setStats(age);
+        
     }
 
     public static void equip(Equipment equipment1, String slot) {

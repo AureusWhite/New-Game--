@@ -694,9 +694,10 @@ public class GUI extends JFrame {
                 }
             }
         });
-
+        
         setVisible(true);
     }
+
 
     public void display(String message, String color) {
         HTMLEditorKit editorKit = (HTMLEditorKit) jTextPane.getEditorKit();
@@ -708,7 +709,6 @@ public class GUI extends JFrame {
         jTextPane.setCaretPosition(doc.getLength());
         GameHandler.updateStatus();
     }
-
     public String getInput() {
         return jTextField.getText();
 

@@ -29,7 +29,9 @@ public class GameHandler {
     public static Room getRoom() {
         return GameHandler.room;
     }
-
+    public static Room getRoom(String roomName) {
+        return rooms.get(roomName);
+    }
     public static GUI getGui() {
         return gui;
     }
@@ -219,6 +221,43 @@ public class GameHandler {
         tidyUp.setType("tidyUp");
         npcs.get("Ms_Sagely").setQuest(tidyUp);
     }
+
+    public static NPC getNPC(NPC effectedNPC) {
+        return npcs.get(effectedNPC.getName());
+    }
+
+    static void demo() {
+        readFile("demo");
+        String responce;
+        String[] dialogOptions = {"Don't I get a say?", "I belong to no one, I just got here", "I only woke up a few hours ago", "I don't know what's going on."};
+        responce = (String) JOptionPane.showInputDialog(null,
+             "What do you do?", 
+             "Choose", JOptionPane.QUESTION_MESSAGE, 
+             null, dialogOptions, dialogOptions[0]);
+        switch (responce) {
+            case "Don't I get a say?" -> readFile("demo2");
+            case "I belong to no one, I just got here" -> readFile("demo2");
+            case "I only woke up a few hours ago" -> readFile("demo2");
+            case "I don't know what's going on." -> readFile("demo2");
+            default -> {
+            }
+        }
+        dialogOptions = new String[]{"I'm with Taliber!", "I kinda like Dishes.", "I'm with Farah.", "I don't want to deside yet."};
+        responce = (String) JOptionPane.showInputDialog(null,
+             "What do you do?", 
+             "Choose", JOptionPane.QUESTION_MESSAGE, 
+             null, dialogOptions, dialogOptions[0]);
+        switch (responce) {
+            case "I'm with Taliber!" -> readFile("demo3");
+            case "I kinda like Dishes." -> readFile("demo3");
+            case "I'm with Farah." -> readFile("demo3");
+            case "I don't want to deside yet." -> readFile("demo3");
+            default -> {
+            }
+        }
+
+    }
+
     Item diaper;
     private Container box;
     public Room recoveryRoom;
@@ -288,6 +327,7 @@ public class GameHandler {
     private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
 
     private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
+    private Room demoRoom;
 
     public GameHandler(GUI gui1, Game game1) {
         game = game1;
@@ -411,6 +451,15 @@ public class GameHandler {
         rooms.put("Pantry", pantry);
         recoveryRoom = new Room("Recovery_Room", "A room where you can recover.");
         rooms.put("Recovery_Room", recoveryRoom);
+        demoRoom = new Room("Demo_Room", "A room where you can play with toys.");
+        rooms.put("Demo_Room", demoRoom);
+        demoRoom.addItem(toy);
+        demoRoom.addItem(box);
+        demoRoom.addItem(diaper);
+        demoRoom.addItem(trainingPants);
+        demoRoom.addItem(trash);
+        demoRoom.addNPC(npcs.get("Ms_Sagely"));
+        
     }
 
     public void createItems() {
@@ -503,6 +552,9 @@ public class GameHandler {
         //Deck
         deck.addExit(backYard);
 
+        //DemoRoom
+        demoRoom.addExit(foyer);
+
         //Dorms
         dorms.addExit(foyer);
         dorms.addExit(greenHall);
@@ -535,6 +587,7 @@ public class GameHandler {
         foyer.addExit(mainRoom);
         foyer.addExit(recoveryRoom);
         foyer.addExit(cogLabs);
+        foyer.addExit(demoRoom);
 
         //FrontYard
         frontYard.addExit(foyer);
@@ -631,6 +684,7 @@ public class GameHandler {
 
         //TreeHouse
         treeHouse.addExit(backYard);
+
     }
 
     public void setUpgame() {

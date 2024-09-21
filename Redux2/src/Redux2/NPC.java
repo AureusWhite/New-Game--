@@ -1,5 +1,6 @@
 package Redux2;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +33,10 @@ public class NPC extends Character {
     public NPC(String name, String description, Room room, String type) {
         super(name, description, room);
         this.type = type;
-        this.pRep.put(0, 1.1);
-        this.pRep.put(1, 1.1);
-        this.pRep.put(2, 1.1);
-        this.pRep.put(3, 1.1);
+        this.pRep.put(0, 1.33);
+        this.pRep.put(1, 1.33);
+        this.pRep.put(2, 1.33);
+        this.pRep.put(3, 1.33);
     }
 
     public int getNpcAge() {
@@ -179,7 +180,7 @@ public class NPC extends Character {
             case "Sarcastic" -> {
                 switch (this.getName()) {
                     case "Ms Sagely" -> {
-                        this.adjustPlayerRep(2, -2, 2, -2);
+                        this.adjustPlayerRep(1.1, 1.1, 1.1, 1.1);
                         return "Ms Sagely: Young one, please do not be sarcastic with me, I have seen this behaviour before and it never ends well";
                     }
                     case "Dawn" -> {
@@ -462,32 +463,80 @@ public class NPC extends Character {
         this.dialog = string;
     }
 
-    private void adjustPlayerRep(int i, int i0, int i1, int i2) {
+    private void adjustPlayerRep(double i, double i0, double i1, double i2) {
+        DecimalFormat df = new DecimalFormat("#.#");
         for (Map.Entry<Integer, Double> entry : this.pRep.entrySet()) {
             int key = entry.getKey();
             double value = entry.getValue();
             if (key == 0) {
-                value += i * 1.25;
+                value *= i * 1.1;
             }
             if (key == 1) {
-
-                value += i0 * 1.25;
+                value *= i0 * 1.1;
             }
             if (key == 2) {
-
-                value += i1 * 1.25;
+                value *= i1 * 1.1;
             }
             if (key == 3) {
-
-                value += i2 * 1.25;
+                value *= i2 * 1.1;
             }
             this.pRep.put(key, value);
         }
         GameHandler.getGui().display("Your reputation with " + this.getName() + " has changed", "black");
-        GameHandler.getGui().display("Respect/Rebelion: " + this.pRep.get(0), "black");
-        GameHandler.getGui().display("Authentisity/Pretentious: " + this.pRep.get(1), "black");
-        GameHandler.getGui().display("Pragmatic/Idealistic: " + this.pRep.get(2), "black");
-        GameHandler.getGui().display("Leanient/Strict: " + this.pRep.get(3), "black");
+        GameHandler.getGui().display("Rebelion/Respect: " + df.format(this.pRep.get(0)), "black");
+        GameHandler.getGui().display("Pretentious/Authentic: " + df.format(this.pRep.get(1)), "black");
+        GameHandler.getGui().display("Pragmatic/Idealistic: " + df.format(this.pRep.get(2)), "black");
+        GameHandler.getGui().display("Leanient/Strict: " + df.format(this.pRep.get(3)), "black");
     }
 
+    void persuade(Ability ability) {
+        switch (ability) {
+            case CRY -> {
+                if (this.pRep.get(1) > 0) {
+                    GameHandler.getGui().display(this.getName() + ": Has heard your cries and is comming to help you.", "black");
+                } else {
+                    GameHandler.getGui().display(this.getName() + ": is not moved by your tears", "black");
+                }
+            }
+            case POINT -> {
+                if (this.pRep.get(0) > 0) {
+                    GameHandler.getGui().display(this.getName() + ": is willing to give you the object you pointed at.", "black");
+                } else {
+                    GameHandler.getGui().display(this.getName() + ": is not willing to give you the object you pointed at.", "black");
+                }
+            }
+            case NAME -> {
+                if (this.pRep.get(0) > 0) {
+                    GameHandler.getGui().display(this.getName() + ": is willing to give you the object you named.", "black");
+                } else {
+                    GameHandler.getGui().display(this.getName() + ": is not willing to give you the object you named.", "black");
+                }
+            }
+            case ASK -> {
+                if (this.pRep.get(0) > 0) {
+                    GameHandler.getGui().display("You ask nicely and " + this.getName() + " is willing to do as you ask", "black");
+                } else {
+                    GameHandler.getGui().display("You ask nicely and " + this.getName() + " is not willing to do as you ask", "black");
+                }
+            }
+            case NEGOTIATE -> {
+                if (this.pRep.get(2) > 0) {
+                    GameHandler.getGui().display("You try to negotiate with " + this.getName() + " and they are willing to do as you ask", "black");
+                } else {
+                    GameHandler.getGui().display("You try to negotiate with " + this.getName() + " and they are not willing to do as you ask", "black");
+                }
+            }
+            case MEDIATE -> {
+                if (this.pRep.get(2) > 0) {
+                    GameHandler.getGui().display("You attempt to mediate the situation and " + this.getName() + " is willing to do as you ask", "black");
+                } else {
+                    GameHandler.getGui().display("You attempt to mediate the situation and " + this.getName() + " is not willing to do as you ask", "black");
+                }
+            }
+
+            default -> {
+            }
+        }
+
+    }
 }

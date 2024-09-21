@@ -43,7 +43,8 @@ public class Game {
         gamehandler.buildExits();
         GameHandler.createQuests();
         gamehandler.playIntro();
-        gamehandler.setupPlayer();
+        Player.initializeSkills();
+        //gamehandler.setupPlayer();
         Game.setRunning(true);
         gamehandler.playGame();
         gamehandler.endGame();
