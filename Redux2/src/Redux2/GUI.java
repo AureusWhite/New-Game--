@@ -734,6 +734,7 @@ public class GUI extends JFrame {
                 }
             }
         });
+        
         setVisible(true);
     }
 
