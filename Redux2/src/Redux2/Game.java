@@ -46,6 +46,7 @@ public class Game {
         Player.initializeSkills();
         //gamehandler.setupPlayer();
         Game.setRunning(true);
+        GameHandler.getGui().unlockButtons();
         gamehandler.playGame();
         gamehandler.endGame();
     }

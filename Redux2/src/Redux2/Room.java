@@ -248,7 +248,6 @@ public class Room {
             }
         }
         this.setDescription(GameHandler.readFile(this.getName().concat("-desc")));
-        this.displayInventory();
     }
 
     public void dance() {

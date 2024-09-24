@@ -2,6 +2,8 @@ package Redux2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -54,15 +56,30 @@ public class Player {
         Map<Ability, Effect> emotionalAbilities = new HashMap<>();
 
         socialAbilities.put(Ability.CRY, new Effect("Cries", (argument) -> {
-            for(NPC npc : room.getNPCs()){
-                if(npc.getName().equals(argument)){
-                npc.persuade(Ability.CRY);
+            for (NPC npc : room.getNPCs()) {
+                if (npc.getName().equals(argument)) {
+                    npc.persuade(Ability.CRY);
                 }
-                
+
             }
         }));
         socialAbilities.put(Ability.POINT, new Effect("Points", (argument) -> {
-            System.out.println("Pointing...");
+            List<Item> items = getRoom().getInventory();
+            Iterator<Item> iterator = items.iterator();
+            while (iterator.hasNext()) {
+                Item item = iterator.next();
+                if (item.getName().equals(argument)) {
+                    if (!item.isContraband() && item.isTakable()) {
+                        NPC npc = getRoom().getFirstNPC();
+                        GameHandler.getGui().display("You pointed at the " + item.getName(), "Black");
+                        GameHandler.getGui().display("You want the " + item.getName(), "Black");
+                        npc.askForItem(item);
+
+                    }else{
+                        GameHandler.getGui().display("You can't take that.", "Black");
+                    }
+                }
+            }
         }));
         socialAbilities.put(Ability.NAME, new Effect("Names", (argument) -> {
             System.out.println("Naming...");
@@ -247,7 +264,8 @@ public class Player {
                     case MEDIATE -> {
                         return 5;
                     }
-                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
                 }
             }
 
@@ -274,7 +292,8 @@ public class Player {
                     case SKIP -> {
                         return 6;
                     }
-                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
                 }
             }
 
@@ -295,7 +314,8 @@ public class Player {
                     case PLAY_ALONG -> {
                         return 4;
                     }
-                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
                 }
             }
 
@@ -319,7 +339,8 @@ public class Player {
                     case REMEDIATED -> {
                         return 5;
                     }
-                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
                 }
             }
 
@@ -343,7 +364,8 @@ public class Player {
                     case TEMPERANCE -> {
                         return 5;
                     }
-                    default -> throw new IllegalArgumentException("Unexpected value: " + ability);
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
                 }
             }
 
@@ -383,7 +405,7 @@ public class Player {
     public static void setRoom(Room room1) {
         room = room1;
         room.initializeRoomFiles();
-        if(room==GameHandler.getRoomByName("Demo_Room")){
+        if (room == GameHandler.getRoomByName("Demo_Room")) {
             GameHandler.demo();
         }
     }
@@ -413,17 +435,21 @@ public class Player {
         GameHandler.getGui().display("You are " + age + " years old.", "Black");
         setUpStats();
         setStats(age);
-        
+
     }
 
     public static void equip(Equipment equipment1, String slot) {
         if (!equipment.containsKey(slot)) {
             equipment.put(slot, equipment1);
+            equipment1.setEquipped(true);
         } else {
-            equipment.remove(slot);
+            Equipment currentEquipment = equipment.get(slot);
+            if (currentEquipment != null) {
+                currentEquipment.setEquipped(false);
+            }
             equipment.put(slot, equipment1);
+            equipment1.setEquipped(true);
         }
-
     }
 
     public static void setAbilities(String social, String motor, String imagenation, String learning, String emotional) {
@@ -546,19 +572,14 @@ public class Player {
         return Pinventory;
     }
 
-    public static void reciveItem(NPC npc, Item item) {
-        if (checkItem()) {
-            addItem(item);
-            npc.removeItem(item);
-        } else {
-            GameHandler.getGui().display("You can't carry anymore items.", "Black");
-        }
-    }
-
     public static String[] getItemChoises() {
         String[] items = new String[Player.getInventory().size()];
         for (int i = 0; i < Player.getInventory().size(); i++) {
+            if (!Player.getInventory().get(i).isEquipped()) {
             items[i] = Player.getInventory().get(i).getName();
+            } else{
+                items[i] = Player.getInventory().get(i).getName() + " (Equipped)";
+            }
         }
         return items;
     }
@@ -752,7 +773,7 @@ public class Player {
         return favorites;
     }
 
-    public static void giveItemToNPC(Item item, NPC npc) {
+    /*public static void giveItemToNPC(Item item, NPC npc) {
         if (hasItem(item)) {
             npc.reciveItem(item);
             removeItem(item);
@@ -760,7 +781,7 @@ public class Player {
             GameHandler.getGui().display("You don't have that item.", "Black");
         }
     }
-
+     */
     public static void sneak() {
         if (motor == null) {
             GameHandler.getGui().display("You can't sneak.", "Black");
@@ -908,8 +929,12 @@ public class Player {
         Pinventory.add(item);
     }
 
-    static void getPunished(String act, int i) {
-        timeOut(i);
+    static void getPunished(String act, int i, NPC npc, String punishment) {
+        switch (punishment) {
+            case "Time Out" -> timeOut(i, act, npc);
+            case "Spanking" -> GameHandler.getGui().display("You were spanked for " + act + " by " + npc.getName(), "Black");
+            default -> GameHandler.getGui().display("You were punished for " + act + " by " + npc.getName(), "Black");
+        }
     }
 
     static void setLeader(boolean b) {
@@ -972,10 +997,6 @@ public class Player {
         return alignmentSet;
     }
 
-    private static boolean checkItem() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     private static int getHunger() {
         return hunger;
     }
@@ -988,8 +1009,9 @@ public class Player {
         status = status1;
     }
 
-    private static void timeOut(int i) {
-        GameHandler.getClock().moveTime(i * 10);
+    private static void timeOut(int i, String act, NPC npc) {
+        GameHandler.getGui().clearTextPane();
+        GameHandler.playerTimeOut(i, act, npc);
         GameHandler.getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
     }
 
@@ -1076,8 +1098,13 @@ public class Player {
     }
 
     public void dropItem(Item item) {
-        getRoom().addItem(item);
-        removeItem(item);
+        if(item.isEquipped()){
+            GameHandler.getGui().display("You may not drop an equipped item.", "Black");
+        } else {
+            GameHandler.getGui().display("You drop the " + item.getName() + ".", "Black");
+            getRoom().addItem(item);
+            removeItem(item);
+        }
     }
 
 }

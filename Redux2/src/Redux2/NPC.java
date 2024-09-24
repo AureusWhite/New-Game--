@@ -3,6 +3,7 @@ package Redux2;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class NPC extends Character {
 
@@ -53,7 +54,7 @@ public class NPC extends Character {
     }
 
     public void giveItemToPlayer(Item item) {
-        Player.reciveItem(this, item);
+        Player.addItem(item);
         this.removeItem(item);
     }
 
@@ -63,8 +64,22 @@ public class NPC extends Character {
 
     public void getPranked() {
         if (this.getType().equals("adult")) {
+            Random random = new Random();
+            int num = random.nextInt(2);
+            switch(num){
+                case 0 -> {
+                    GameHandler.getGui().display("You walk up and place a pickle into "+this.getName()+"'s pocket.", "black");
+                    Player.getPunished("pranking", 1,this,"Time out");
+                    break;
+                }
+                case 1 -> {
+                    GameHandler.getGui().display("You put a plastic spider into " +this.getName()+"'s hair.", "black");
+                    Player.getPunished("pranking", 1,this,"Time out");
+                    break;
+                }
+            }
+            GameHandler.playerTimeOut(10, "Pranking", this);
             GameHandler.getGui().display(this.getName() + " is not amused by your prank", "black");
-            Player.getPunished("pranking", 1);
         } else {
             GameHandler.getGui().display(this.getName() + " is not amused by your prank", "black");
         }
@@ -184,7 +199,7 @@ public class NPC extends Character {
                         return "Ms Sagely: Young one, please do not be sarcastic with me, I have seen this behaviour before and it never ends well";
                     }
                     case "Dawn" -> {
-                        this.adjustPlayerRep(-1, 1, 2, -2);
+                        this.adjustPlayerRep(1.2, 1.2, 1.2, 1.2);
                         return "Dawn: Haha, very funny. I invented the bratty child act, you can't fool me";
                     }
                     case "Dr_White" -> {
@@ -235,6 +250,7 @@ public class NPC extends Character {
                 }
             }
             case "Nice" -> {
+                adjustPlayerRep(-1, -1, -1, -1);
                 return "Thank you";
 
             }
@@ -288,12 +304,12 @@ public class NPC extends Character {
 
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                         setRep("Bad");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -307,11 +323,11 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -325,12 +341,12 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                         setRep("Bad");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -344,11 +360,11 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -362,11 +378,11 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -380,11 +396,11 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -398,11 +414,11 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -416,11 +432,11 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -434,12 +450,12 @@ public class NPC extends Character {
                     }
                     case "Mischievous" -> {
                         GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1);
+                        Player.getPunished(act, 1, this, "Time out");
                         setRep("Bad");
                     }
                     case "Bad" -> {
                         GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2);
+                        Player.getPunished(act, 2, this, "Time out");
                     }
                     default -> {
                     }
@@ -537,6 +553,19 @@ public class NPC extends Character {
             default -> {
             }
         }
+
+    }
+
+    void askForItem(Item item) {
+        if(pRep.get(0) > 0)
+        GameHandler.getGui().display(this.getName() + " is willing to give you " + item.getName(), "black");
+            this.takeItem(item);
+            giveItemToPlayer(item);
+    }
+
+    private void takeItem(Item item) {
+        this.addItem(item);
+        GameHandler.removeItemFromRoom(item);
 
     }
 }

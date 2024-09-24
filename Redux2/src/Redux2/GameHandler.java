@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
@@ -21,6 +23,9 @@ public class GameHandler {
     public static Room room;
     private static GUI gui;
     private static Game game;
+    public static String fileSection2 = "";
+    public static String fileSection3 = "";
+    public static String fileSection4 = "";
 
     public static Room getRoomByName(String name) {
         return rooms.get(name);
@@ -29,9 +34,11 @@ public class GameHandler {
     public static Room getRoom() {
         return GameHandler.room;
     }
+
     public static Room getRoom(String roomName) {
         return rooms.get(roomName);
     }
+
     public static GUI getGui() {
         return gui;
     }
@@ -175,16 +182,48 @@ public class GameHandler {
         File file = new File(fileName.concat(".txt"));
         if (file.exists()) {
             try {
-                StringBuilder content;
+                StringBuilder content = new StringBuilder();
+                StringBuilder section2 = new StringBuilder();
+                StringBuilder section3 = new StringBuilder();
+                StringBuilder section4 = new StringBuilder();
+
                 try (FileReader reader = new FileReader(file)) {
                     int character;
-                    content = new StringBuilder();
+                    int sectionCount = 1; // Track which section we're in
                     while ((character = reader.read()) != -1) {
-                        content.append((char) character);
+                        if (character == '#') {
+                            sectionCount++; // Increment when we encounter a '#'
+                            continue; // Skip appending '#'
+                        }
+
+                        // Append to content based on which section we're in
+                        switch (sectionCount) {
+                            case 1 ->
+                                content.append((char) character); // First section (before the first '#')
+                            case 2 ->
+                                section2.append((char) character); // Second section (between first and second '#')
+                            case 3 ->
+                                section3.append((char) character); // Third section (between second and third '#')
+                            case 4 ->
+                                section4.append((char) character); // Fourth section (between third and fourth '#')
+                            default -> {
+                            }
+                        }
                     }
-                    getGui().display(content.toString(), "Black");
+
+                    // Display the sections
+                    getGui().display(content.toString(), "Black"); // Display everything before first '#'
+                    if (section2.length() > 0) {
+                        fileSection2 = section2.toString(); // Display second section
+                    }
+                    if (section3.length() > 0) {
+                        fileSection3 = section3.toString();
+                    }
+                    if (section4.length() > 0) {
+                        fileSection4 = section4.toString();
+                    }
                 }
-                return content.toString();
+                return content.toString(); // Return the content before first '#'
             } catch (IOException e) {
                 GameHandler.getGui().display("Error reading file.", "Red");
             }
@@ -231,33 +270,149 @@ public class GameHandler {
         String responce;
         String[] dialogOptions = {"Don't I get a say?", "I belong to no one, I just got here", "I only woke up a few hours ago", "I don't know what's going on."};
         responce = (String) JOptionPane.showInputDialog(null,
-             "What do you do?", 
-             "Choose", JOptionPane.QUESTION_MESSAGE, 
-             null, dialogOptions, dialogOptions[0]);
+                "What do you do?",
+                "Choose", JOptionPane.QUESTION_MESSAGE,
+                null, dialogOptions, dialogOptions[0]);
         switch (responce) {
-            case "Don't I get a say?" -> readFile("demo2");
-            case "I belong to no one, I just got here" -> readFile("demo2");
-            case "I only woke up a few hours ago" -> readFile("demo2");
-            case "I don't know what's going on." -> readFile("demo2");
+            case "Don't I get a say?" ->
+                getGui().display(fileSection2, "Black");
+            case "I belong to no one, I just got here" ->
+                getGui().display(fileSection3, "Black");
+            case "I only woke up a few hours ago" ->
+                getGui().display(fileSection4, "Black");
+            case "I don't know what's going on." ->
+                getGui().display(fileSection2, "Black");
             default -> {
             }
         }
         dialogOptions = new String[]{"I'm with Taliber!", "I kinda like Dishes.", "I'm with Farah.", "I don't want to deside yet."};
         responce = (String) JOptionPane.showInputDialog(null,
-             "What do you do?", 
-             "Choose", JOptionPane.QUESTION_MESSAGE, 
-             null, dialogOptions, dialogOptions[0]);
+                "What do you do?",
+                "Choose", JOptionPane.QUESTION_MESSAGE,
+                null, dialogOptions, dialogOptions[0]);
         switch (responce) {
-            case "I'm with Taliber!" -> readFile("demo3");
-            case "I kinda like Dishes." -> readFile("demo3");
-            case "I'm with Farah." -> readFile("demo3");
-            case "I don't want to deside yet." -> readFile("demo3");
+            case "I'm with Taliber!" ->
+                readFile("demo3");
+            case "I kinda like Dishes." ->
+                readFile("demo3");
+            case "I'm with Farah." ->
+                readFile("demo3");
+            case "I don't want to deside yet." ->
+                readFile("demo3");
             default -> {
+                break;
             }
         }
 
     }
 
+    static void playerTimeOut(int i, String act, NPC npc) {
+        boolean applogy = false;
+        String[] timeoutOptions = {"I am Sorry", "Screw You"};
+        getGui().lockButtons();
+        getGui().display("You have been timed out", "Red");
+        while (!applogy) {
+            getGui().display("Please select \"I am Sorry from the menu.\"", "Black");
+            String responce = (String) JOptionPane.showInputDialog(null,
+                    "Are you sorry?",
+                    "Choose", JOptionPane.QUESTION_MESSAGE,
+                    null, timeoutOptions, timeoutOptions[0]);
+            switch (responce) {
+                case "I am Sorry" -> {
+                    String[] acts = {"I stole", "I pranked someone", "Vandilism", "I picked on someone", "I skipped class", "I was tresspassing"};
+                    responce = (String) JOptionPane.showInputDialog(null,
+                            "What did you do?",
+                            "Choose", JOptionPane.QUESTION_MESSAGE,
+                            null, acts, acts[0]);
+                    switch (responce) {
+                        case "I stole" -> {
+                            String[] reasons = {"Because it was fun", "I wanted it", "I was dared", "I was angry", "I was hungry", "I was bored"};
+                            responce = (String) JOptionPane.showInputDialog(null,
+                                    "Why did you steal?",
+                                    "Choose", JOptionPane.QUESTION_MESSAGE,
+                                    null, reasons, reasons[0]);
+                            switch (responce) {
+                                case "Because it was fun" -> {
+                                    String wrong[] = {"Stealing is wrong", "You should not steal", "Stealing is bad", "Stealing is not nice", "Stealing is not good"};
+                                    responce = (String) JOptionPane.showInputDialog(null,
+                                            "Is stealing wrong?",
+                                            "Choose", JOptionPane.QUESTION_MESSAGE,
+                                            null, wrong, wrong[0]);
+                                    switch (responce) {
+                                        case "Stealing is wrong" -> {
+                                            String[] why = {"I dunno","I wouldn't like it if someone stole from me", "I don't want to go to jail", "I don't want to get in trouble", "I don't want to hurt anyone", "I don't want to be mean"};
+                                            responce = (String) JOptionPane.showInputDialog(null,
+                                                    "Why is stealing wrong?",
+                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
+                                                    null, why, why[0]);
+                                            switch (responce) {
+                                                case "I dunno" -> {
+                                                    String[] yuusnuu ={"Yes", "No"}; 
+                                                    getGui().display("You should not steal, because it does not belong to you, How would you feel if someone stole from you?", "Black");
+                                                    getGui().display("Will you steal again?", "Black");
+                                                    responce = (String) JOptionPane.showInputDialog(null,
+                                                            "Will you steal again?",
+                                                            "Choose", JOptionPane.QUESTION_MESSAGE,
+                                                            null, yuusnuu, yuusnuu[0]);
+                                                    switch (responce) {
+                                                        case "Yes" -> {
+                                                            getGui().display("You should not steal", "Black");
+                                                            break;
+                                                        }
+                                                        case "No" -> {
+                                                            getGui().display("You should not steal", "Black");
+                                                            applogy = true;
+                                                        }
+                                                        default -> {
+                                                            break;
+                                                        }
+                                                    }
+
+                                                }
+                                                case "I wouldn't like it if someone stole from me" -> {
+                                                    getGui().display("Very good!", "Black");
+                                                    applogy = true;
+                                                }
+                                                case "I don't want to go to jail" -> {
+                                                    getGui().display("Well, it's not that serious, but I supose.", "Black");
+                                                    applogy = true;
+                                                }
+                                                case "I don't want to get in trouble" -> {
+                                                    getGui().display("Good enough...", "Black");
+                                                    applogy = true;
+                                                }
+                                                case "I don't want to hurt anyone" -> {
+                                                    getGui().display("That's right, stealing hurts people", "Black");
+                                                    applogy = true;
+                                                }
+                                                case "I don't want to be mean" -> {
+                                                    getGui().display("Taking other peoples things in mean, very good.", "Black");
+                                                    applogy = true;
+                                                }
+                                                default -> {
+                                                    break;
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        default -> {
+                            break;
+                        }
+                    }
+
+                }
+                default -> {
+                    break;
+                }
+            }
+        }
+        getGui().unlockButtons();
+
+    }
     Item diaper;
     private Container box;
     public Room recoveryRoom;
@@ -360,6 +515,18 @@ public class GameHandler {
         return game;
     }
 
+    public static void removeItemFromRoom(Item item) {
+        List<Item> itemsI = Player.getRoom().getInventory();
+        Iterator<Item> iterator = itemsI.iterator();
+        while (iterator.hasNext()) {
+            Item currentItem = iterator.next();
+            if (currentItem.equals(item)) {
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
     public void buildRooms() {
         kitchen = new Room("Kitchen", "A room where you can cook food.");
         rooms.put("Kitchen", kitchen);
@@ -446,6 +613,7 @@ public class GameHandler {
         Player.setRoom(foyer);
         npcs.get("Ms_Sagely").setRoom(foyer);
         foyer.addItem(toy);
+        toy.setTakable(true);
         foyer.addItem(box);
         pantry = new Room("Pantry", "A room where you can store food.");
         rooms.put("Pantry", pantry);
@@ -456,10 +624,11 @@ public class GameHandler {
         demoRoom.addItem(toy);
         demoRoom.addItem(box);
         demoRoom.addItem(diaper);
+        diaper.setTakable(true);
         demoRoom.addItem(trainingPants);
         demoRoom.addItem(trash);
         demoRoom.addNPC(npcs.get("Ms_Sagely"));
-        
+
     }
 
     public void createItems() {

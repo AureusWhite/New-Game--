@@ -36,6 +36,9 @@ public class GUI extends JFrame {
     private Color lightPink;
 
     private final JButton takeButton, moveButton, dialogButton, learnButton, inventoryButton, carebutton, socializeButton, mischiefButton;
+    private boolean locked;
+    private JPanel npcPanel, itemPanel, extraPanel;
+    private JPanel panelContainer;
 
     public GUI() {
         setTitle("Busy Beavers by Jackal Face games");
@@ -44,7 +47,7 @@ public class GUI extends JFrame {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         setResizable(false);
-
+        
         statsPanel = new JPanel();
         statsPanel.setBackground(periwinkle);
         statsPanel.setPreferredSize(new Dimension(1200, 35));
@@ -54,16 +57,53 @@ public class GUI extends JFrame {
         statsLabel.setForeground(Color.BLACK);
         statsPanel.add(statsLabel);
         add(statsPanel, BorderLayout.NORTH);
-
+        
+        npcPanel = new JPanel();
+        npcPanel.setBackground(periwinkle);
+        npcPanel.setLayout(new BoxLayout(npcPanel, BoxLayout.Y_AXIS));
+        
+        // Add NPCs label
+        JLabel npcsLabel = new JLabel("NPCs:");
+        npcsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        npcsLabel.setOpaque(true);
+        npcsLabel.setBackground(periwinkle);
+        npcsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        npcPanel.add(npcsLabel);
+        
+        itemPanel = new JPanel();
+        itemPanel.setBackground(periwinkle);
+        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
+        
+        // Add ITEMS label
+        JLabel itemsLabel = new JLabel("ITEMS:");
+        itemsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        itemsLabel.setOpaque(true);
+        itemsLabel.setBackground(periwinkle);
+        itemsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        itemPanel.add(itemsLabel);
+        
+        extraPanel = new JPanel();
+        extraPanel.setBackground(periwinkle);
+        extraPanel.setLayout(new BoxLayout(extraPanel, BoxLayout.Y_AXIS));
+        
+        // Add panels to the main container
+        JPanel panelContainer = new JPanel();
+        panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.Y_AXIS));
+        panelContainer.add(npcPanel);
+        panelContainer.add(itemPanel);
+        panelContainer.add(extraPanel);
+        
+        add(panelContainer, BorderLayout.WEST);
+        
         // Initialize buttonPanel
         btnPanel = new JPanel();
         btnPanel.setBackground(periwinkle);
         add(btnPanel, BorderLayout.SOUTH);
-
+        
         // Initialize inputPanel
         inputPanel = new JPanel();
         inputPanel.setBackground(periwinkle);
-
+        
         // Initialize jTextPane
         jTextPane = new JTextPane();
         jTextPane.setContentType("text/html");
@@ -85,11 +125,11 @@ public class GUI extends JFrame {
         scrollPane.setPreferredSize(new Dimension(700, 400));
         add(scrollPane, BorderLayout.CENTER);
         jTextPane.setEditable(false);
-
+        
         // Initialize jTextField
         jTextField = new JTextField(20);
         jTextField.setFont(new Font("Arial", Font.PLAIN, 16));
-
+        
         // Create buttons
         takeButton = new JButton("Take");
         takeButton.setFont(new Font("Arial", Font.BOLD, 16));
@@ -107,7 +147,7 @@ public class GUI extends JFrame {
         socializeButton.setFont(new Font("Arial", Font.BOLD, 16));
         mischiefButton = new JButton("Mischief");
         mischiefButton.setFont(new Font("Arial", Font.BOLD, 16));
-
+        
         // Set button size
         Dimension buttonSize = new Dimension(100, 50);
         moveButton.setPreferredSize(buttonSize);
@@ -118,7 +158,7 @@ public class GUI extends JFrame {
         socializeButton.setPreferredSize(buttonSize);
         takeButton.setPreferredSize(buttonSize);
         mischiefButton.setPreferredSize(buttonSize);
-
+        
         // Add buttons to panel
         btnPanel.add(mischiefButton);
         btnPanel.add(socializeButton);
@@ -129,7 +169,7 @@ public class GUI extends JFrame {
         btnPanel.add(inventoryButton);
         btnPanel.add(carebutton);
         btnPanel.add(takeButton);
-
+        
         // Add borders to components
         statsPanel.setBorder(new LineBorder(Color.BLACK, 2));
         inputPanel.setBorder(new LineBorder(Color.BLACK, 2));
@@ -694,10 +734,8 @@ public class GUI extends JFrame {
                 }
             }
         });
-        
         setVisible(true);
     }
-
 
     public void display(String message, String color) {
         HTMLEditorKit editorKit = (HTMLEditorKit) jTextPane.getEditorKit();
@@ -708,7 +746,9 @@ public class GUI extends JFrame {
         }
         jTextPane.setCaretPosition(doc.getLength());
         GameHandler.updateStatus();
+        updateSidePanels();
     }
+
     public String getInput() {
         return jTextField.getText();
 
@@ -816,5 +856,81 @@ public class GUI extends JFrame {
         dialog.pack();
         dialog.setLocationRelativeTo(null); // Center the dialog
         dialog.setVisible(true);
+    }
+
+    public void unlockButtons() {
+        locked = false;
+    }
+
+    public void lockButtons() {
+        locked = true;
+    }
+
+    public void clearTextPane() {
+        jTextPane.setText("");
+    }
+
+    public void updateSidePanels() {
+        npcPanel.removeAll();
+        itemPanel.removeAll();
+        extraPanel.removeAll();
+
+        // Add NPCs label
+        JLabel itemsLabel = new JLabel("ITEMS:");
+        itemsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        itemsLabel.setOpaque(true);
+        itemsLabel.setBackground(periwinkle);
+        itemsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        itemPanel.add(itemsLabel);
+
+        // Add Items to itemPanel
+        for (Item item : Player.room.getArrayInventory()) {
+            if (item != null) {
+                JLabel itemLabel = new JLabel(item.getName());
+                itemLabel.setFont(new Font("Arial", Font.BOLD, 14));
+                itemLabel.setOpaque(true);
+                itemLabel.setBackground(periwinkle);
+                itemLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                itemLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        GameHandler.getGui().display(item.getDescription(), "Black");
+                    }
+                });
+                itemPanel.add(itemLabel);
+            }
+        }
+
+        // Add NPCs label
+        JLabel npcsLabel = new JLabel("NPCs:");
+        npcsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        npcsLabel.setOpaque(true);
+        npcsLabel.setBackground(periwinkle);
+        npcsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        npcPanel.add(npcsLabel);
+
+        // Add NPCs to npcPanel
+        for (NPC npc : Player.room.getNPCs()) {
+            JLabel npcLabel = new JLabel(npc.getName());
+            npcLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            npcLabel.setOpaque(true);
+            npcLabel.setBackground(periwinkle);
+            npcLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            npcLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    GameHandler.getGui().display(npc.getDialog(), "Black");
+                }
+            });
+            npcPanel.add(npcLabel);
+        }
+
+        // Revalidate and repaint panels
+        npcPanel.revalidate();
+        npcPanel.repaint();
+        itemPanel.revalidate();
+        itemPanel.repaint();
+        extraPanel.revalidate();
+        extraPanel.repaint();
     }
 }

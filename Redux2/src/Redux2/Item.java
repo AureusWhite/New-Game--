@@ -15,6 +15,7 @@ public class Item {
     private String slot;
     private boolean contraband;
     private boolean updated = false;
+    private boolean equipped;
 
     public Item(String name, String description, String type, boolean takable) {
         this.name = name;
@@ -297,6 +298,10 @@ public class Item {
             }
         }
 
+    }
+
+    boolean isEquipped() {
+        return equipped;
     }
 
 }
