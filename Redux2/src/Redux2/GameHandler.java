@@ -1,9 +1,7 @@
 package Redux2;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +47,7 @@ public class GameHandler {
 
     public static void storyTime() {
         String[] Choices = Player.getRoom().getItemsByType("Book");
-        if (Choices.length == 0) {
+        if (Choices == null) {
             getGui().display("There are no books in this room.", "Black");
         } else {
             getGui().display("Which book would you like to read?", "Black");
@@ -230,12 +228,8 @@ public class GameHandler {
         } else {
             try {
                 file.createNewFile();
-                FileWriter fw = new FileWriter(fileName);
-                try (BufferedWriter bw = new BufferedWriter(fw)) {
-                    bw.write("<html> <h1><center><Strong>" + room.getName() + "</h1></center></Stong><p style=\"font-size: 16;\">" + room.getDescription() + "</font><h2> Room Details </h2>" + room.getType() + "<br><br><Strong> Items in room</Strong><br>" + room.listItems() + "<br><Strong>People in room</Strong><br>" + room.listPeople() + "<br><br></html>");
-                }
             } catch (IOException e) {
-                GameHandler.getGui().display("Error reading file.", "Red");
+                GameHandler.getGui().display("Error creating file.", "Red");
             }
         }
         return null;
@@ -340,14 +334,14 @@ public class GameHandler {
                                             null, wrong, wrong[0]);
                                     switch (responce) {
                                         case "Stealing is wrong" -> {
-                                            String[] why = {"I dunno","I wouldn't like it if someone stole from me", "I don't want to go to jail", "I don't want to get in trouble", "I don't want to hurt anyone", "I don't want to be mean"};
+                                            String[] why = {"I dunno", "I wouldn't like it if someone stole from me", "I don't want to go to jail", "I don't want to get in trouble", "I don't want to hurt anyone", "I don't want to be mean"};
                                             responce = (String) JOptionPane.showInputDialog(null,
                                                     "Why is stealing wrong?",
                                                     "Choose", JOptionPane.QUESTION_MESSAGE,
                                                     null, why, why[0]);
                                             switch (responce) {
                                                 case "I dunno" -> {
-                                                    String[] yuusnuu ={"Yes", "No"}; 
+                                                    String[] yuusnuu = {"Yes", "No"};
                                                     getGui().display("You should not steal, because it does not belong to you, How would you feel if someone stole from you?", "Black");
                                                     getGui().display("Will you steal again?", "Black");
                                                     responce = (String) JOptionPane.showInputDialog(null,
@@ -641,7 +635,9 @@ public class GameHandler {
         diaper = new Equipment("Diaper", "A diaper for you, a baby.", "Underpants");
         items.put("Diaper", diaper);
         diaper.setType("Equipment");
-
+        Item book = new Item("Book", "A book for you to read.", "Book", true);
+        items.put("Book", book);
+        book.setType("Book");
         trainingPants = new Equipment("Training Pants", "Training Pants, for you, a big kid", "Underpants");
         items.put("Training Pants", trainingPants);
         trainingPants.setType("Equipment");
@@ -652,6 +648,7 @@ public class GameHandler {
         items.put("Box", box);
         box.addItem(diaper);
         Player.addItem(diaper);
+        Player.addItem(book);
         Player.addItem(trainingPants);
     }
 
@@ -665,14 +662,11 @@ public class GameHandler {
     }
 
     public void setupPlayer() {
-        Item nothing = new Item("Nothing", "You have nothing in your pockets.");
-        Player.addItem(nothing);
-        nothing.setDroppable(false);
         setCharacterBio();
         setCharacterAlignment();
-        setCharacterAbilities();
         updateStatus();
         Game.setRunning(true);
+        getGui().unlockButtons();
     }
 
     public void playGame() {
@@ -1415,9 +1409,5 @@ public class GameHandler {
 
     private void playOutro() {
         readFile("outro");
-    }
-
-    private void setCharacterAbilities() {
-        Player.setCharacterAbilities();
     }
 }

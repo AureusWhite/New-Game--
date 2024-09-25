@@ -15,6 +15,7 @@ public class Room {
     private ArrayList<Room> rooms;
     private boolean locked;
     private boolean updated;
+    private String type;
 
     public Room(String name, String description) {
         this.name = name;
@@ -229,27 +230,6 @@ public class Room {
         return containers.toArray(Item[]::new);
     }
 
-    void initializeRoomFiles() { //initializes the room files and creates them if they don't exist already.
-        File mainFile = new File(this.getName().concat(".txt"));
-        File descFile = new File(this.getName().concat("-desc.txt"));
-
-        if (!mainFile.exists()) {
-            try {
-                mainFile.createNewFile();
-            } catch (IOException e) {
-                GameHandler.getGui().display("Error creating file main file", "Black");
-            }
-            if (!descFile.exists()) {
-                try {
-                    descFile.createNewFile();
-                } catch (IOException e) {
-                    GameHandler.getGui().display("Error creating description file", "Black");
-                }
-            }
-        }
-        this.setDescription(GameHandler.readFile(this.getName().concat("-desc")));
-    }
-
     public void dance() {
         GameHandler.getGui().display("You danced", "Black");
     }
@@ -319,7 +299,6 @@ public class Room {
     }
 
     public void vandalize(Item item) {
-        GameHandler.getGui().display("What do you want to vandalize?", "Black");
         if (item == null) {
             GameHandler.getGui().display("That item does not exist", "Black");
         } else {
@@ -341,20 +320,6 @@ public class Room {
             }
         }
         return null;
-    }
-
-    String[] getContraband() {
-        ArrayList<Item> contraband = new ArrayList<>();
-        for (Item item : this.getArrayInventory()) {
-            if (item.isContraband()) {
-                contraband.add(item);
-            }
-        }
-        String[] contraband1 = new String[contraband.size()];
-        for (int i = 0; i < contraband.size(); i++) {
-            contraband1[i] = contraband.get(i).getName();
-        }
-        return contraband1;
     }
 
     public NPC getFirstNPC() {
@@ -392,36 +357,7 @@ public class Room {
         return toys;
     }
 
-    private void displayInventory() {
-        StringBuilder inventoryString = new StringBuilder();
-        for (Item item : this.getArrayInventory()) {
-            if (item.getName().equalsIgnoreCase("Nothing")) {
-            } else {
-                inventoryString.append(item.getName()).append(", ");
-            }
-            GameHandler.getGui().display(inventoryString.toString(), "Black");
-        }
-
-    }
-
     public void update() {
-    }
-
-    void setUpdated(boolean b) {
-        GameHandler.getGui().display("Room updated to " + this.updated + " ", "Black");
-        this.updated = b;
-    }
-
-    String listPeople() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    String listItems() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    String getType() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public ArrayList<NPC> getNpcs() {
@@ -434,5 +370,43 @@ public class Room {
 
     public boolean isUpdated() {
         return updated;
+    }
+
+    void initializeRoomFiles() { //initializes the room files and creates them if they don't exist already.
+        File mainFile = new File(this.getName().concat(".txt"));
+        File descFile = new File(this.getName().concat("-desc.txt"));
+
+        if (!mainFile.exists()) {
+            try {
+                mainFile.createNewFile();
+            } catch (IOException e) {
+                GameHandler.getGui().display("Error creating file main file", "Black");
+            }
+            if (!descFile.exists()) {
+                try {
+                    descFile.createNewFile();
+                } catch (IOException e) {
+                    GameHandler.getGui().display("Error creating description file", "Black");
+                }
+            }
+        }
+        this.setDescription(GameHandler.readFile(this.getName().concat("-desc")));
+    }
+
+    String[] getContraband() {
+        ArrayList<Item> contraband = new ArrayList<>();
+        for (Item item : this.getArrayInventory()) {
+            if (item.isContraband()) {
+                contraband.add(item);
+            }
+        }
+        String[] contraband1 = new String[contraband.size()];
+        for (int i = 0; i < contraband.size(); i++) {
+            contraband1[i] = contraband.get(i).getName();
+        }
+        return contraband1;
+    }
+    public String getType() {
+        return this.type;
     }
 }

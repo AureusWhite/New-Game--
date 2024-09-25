@@ -47,7 +47,7 @@ public class GUI extends JFrame {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         setResizable(false);
-        
+
         statsPanel = new JPanel();
         statsPanel.setBackground(periwinkle);
         statsPanel.setPreferredSize(new Dimension(1200, 35));
@@ -57,53 +57,61 @@ public class GUI extends JFrame {
         statsLabel.setForeground(Color.BLACK);
         statsPanel.add(statsLabel);
         add(statsPanel, BorderLayout.NORTH);
-        
+
         npcPanel = new JPanel();
         npcPanel.setBackground(periwinkle);
         npcPanel.setLayout(new BoxLayout(npcPanel, BoxLayout.Y_AXIS));
-        
+        npcPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
+        npcPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the panel
+        npcPanel.setPreferredSize(new Dimension(100, 1));
+
         // Add NPCs label
-        JLabel npcsLabel = new JLabel("NPCs:");
-        npcsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        JLabel npcsLabel = new JLabel("NPCs:", JLabel.CENTER); // Center the label text
+        npcsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         npcsLabel.setOpaque(true);
         npcsLabel.setBackground(periwinkle);
-        npcsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        npcsLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5)); // Thicker border
+        npcsLabel.setPreferredSize(new Dimension(100, 1)); // Adjust size if needed
         npcPanel.add(npcsLabel);
-        
+
         itemPanel = new JPanel();
         itemPanel.setBackground(periwinkle);
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
-        
+        itemPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
+        itemPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the panel
+        itemPanel.setPreferredSize(new Dimension(100, 1));
+
         // Add ITEMS label
-        JLabel itemsLabel = new JLabel("ITEMS:");
-        itemsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        JLabel itemsLabel = new JLabel("ITEMS:", JLabel.CENTER); // Center the label text
+        itemsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         itemsLabel.setOpaque(true);
         itemsLabel.setBackground(periwinkle);
-        itemsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        itemsLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5)); // Thicker border
+        itemsLabel.setPreferredSize(new Dimension(100, 1)); // Adjust size if needed
         itemPanel.add(itemsLabel);
-        
+
         extraPanel = new JPanel();
         extraPanel.setBackground(periwinkle);
         extraPanel.setLayout(new BoxLayout(extraPanel, BoxLayout.Y_AXIS));
-        
+
         // Add panels to the main container
-        JPanel panelContainer = new JPanel();
+        panelContainer = new JPanel();
         panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.Y_AXIS));
         panelContainer.add(npcPanel);
-        panelContainer.add(itemPanel);
         panelContainer.add(extraPanel);
-        
+        panelContainer.add(itemPanel);
+
         add(panelContainer, BorderLayout.WEST);
-        
+
         // Initialize buttonPanel
         btnPanel = new JPanel();
         btnPanel.setBackground(periwinkle);
         add(btnPanel, BorderLayout.SOUTH);
-        
+
         // Initialize inputPanel
         inputPanel = new JPanel();
         inputPanel.setBackground(periwinkle);
-        
+
         // Initialize jTextPane
         jTextPane = new JTextPane();
         jTextPane.setContentType("text/html");
@@ -125,11 +133,11 @@ public class GUI extends JFrame {
         scrollPane.setPreferredSize(new Dimension(700, 400));
         add(scrollPane, BorderLayout.CENTER);
         jTextPane.setEditable(false);
-        
+
         // Initialize jTextField
         jTextField = new JTextField(20);
         jTextField.setFont(new Font("Arial", Font.PLAIN, 16));
-        
+
         // Create buttons
         takeButton = new JButton("Take");
         takeButton.setFont(new Font("Arial", Font.BOLD, 16));
@@ -147,7 +155,7 @@ public class GUI extends JFrame {
         socializeButton.setFont(new Font("Arial", Font.BOLD, 16));
         mischiefButton = new JButton("Mischief");
         mischiefButton.setFont(new Font("Arial", Font.BOLD, 16));
-        
+
         // Set button size
         Dimension buttonSize = new Dimension(100, 50);
         moveButton.setPreferredSize(buttonSize);
@@ -158,7 +166,7 @@ public class GUI extends JFrame {
         socializeButton.setPreferredSize(buttonSize);
         takeButton.setPreferredSize(buttonSize);
         mischiefButton.setPreferredSize(buttonSize);
-        
+
         // Add buttons to panel
         btnPanel.add(mischiefButton);
         btnPanel.add(socializeButton);
@@ -169,7 +177,7 @@ public class GUI extends JFrame {
         btnPanel.add(inventoryButton);
         btnPanel.add(carebutton);
         btnPanel.add(takeButton);
-        
+
         // Add borders to components
         statsPanel.setBorder(new LineBorder(Color.BLACK, 2));
         inputPanel.setBorder(new LineBorder(Color.BLACK, 2));
@@ -186,7 +194,7 @@ public class GUI extends JFrame {
 
         // Add action listeners to buttons
         moveButton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     String[] exits = Player.room.getExits();
@@ -218,7 +226,7 @@ public class GUI extends JFrame {
             }
         });
         dialogButton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     if (Player.room.getNPCs().isEmpty()) {
@@ -238,7 +246,7 @@ public class GUI extends JFrame {
                             npcs,
                             npcs[0]);
 
-                    if (selectedNPC != null && !selectedNPC.equals("Nobody")) {
+                    if (selectedNPC != null) {
                         GameHandler.getGui().display("You talk to the " + selectedNPC + ".", "Black");
                         NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
                         GameHandler.getGui().display(npc.getDialog(), "Black");
@@ -273,7 +281,7 @@ public class GUI extends JFrame {
             }
         });
         learnButton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     String[] topics = {"Story Time", "Arts & Crafts", "Educational Games", "Language", "Puzzles"};
@@ -288,7 +296,6 @@ public class GUI extends JFrame {
                     if (selectedTopic != null) {
                         switch (selectedTopic) {
                             case "Story Time" -> {
-                                GameHandler.getGui().display("You read a story", "Black");
                                 GameHandler.storyTime();
                             }
                             case "Arts & Crafts" -> {
@@ -316,7 +323,7 @@ public class GUI extends JFrame {
 
         });
         inventoryButton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     String[] options = {"Use", "Drop", "Throw Away", "Put up", "Give"};
@@ -352,6 +359,7 @@ public class GUI extends JFrame {
                                 notify();
                                 Item item = GameHandler.getItemByName(selectedItem);
                                 Player.removeItem(item);
+                                Player.getRoom().addItem(item);
                                 GameHandler.getGui().display("You drop the " + selectedItem + ".", "Black");
                             }
                             case 2 -> {
@@ -425,7 +433,7 @@ public class GUI extends JFrame {
             }
         });
         carebutton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     String[] care = {"Nap", "Potty", "Tantrum", "Eat/Drink", "Reflect"};
@@ -467,7 +475,7 @@ public class GUI extends JFrame {
             }
         });
         socializeButton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     String[] socialize = {"Play", "Help", "Lead", "Pretend", "Dance"};
@@ -577,7 +585,7 @@ public class GUI extends JFrame {
         });
 
         takeButton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     if (Player.room.getArrayInventory().isEmpty()) {
@@ -608,7 +616,7 @@ public class GUI extends JFrame {
             }
         });
         mischiefButton.addActionListener(e -> {
-            if (Game.isRunning()) {
+            if (!locked) {
                 synchronized (this) {
                     notify();
                     String[] mischief = {"Sneak", "Prank", "Steal", "Sabotage", "Vandalize"};
@@ -727,14 +735,14 @@ public class GUI extends JFrame {
         jTextField.addActionListener(e -> {
             synchronized (this) {
                 notify();
-                if (Game.isRunning()) {
+                if (!locked) {
                     Commands.execute(jTextField.getText());
                 } else {
                     notify();
                 }
             }
         });
-        
+
         setVisible(true);
     }
 
@@ -842,23 +850,6 @@ public class GUI extends JFrame {
         return mischiefButton;
     }
 
-    private void showPopupWithContent(String content) {
-        JTextPane textPane = new JTextPane();
-        textPane.setContentType("text/html");
-        textPane.setText(content);
-        textPane.setEditable(false);
-
-        JScrollPane scrollPane = new JScrollPane(textPane);
-        scrollPane.setPreferredSize(new Dimension(500, 400));
-
-        JDialog dialog = new JDialog((Frame) null, "File Content", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.add(scrollPane, BorderLayout.CENTER);
-        dialog.pack();
-        dialog.setLocationRelativeTo(null); // Center the dialog
-        dialog.setVisible(true);
-    }
-
     public void unlockButtons() {
         locked = false;
     }
@@ -876,57 +867,70 @@ public class GUI extends JFrame {
         itemPanel.removeAll();
         extraPanel.removeAll();
 
-        // Add NPCs label
-        JLabel itemsLabel = new JLabel("ITEMS:");
-        itemsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        // Set GridBagLayout for npcPanel and itemPanel
+        npcPanel.setLayout(new GridBagLayout());
+        itemPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTH; // Anchor to the top
+        gbc.insets = new Insets(0, 0, 0, 0); // Adjust insets to reduce spacing
+        gbc.weighty = 0.0; // No extra vertical space
+
+        // Add ITEMS label
+        JLabel itemsLabel = new JLabel("ITEMS:", JLabel.CENTER);
+        itemsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         itemsLabel.setOpaque(true);
         itemsLabel.setBackground(periwinkle);
-        itemsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        itemPanel.add(itemsLabel);
+        itemsLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
+        itemsLabel.setPreferredSize(new Dimension(200, 1));
+        itemPanel.add(itemsLabel, gbc);
 
         // Add Items to itemPanel
         for (Item item : Player.room.getArrayInventory()) {
             if (item != null) {
-                JLabel itemLabel = new JLabel(item.getName());
-                itemLabel.setFont(new Font("Arial", Font.BOLD, 14));
+                JLabel itemLabel = new JLabel(item.getName(), JLabel.CENTER);
+                itemLabel.setFont(new Font("Arial", Font.BOLD, 16));
                 itemLabel.setOpaque(true);
                 itemLabel.setBackground(periwinkle);
-                itemLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                itemLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
+                itemLabel.setPreferredSize(new Dimension(200, 30));
                 itemLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
                         GameHandler.getGui().display(item.getDescription(), "Black");
                     }
                 });
-                itemPanel.add(itemLabel);
+                itemPanel.add(itemLabel, gbc);
             }
         }
 
         // Add NPCs label
-        JLabel npcsLabel = new JLabel("NPCs:");
-        npcsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        JLabel npcsLabel = new JLabel("NPCs:", JLabel.CENTER);
+        npcsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         npcsLabel.setOpaque(true);
         npcsLabel.setBackground(periwinkle);
-        npcsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        npcPanel.add(npcsLabel);
+        npcsLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
+        npcsLabel.setPreferredSize(new Dimension(200, 30));
+        npcPanel.add(npcsLabel, gbc);
 
         // Add NPCs to npcPanel
         for (NPC npc : Player.room.getNPCs()) {
-            JLabel npcLabel = new JLabel(npc.getName());
-            npcLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            JLabel npcLabel = new JLabel(npc.getName(), JLabel.CENTER);
+            npcLabel.setFont(new Font("Arial", Font.BOLD, 16));
             npcLabel.setOpaque(true);
             npcLabel.setBackground(periwinkle);
-            npcLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            npcLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
+            npcLabel.setPreferredSize(new Dimension(200, 30));
             npcLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     GameHandler.getGui().display(npc.getDialog(), "Black");
                 }
             });
-            npcPanel.add(npcLabel);
+            npcPanel.add(npcLabel, gbc);
         }
-
-        // Revalidate and repaint panels
         npcPanel.revalidate();
         npcPanel.repaint();
         itemPanel.revalidate();
@@ -934,4 +938,62 @@ public class GUI extends JFrame {
         extraPanel.revalidate();
         extraPanel.repaint();
     }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public JPanel getNpcPanel() {
+        return npcPanel;
+    }
+
+    public void setNpcPanel(JPanel npcPanel) {
+        this.npcPanel = npcPanel;
+    }
+
+    public JPanel getItemPanel() {
+        return itemPanel;
+    }
+
+    public void setItemPanel(JPanel itemPanel) {
+        this.itemPanel = itemPanel;
+    }
+
+    public JPanel getExtraPanel() {
+        return extraPanel;
+    }
+
+    public void setExtraPanel(JPanel extraPanel) {
+        this.extraPanel = extraPanel;
+    }
+
+    public JPanel getPanelContainer() {
+        return panelContainer;
+    }
+
+    public void setPanelContainer(JPanel panelContainer) {
+        this.panelContainer = panelContainer;
+    }
+
+    private void showPopupWithContent(String content) {
+        JTextPane textPane = new JTextPane();
+        textPane.setContentType("text/html");
+        textPane.setText(content);
+        textPane.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(textPane);
+        scrollPane.setPreferredSize(new Dimension(500, 400));
+
+        JDialog dialog = new JDialog((Frame) null, "File Content", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.add(scrollPane, BorderLayout.CENTER);
+        dialog.pack();
+        dialog.setLocationRelativeTo(null); // Center the dialog
+        dialog.setVisible(true);
+    }
+
 }

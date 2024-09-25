@@ -27,7 +27,6 @@ public class NPC extends Character {
     private String playerRep = "Good";
     private String reason = "";
     private String alignment;
-    private String dialog = "Hello, I am " + this.getName().replace("_", " ") + ".";
     boolean follower;
     private Quest quest;
 
@@ -59,7 +58,24 @@ public class NPC extends Character {
     }
 
     public String getDialog() {
-        return dialog;
+        GameHandler.readFile(this.getName());
+        switch(GameHandler.getClock().getTimeOfDay()){
+            case "Morning" -> {
+                return GameHandler.fileSection2;
+            }
+            case "Afternoon" -> {
+                return "Good afternoon, I am " + this.getName().replace("_", " ") + ".";
+            }
+            case "Evening" -> {
+                return "Good evening, I am " + this.getName().replace("_", " ") + ".";
+            }
+            case "Night" -> {
+                return "Good night, I am " + this.getName().replace("_", " ") + ".";
+            }
+            default -> {
+                return "Hello, I am " + this.getName().replace("_", " ") + ".";
+            }
+        }
     }
 
     public void getPranked() {
@@ -168,18 +184,6 @@ public class NPC extends Character {
 
     public String getAlignment() {
         return alignment;
-    }
-
-    public void update() {
-        String blargh = getPlayerRep();
-        switch (blargh) {
-            case "Bad" ->
-                this.setDialog("I am not talking to you");
-            case "Mischievous" ->
-                this.setDialog("I am watching you");
-            default ->
-                this.setDialog("Hello, I am " + this.getName().replace("_", " ") + ".");
-        }
     }
 
     public boolean isFollower() {
@@ -474,11 +478,6 @@ public class NPC extends Character {
     private void setRep(String reputation) {
         this.playerRep = reputation;
     }
-
-    private void setDialog(String string) {
-        this.dialog = string;
-    }
-
     private void adjustPlayerRep(double i, double i0, double i1, double i2) {
         DecimalFormat df = new DecimalFormat("#.#");
         for (Map.Entry<Integer, Double> entry : this.pRep.entrySet()) {

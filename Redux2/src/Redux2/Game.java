@@ -14,6 +14,7 @@ public class Game {
     }
 
     public static void setRunning(boolean b) {
+        
         Game.running = b;
     }
 
@@ -45,7 +46,6 @@ public class Game {
         gamehandler.playIntro();
         Player.initializeSkills();
         //gamehandler.setupPlayer();
-        Game.setRunning(true);
         GameHandler.getGui().unlockButtons();
         gamehandler.playGame();
         gamehandler.endGame();

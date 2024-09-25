@@ -11,11 +11,6 @@ public class Player {
 
     public static String alignment = "Newbie";
     public static int age;
-    public static String social;
-    public static String motor;
-    public static String imagenation;
-    public static String learning;
-    public static String emotional;
     public static ArrayList<Item> Pinventory = new ArrayList<>();
     public static ArrayList<Consumable> consumables = new ArrayList<>();
     public static HashMap<String, Equipment> equipment = new HashMap<>();
@@ -33,7 +28,7 @@ public class Player {
     private static int thirst = 100;
     private static int hunger = 100;
     private static int energy;
-    private static String status;
+    private static String status = "Normal";
     static String[] pronouns;
     private static String[] favorites;
     private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
@@ -46,14 +41,14 @@ public class Player {
     }
 
     public static void initializeSkills() {
-        for (Skill skill : Skill.values()) {
-            skillLevels.put(skill, 1);
-        }
         Map<Ability, Effect> socialAbilities = new HashMap<>();
         Map<Ability, Effect> motorAbilities = new HashMap<>();
         Map<Ability, Effect> imaginationAbilities = new HashMap<>();
         Map<Ability, Effect> learningAbilities = new HashMap<>();
         Map<Ability, Effect> emotionalAbilities = new HashMap<>();
+        for (Skill skill : Skill.values()) {
+            skillLevels.put(skill, 1);
+        }
 
         socialAbilities.put(Ability.CRY, new Effect("Cries", (argument) -> {
             for (NPC npc : room.getNPCs()) {
@@ -75,7 +70,7 @@ public class Player {
                         GameHandler.getGui().display("You want the " + item.getName(), "Black");
                         npc.askForItem(item);
 
-                    }else{
+                    } else {
                         GameHandler.getGui().display("You can't take that.", "Black");
                     }
                 }
@@ -195,184 +190,6 @@ public class Player {
         skillLevels.put(skill, skillLevels.get(skill) + 1);
     }
 
-    public void levelDownSkill(Skill skill) {
-        skillLevels.put(skill, skillLevels.get(skill) - 1);
-    }
-
-    public void setSkillLevel(Skill skill, int level) {
-        skillLevels.put(skill, level);
-    }
-
-    public void setSkillLevels(Map<Skill, Integer> skillLevels) {
-        Player.skillLevels = skillLevels;
-    }
-
-    public Map<Skill, Integer> getSkillLevels() {
-        return skillLevels;
-    }
-
-    public void setAbilities(Map<Skill, Map<Ability, Effect>> abilities) {
-        Player.abilities = abilities;
-    }
-
-    public Map<Skill, Map<Ability, Effect>> getAbilities() {
-        return abilities;
-    }
-
-    public void addAbility(Skill skill, Ability ability, Effect effect) {
-        abilities.get(skill).put(ability, effect);
-    }
-
-    public void removeAbility(Skill skill, Ability ability) {
-        abilities.get(skill).remove(ability);
-    }
-
-    public void setAbility(Skill skill, Ability ability, Effect effect) {
-        abilities.get(skill).put(ability, effect);
-    }
-
-    public void setPronouns(String subjective, String objective, String possessive, String reference) {
-        pronouns = new String[]{subjective, objective, possessive, reference};
-    }
-
-    private static boolean canPerform(Skill skill, Ability ability) {
-        // Check if the player has enough skill level to use the ability
-        // You can define thresholds based on skill and ability
-        int levelRequired = determineLevelRequired(skill, ability);
-        return getSkillLevel(skill) >= levelRequired;
-    }
-
-    private static int determineLevelRequired(Skill skill, Ability ability) {
-        switch (skill) {
-            case SOCIAL -> {
-                switch (ability) {
-                    case CRY -> {
-                        return 0;
-                    }
-                    case POINT -> {
-                        return 1;
-                    }
-                    case NAME -> {
-                        return 2;
-                    }
-                    case ASK -> {
-                        return 3;
-                    }
-                    case NEGOTIATE -> {
-                        return 4;
-                    }
-                    case MEDIATE -> {
-                        return 5;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case MOTOR -> {
-                switch (ability) {
-                    case CRAWL -> {
-                        return 0;
-                    }
-                    case WALK -> {
-                        return 1;
-                    }
-                    case RUN -> {
-                        return 2;
-                    }
-                    case CLIMB -> {
-                        return 3;
-                    }
-                    case SNEAK -> {
-                        return 4;
-                    }
-                    case KICK -> {
-                        return 5;
-                    }
-                    case SKIP -> {
-                        return 6;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case IMAGINATION -> {
-                switch (ability) {
-                    case IMITATE -> {
-                        return 0;
-                    }
-                    case DOLLS -> {
-                        return 1;
-                    }
-                    case PRODUCE -> {
-                        return 2;
-                    }
-                    case DIRECT -> {
-                        return 3;
-                    }
-                    case PLAY_ALONG -> {
-                        return 4;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case LEARNING -> {
-                switch (ability) {
-                    case READ -> {
-                        return 0;
-                    }
-                    case WRITE -> {
-                        return 1;
-                    }
-                    case BASICS -> {
-                        return 2;
-                    }
-                    case INTERMEDIATE -> {
-                        return 3;
-                    }
-                    case ADVANCED -> {
-                        return 4;
-                    }
-                    case REMEDIATED -> {
-                        return 5;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case EMOTIONAL -> {
-                switch (ability) {
-                    case EXPRESS -> {
-                        return 0;
-                    }
-                    case INTERPRET -> {
-                        return 1;
-                    }
-                    case SELF_SOOTHE -> {
-                        return 2;
-                    }
-                    case SOOTHE_OTHERS -> {
-                        return 3;
-                    }
-                    case RESILIENCE -> {
-                        return 4;
-                    }
-                    case TEMPERANCE -> {
-                        return 5;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-        }
-        return -1;
-    }
-
     public static void useEnergy(int energy) {
         Player.energy -= energy;
     }
@@ -452,42 +269,6 @@ public class Player {
         }
     }
 
-    public static void setAbilities(String social, String motor, String imagenation, String learning, String emotional) {
-        setSocial(social);
-        setMotor(motor);
-        setImagenation(imagenation);
-        setLearning(learning);
-        setEmotional(emotional);
-    }
-
-    public static void setCharacterAbilities() {
-        while (!isAbilitiesSet()) {
-            GameHandler.getGui().display("Please enter your social ability.", "Black");
-            GameHandler.getGui().waitForInput();
-            social = GameHandler.getGui().getInput();
-            GUI.getJTextField().setText("");
-            GameHandler.getGui().display("Please enter your motor ability.", "Black");
-            GameHandler.getGui().waitForInput();
-            motor = GameHandler.getGui().getInput();
-            GUI.getJTextField().setText("");
-            GameHandler.getGui().display("Please enter your imagenation ability.", "Black");
-            GameHandler.getGui().waitForInput();
-            imagenation = GameHandler.getGui().getInput();
-            GUI.getJTextField().setText("");
-            GameHandler.getGui().display("Please enter your learning ability.", "Black");
-            GameHandler.getGui().waitForInput();
-            learning = GameHandler.getGui().getInput();
-            GUI.getJTextField().setText("");
-            GameHandler.getGui().display("Please enter your emotional ability.", "Black");
-            GameHandler.getGui().waitForInput();
-            emotional = GameHandler.getGui().getInput();
-            GUI.getJTextField().setText("");
-            setAbilities(social, motor, imagenation, learning, emotional);
-            abilitiesSet = true;
-        }
-        GameHandler.getGui().display("Your abilities are: " + social + ", " + motor + ", " + imagenation + ", " + learning + ", " + emotional, "Black");
-    }
-
     public static int getExperience() {
         return experience;
     }
@@ -528,26 +309,6 @@ public class Player {
         age = age1;
     }
 
-    public static void setSocial(String social1) {
-        social = social1;
-    }
-
-    public static void setMotor(String motor1) {
-        motor = motor1;
-    }
-
-    public static void setImagenation(String imagenation1) {
-        imagenation = imagenation1;
-    }
-
-    public static void setLearning(String learning1) {
-        learning = learning1;
-    }
-
-    public static void setEmotional(String emotional1) {
-        emotional = emotional1;
-    }
-
     public static void setAbilitiesSet(boolean abilitiesSet1) {
         abilitiesSet = abilitiesSet1;
     }
@@ -576,8 +337,8 @@ public class Player {
         String[] items = new String[Player.getInventory().size()];
         for (int i = 0; i < Player.getInventory().size(); i++) {
             if (!Player.getInventory().get(i).isEquipped()) {
-            items[i] = Player.getInventory().get(i).getName();
-            } else{
+                items[i] = Player.getInventory().get(i).getName();
+            } else {
                 items[i] = Player.getInventory().get(i).getName() + " (Equipped)";
             }
         }
@@ -783,28 +544,38 @@ public class Player {
     }
      */
     public static void sneak() {
-        if (motor == null) {
+        if (getSkillLevel(Skill.MOTOR) < 4) {
             GameHandler.getGui().display("You can't sneak.", "Black");
+            levelUpSkill(Skill.MOTOR);
             return;
         }
-        if (motor.contains("sneak")) {
-            GameHandler.getGui().display("You attempt to sneak unseen", "Black");
-            if (getRoom().getNPCs().size() == 1) {
-                GameHandler.getGui().display("No one here to see you.", "Black");
-                Player.setStatus("Hidden");
-                return;
+        if (getSkillLevel(Skill.MOTOR) >= 4) {
+            {
+                if(status.equals("Hidden")){
+                    GameHandler.getGui().display("You are already hidden.", "Black");
+                    return;
+                }
+                if(status.equals("Seen")){
+                    GameHandler.getGui().display("You were already seen.", "Black");
+                    return;
+                }
+                GameHandler.getGui().display("You attempt to sneak unseen", "Black");
+                if (getRoom().getNPCs().isEmpty()) {
+                    GameHandler.getGui().display("No one here to see you.", "Black");
+                    Player.setStatus("Hidden");
+                    return;
+                }
+                int outcome = (int) (Math.random() * 100);
+                if (outcome < 50) {
+                    GameHandler.getGui().display("You were seen.", "Black");
+                    Player.getRoom().getFirstNPC().setSuspicion();
+                    Player.setStatus("Seen");
+                    Player.getRoom().getFirstNPC().caughtPlayer("sneaking");
+                } else {
+                    GameHandler.getGui().display("You were not seen.", "Black");
+                    Player.setStatus("Hidden");
+                }
             }
-            int outcome = (int) (Math.random() * 100);
-            if (outcome < 50) {
-                GameHandler.getGui().display("You were seen.", "Black");
-                Player.getRoom().getFirstNPC().setSuspicion();
-                Player.setStatus("Seen");
-                Player.getRoom().getFirstNPC().caughtPlayer("sneaking");
-            } else {
-                GameHandler.getGui().display("You were not seen.", "Black");
-                Player.setStatus("Hidden");
-            }
-
         } else {
             GameHandler.getGui().display("You can't sneak.", "Black");
         }
@@ -842,26 +613,6 @@ public class Player {
     public static void setFavorites(String color, String food, String toy, String game, String book, String subject, String activity) {
         favorites = new String[]{color, food, toy, game, book, subject, activity};
 
-    }
-
-    public static String getSocial() {
-        return social;
-    }
-
-    public static String getMotor() {
-        return motor;
-    }
-
-    public static String getImagenation() {
-        return imagenation;
-    }
-
-    public static String getLearning() {
-        return learning;
-    }
-
-    public static String getEmotional() {
-        return emotional;
     }
 
     public static ArrayList<Item> getPinventory() {
@@ -931,9 +682,12 @@ public class Player {
 
     static void getPunished(String act, int i, NPC npc, String punishment) {
         switch (punishment) {
-            case "Time Out" -> timeOut(i, act, npc);
-            case "Spanking" -> GameHandler.getGui().display("You were spanked for " + act + " by " + npc.getName(), "Black");
-            default -> GameHandler.getGui().display("You were punished for " + act + " by " + npc.getName(), "Black");
+            case "Time Out" ->
+                timeOut(i, act, npc);
+            case "Spanking" ->
+                GameHandler.getGui().display("You were spanked for " + act + " by " + npc.getName(), "Black");
+            default ->
+                GameHandler.getGui().display("You were punished for " + act + " by " + npc.getName(), "Black");
         }
     }
 
@@ -987,6 +741,144 @@ public class Player {
             }
         }
         return false;
+    }
+
+    private static boolean canPerform(Skill skill, Ability ability) {
+        // Check if the player has enough skill level to use the ability
+        // You can define thresholds based on skill and ability
+        int levelRequired = determineLevelRequired(skill, ability);
+        return getSkillLevel(skill) >= levelRequired;
+    }
+
+    private static int determineLevelRequired(Skill skill, Ability ability) {
+        switch (skill) {
+            case SOCIAL -> {
+                switch (ability) {
+                    case CRY -> {
+                        return 0;
+                    }
+                    case POINT -> {
+                        return 1;
+                    }
+                    case NAME -> {
+                        return 2;
+                    }
+                    case ASK -> {
+                        return 3;
+                    }
+                    case NEGOTIATE -> {
+                        return 4;
+                    }
+                    case MEDIATE -> {
+                        return 5;
+                    }
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case MOTOR -> {
+                switch (ability) {
+                    case CRAWL -> {
+                        return 0;
+                    }
+                    case WALK -> {
+                        return 1;
+                    }
+                    case RUN -> {
+                        return 2;
+                    }
+                    case CLIMB -> {
+                        return 3;
+                    }
+                    case SNEAK -> {
+                        return 4;
+                    }
+                    case KICK -> {
+                        return 5;
+                    }
+                    case SKIP -> {
+                        return 6;
+                    }
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case IMAGINATION -> {
+                switch (ability) {
+                    case IMITATE -> {
+                        return 0;
+                    }
+                    case DOLLS -> {
+                        return 1;
+                    }
+                    case PRODUCE -> {
+                        return 2;
+                    }
+                    case DIRECT -> {
+                        return 3;
+                    }
+                    case PLAY_ALONG -> {
+                        return 4;
+                    }
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case LEARNING -> {
+                switch (ability) {
+                    case READ -> {
+                        return 0;
+                    }
+                    case WRITE -> {
+                        return 1;
+                    }
+                    case BASICS -> {
+                        return 2;
+                    }
+                    case INTERMEDIATE -> {
+                        return 3;
+                    }
+                    case ADVANCED -> {
+                        return 4;
+                    }
+                    case REMEDIATED -> {
+                        return 5;
+                    }
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+            case EMOTIONAL -> {
+                switch (ability) {
+                    case EXPRESS -> {
+                        return 0;
+                    }
+                    case INTERPRET -> {
+                        return 1;
+                    }
+                    case SELF_SOOTHE -> {
+                        return 2;
+                    }
+                    case SOOTHE_OTHERS -> {
+                        return 3;
+                    }
+                    case RESILIENCE -> {
+                        return 4;
+                    }
+                    case TEMPERANCE -> {
+                        return 5;
+                    }
+                    default ->
+                        throw new IllegalArgumentException("Unexpected value: " + ability);
+                }
+            }
+
+        }
+        return -1;
     }
 
     private static int getEnergy() {
@@ -1070,35 +962,48 @@ public class Player {
 
     }
 
-    public void calculateAttributes() {
-        int pAge = getAge();
-        switch (pAge) {
-            case 2, 3, 4 -> {
-                setSocial("Expressive");
-                setMotor("sneak");
-                setImagenation("Pretend Play");
-                setLearning("Exploration");
-                setEmotional("Unregulated");
-            }
-            case 5, 6, 7 -> {
-                setSocial("Mixed Cooperative");
-                setMotor("Walk, Run, Jump");
-                setImagenation("Pretend Play, Drawing, Building");
-                setLearning("Passive Learning");
-                setEmotional("Semiregulated");
-            }
-            case 8, 9, 10, 11, 12 -> {
-                setSocial("Cooperative");
-                setMotor("Walk, Run, Jump, Skip, Hop");
-                setImagenation("Pretend Play, Storytelling, Drawing, Building");
-                setLearning("Active Learning");
-                setEmotional("Regulated");
-            }
-        }
+    public void levelDownSkill(Skill skill) {
+        skillLevels.put(skill, skillLevels.get(skill) - 1);
+    }
+
+    public void setSkillLevel(Skill skill, int level) {
+        skillLevels.put(skill, level);
+    }
+
+    public void setSkillLevels(Map<Skill, Integer> skillLevels) {
+        Player.skillLevels = skillLevels;
+    }
+
+    public Map<Skill, Integer> getSkillLevels() {
+        return skillLevels;
+    }
+
+    public void setAbilities(Map<Skill, Map<Ability, Effect>> abilities) {
+        Player.abilities = abilities;
+    }
+
+    public Map<Skill, Map<Ability, Effect>> getAbilities() {
+        return abilities;
+    }
+
+    public void addAbility(Skill skill, Ability ability, Effect effect) {
+        abilities.get(skill).put(ability, effect);
+    }
+
+    public void removeAbility(Skill skill, Ability ability) {
+        abilities.get(skill).remove(ability);
+    }
+
+    public void setAbility(Skill skill, Ability ability, Effect effect) {
+        abilities.get(skill).put(ability, effect);
+    }
+
+    public void setPronouns(String subjective, String objective, String possessive, String reference) {
+        pronouns = new String[]{subjective, objective, possessive, reference};
     }
 
     public void dropItem(Item item) {
-        if(item.isEquipped()){
+        if (item.isEquipped()) {
             GameHandler.getGui().display("You may not drop an equipped item.", "Black");
         } else {
             GameHandler.getGui().display("You drop the " + item.getName() + ".", "Black");
