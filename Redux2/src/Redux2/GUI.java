@@ -214,11 +214,11 @@ public class GUI extends JFrame {
                         GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
                         Player.setRoom(GameHandler.getRoomByName(selectedExit.replace(" ", "_")));
                         for (NPC npc : tempRoom.getNPCs()) {
+                            npc.setSuspicion(0);
                             if (npc.isFollower()) {
                                 npc.setRoom(Player.getRoom());
                             }
                         }
-                        Player.getRoom().update();
                     } else {
                         notify();
                     }
@@ -250,7 +250,7 @@ public class GUI extends JFrame {
                         GameHandler.getGui().display("You talk to the " + selectedNPC + ".", "Black");
                         NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
                         GameHandler.getGui().display(npc.getDialog(), "Black");
-                        String[] options = {"Sarcastic", "Nice", "Mean", "Neutral"};
+                        String[] options = {"Persuade", "Ask a question.", "Make a statement", "Greetings"};
                         int selectedOption = JOptionPane.showOptionDialog(null,
                                 "What do you want to say?",
                                 "Dialog",
@@ -261,16 +261,106 @@ public class GUI extends JFrame {
                                 options[0]);
                         switch (selectedOption) {
                             case 0 -> {
-                                GameHandler.getGui().display(npc.getResponse("Sarcastic"), "Black");
+                                String persuasions[] = {"Cry","Pout","Silly","Mediate"};
+                                String selectedPersuasion = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "How do you persuasde ? "+npc.getName(), 
+                                        "Dialog",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        persuasions,
+                                        persuasions[0]);
+                                switch (selectedPersuasion) {
+                                    case "Cry" -> {
+                                        GameHandler.getGui().display(npc.getResponse("persuasion","Cry"), "Black");
+
+                                    }
+                                    case "Pout" -> {
+                                        GameHandler.getGui().display(npc.getResponse("persuasion","Pout"), "Black");
+                                    }
+                                    case "Silly" -> {
+                                        GameHandler.getGui().display(npc.getResponse("persuasion","Silly"), "Black");
+                                    }
+                                    case "Mediate" -> {
+                                        GameHandler.getGui().display(npc.getResponse("persuasion","Mediate"), "Black");
+                                    }
+                                }
+
                             }
                             case 1 -> {
-                                GameHandler.getGui().display(npc.getResponse("Nice"), "Black");
+                                String questions[] = {"What is your name?", "How old are you?", "What do you like?", "What do you dislike?"};
+                                String selectedQuestion = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to ask?",
+                                        "Dialog",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        questions,
+                                        questions[0]);
+                                switch (selectedQuestion) {
+                                    case "What is your name?" -> {
+                                        GameHandler.getGui().display(npc.getResponse("question","name"), "Black");
+                                    }
+                                    case "How old are you?" -> {
+                                        GameHandler.getGui().display(npc.getResponse("question","age"), "Black");
+                                    }
+                                    case "What do you like?" -> {
+                                        GameHandler.getGui().display(npc.getResponse("question","like"), "Black");
+                                    }
+                                    case "What do you dislike?" -> {
+                                        GameHandler.getGui().display(npc.getResponse("question","dislike"), "Black");
+                                    }
+                                }
                             }
                             case 2 -> {
-                                GameHandler.getGui().display(npc.getResponse("Mean"), "Black");
+                                String statements[] = {"I like you", "I don't like you", "You are nice", "You are mean"};
+                                String selectedStatement = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to say?",
+                                        "Dialog",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        statements,
+                                        statements[0]);
+                                switch (selectedStatement) {
+                                    case "I like you" -> {
+                                        GameHandler.getGui().display(npc.getResponse("statement","like"), "Black");
+                                    }
+                                    case "I don't like you" -> {
+                                        GameHandler.getGui().display(npc.getResponse("statement","dislike"), "Black");
+                                    }
+                                    case "You are nice" -> {
+                                        GameHandler.getGui().display(npc.getResponse("statement","nice"), "Black");
+                                    }
+                                    case "You are mean" -> {
+                                        GameHandler.getGui().display(npc.getResponse("statement","mean"), "Black");
+                                    }
+                                }
                             }
                             case 3 -> {
-                                GameHandler.getGui().display(npc.getResponse("Neutral"), "Black");
+                                String greetings[] = {"Hello", "Goodbye", "Good Morning", "Good Night"};
+                                String selectedGreeting = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to say?",
+                                        "Dialog",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        greetings,
+                                        greetings[0]);
+                                switch (selectedGreeting) {
+                                    case "Hello" -> {
+                                        GameHandler.getGui().display(npc.getResponse("greeting","hello"), "Black");
+                                    }
+                                    case "Goodbye" -> {
+                                        GameHandler.getGui().display(npc.getResponse("greeting","goodbye"), "Black");
+                                    }
+                                    case "Good Morning" -> {
+                                        GameHandler.getGui().display(npc.getResponse("greeting","morning"), "Black");
+                                    }
+                                    case "Good Night" -> {
+                                        GameHandler.getGui().display(npc.getResponse("greeting","night"), "Black");
+                                    }
+                                }
                             }
                         }
 

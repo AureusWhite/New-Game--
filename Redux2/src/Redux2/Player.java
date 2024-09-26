@@ -28,13 +28,13 @@ public class Player {
     private static int thirst = 100;
     private static int hunger = 100;
     private static int energy;
-    private static String status = "Normal";
     static String[] pronouns;
     private static String[] favorites;
     private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
     private static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
 
     private static boolean leader = true;
+    private static boolean playerIsHidden;
 
     public static void setEnergy(int energy) {
         Player.energy = energy;
@@ -402,10 +402,6 @@ public class Player {
         }
     }
 
-    public static String getStatus() {
-        return status;
-    }
-
     public static void addXP(int reward) {
         experience += reward;
     }
@@ -551,29 +547,33 @@ public class Player {
         }
         if (getSkillLevel(Skill.MOTOR) >= 4) {
             {
-                if(status.equals("Hidden")){
+                if (playerIsHidden) {
                     GameHandler.getGui().display("You are already hidden.", "Black");
                     return;
                 }
-                if(status.equals("Seen")){
-                    GameHandler.getGui().display("You were already seen.", "Black");
-                    return;
+                if (!playerIsHidden) {
+                    for (NPC npc : getRoom().getNPCs()) {
+                        if (npc.getSuspicion() >= 1) {
+                            GameHandler.getGui().display(npc.getName() + ": I can see you. ", "Black");
+                            return;
+                        }
+                    }
                 }
                 GameHandler.getGui().display("You attempt to sneak unseen", "Black");
                 if (getRoom().getNPCs().isEmpty()) {
                     GameHandler.getGui().display("No one here to see you.", "Black");
-                    Player.setStatus("Hidden");
+                    setHidden(true);
                     return;
                 }
                 int outcome = (int) (Math.random() * 100);
-                if (outcome < 50) {
+                if (outcome < getSkillLevel(Skill.MOTOR) * 15) {
                     GameHandler.getGui().display("You were seen.", "Black");
-                    Player.getRoom().getFirstNPC().setSuspicion();
-                    Player.setStatus("Seen");
+                    Player.getRoom().getFirstNPC().setSuspicion(1, "sneaking");
+                    Player.setHidden(false);
                     Player.getRoom().getFirstNPC().caughtPlayer("sneaking");
                 } else {
                     GameHandler.getGui().display("You were not seen.", "Black");
-                    Player.setStatus("Hidden");
+                    setHidden(true);
                 }
             }
         } else {
@@ -897,10 +897,6 @@ public class Player {
         return thirst;
     }
 
-    private static void setStatus(String status1) {
-        status = status1;
-    }
-
     private static void timeOut(int i, String act, NPC npc) {
         GameHandler.getGui().clearTextPane();
         GameHandler.playerTimeOut(i, act, npc);
@@ -956,6 +952,10 @@ public class Player {
             stats.put("Learning", 0);
             stats.put("Emotional", 0);
         }
+    }
+
+    private static void setHidden(boolean b) {
+        playerIsHidden = b;
     }
 
     public Player(String name, String discription, Room room) {

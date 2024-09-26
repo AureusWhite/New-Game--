@@ -18,7 +18,7 @@ public class NPC extends Character {
             GameHandler.getGui().display(npc.getName() + " is not interested in following you", "black");
         }
     }
-    private int npcAge = 1;
+    private int npcAge;
     private boolean faction;
     private final Map<Integer, Double> pRep = new HashMap<>();
     private boolean confederate;
@@ -50,6 +50,12 @@ public class NPC extends Character {
     public void reciveItem(Item item) {
         this.addItem(item);
         Player.removeItem(item);
+        if(item.equals(this.getQuest().getRequiredItem())){
+            this.getQuest().setCompleted(true);
+            GameHandler.getGui().display("You have completed the quest", "black");
+            this.setQuest(null);
+            this.listQuests();
+        }
     }
 
     public void giveItemToPlayer(Item item) {
@@ -59,7 +65,7 @@ public class NPC extends Character {
 
     public String getDialog() {
         GameHandler.readFile(this.getName());
-        switch(GameHandler.getClock().getTimeOfDay()){
+        switch (GameHandler.getClock().getTimeOfDay()) {
             case "Morning" -> {
                 return GameHandler.fileSection2;
             }
@@ -82,15 +88,15 @@ public class NPC extends Character {
         if (this.getType().equals("adult")) {
             Random random = new Random();
             int num = random.nextInt(2);
-            switch(num){
+            switch (num) {
                 case 0 -> {
-                    GameHandler.getGui().display("You walk up and place a pickle into "+this.getName()+"'s pocket.", "black");
-                    Player.getPunished("pranking", 1,this,"Time out");
+                    GameHandler.getGui().display("You walk up and place a pickle into " + this.getName() + "'s pocket.", "black");
+                    Player.getPunished("pranking", 1, this, "Time out");
                     break;
                 }
                 case 1 -> {
-                    GameHandler.getGui().display("You put a plastic spider into " +this.getName()+"'s hair.", "black");
-                    Player.getPunished("pranking", 1,this,"Time out");
+                    GameHandler.getGui().display("You put a plastic spider into " + this.getName() + "'s hair.", "black");
+                    Player.getPunished("pranking", 1, this, "Time out");
                     break;
                 }
             }
@@ -129,7 +135,7 @@ public class NPC extends Character {
 
     }
 
-    public void setSuspicion() {
+    public void setSuspicion(int suspicion, String reason) {
         if (this.getType().equals("adult")) {
             GameHandler.getGui().display(this.getName() + " is suspicious of you", "black");
             this.suspicion += 1;
@@ -194,82 +200,110 @@ public class NPC extends Character {
         return quest;
     }
 
-    public String getResponse(String responce) {
-        switch (responce) {
-            case "Sarcastic" -> {
-                switch (this.getName()) {
-                    case "Ms Sagely" -> {
-                        this.adjustPlayerRep(1.1, 1.1, 1.1, 1.1);
-                        return "Ms Sagely: Young one, please do not be sarcastic with me, I have seen this behaviour before and it never ends well";
+    public String getResponse(String type, String act) {
+        switch (type) {
+            case "persuasion" -> {
+                switch (act.toLowerCase()) {
+                    case "cry" -> {
+                        if (this.pRep.get(1) > 0) {
+                            return this.getName() + " is moved by your tears";
+                        } else {
+                            return this.getName() + " is not moved by your tears";
+                        }
                     }
-                    case "Dawn" -> {
-                        this.adjustPlayerRep(1.2, 1.2, 1.2, 1.2);
-                        return "Dawn: Haha, very funny. I invented the bratty child act, you can't fool me";
+                    case "pout" -> {
+                        if (this.pRep.get(1) > 0) {
+                            return this.getName() + " is moved by your pout";
+                        } else {
+                            return this.getName() + " is not moved by your pout";
+                        }
                     }
-                    case "Dr_White" -> {
-                        this.adjustPlayerRep(1, -1, 1, -1);
-                        return "Dr White: 'humm' I see *Writes in notebook*";
+                    case "silly" -> {
+                        if (this.pRep.get(1) > 0) {
+                            return this.getName() + " is moved by your silliness";
+                        } else {
+                            return this.getName() + " is not moved by your silliness";
+                        }
                     }
-                    case "Susy" -> {
-                        this.adjustPlayerRep(2, -1, 1, -2);
-                        return "Susy: Why would you say that?";
+                    case "mediate" -> {
+                        if (this.pRep.get(2) > 0) {
+                            return this.getName() + " is willing to do as you ask";
+                        } else {
+                            return this.getName() + " is not willing to do as you ask";
+                        }
                     }
-                    case "Aang" -> {
-                        this.adjustPlayerRep(1, -1, 1, -1);
-                        return "Aang: *Adjust his spectacles* I am very familiar with the rhetorical technique of sarcasm. Your attempt is lackluster at best";
+                    default -> {
+                        return "I am not sure what you are asking";
                     }
-                    case "Taliber" -> {
-                        this.adjustPlayerRep(-1, 1, 2, -2);
-                        return "Taliber: *Rolls eyes*";
-                    }
-                    case "Aureus" -> {
-                        this.adjustPlayerRep(2, -1, 1, -2);
-                        return "Aureus: *laughs loudly and claps* \"Nice one, I like you\"";
-                    }
-                    case "Reaserch_Student M" -> {
-                        this.adjustPlayerRep(-1, 1, 2, -2);
-                        return "*Writes in notebook*";
-                    }
-                    case "Reaserch_Student F" -> {
-                        this.adjustPlayerRep(1, -1, -2, 2);
-                        return "*Writes in notebook*";
-                    }
-                    case "Casidy" -> {
-                        return "Casidy: Whoa, I don't want any trouble from you. I am just trying to get by";
-                    }
-                    case "Farah" -> {
-                        return "Farah: You what? Listen that attitude is not going to get you anywhere";
-                    }
-                    case "Danelle" -> {
-                        return "Danelle: *Rolls eyes* seen it before kid, no one likes a smart ass";
-                    }
-                    case "Timmy" -> {
-                        return "*Cries* You are a meanie";
-                    }
-                    case "Mrs_White" -> {
-                        return "Mrs White: Have you spoken to my husband about that, I am sure he would love to hear all about it from you, I am sure you won't mind doing a few tests while you're in his office filing a complaint?";
-                    }
-                    default ->
-                        throw new AssertionError();
                 }
             }
-            case "Nice" -> {
-                adjustPlayerRep(-1, -1, -1, -1);
-                return "Thank you";
-
+            case "question" -> {
+                switch (act.toLowerCase()) {
+                    case "name" -> {
+                        GameHandler.getGui().display(this.getName() + ": I am " + this.getName(), "black");
+                    }
+                    case "age" -> {
+                        if (this.getAge() == 0) {
+                            GameHandler.getGui().display(this.getName() + ": I am an Adult", "black");
+                        } else {
+                            GameHandler.getGui().display(this.getName() + ": I am " + this.getAge() + " years old", "black");
+                        }
+                    }
+                    case "like" -> {
+                        GameHandler.getGui().display(this.getName() + ": I like " + this.getLikes(), "black");
+                    }
+                    case "dislike" -> {
+                        GameHandler.getGui().display(this.getName() + ": I dislike " + this.getDislikes(), "black");
+                    }
+                    default -> {
+                        GameHandler.getGui().display("I am not sure what you are asking", "black");
+                    }
+                }
             }
-            case "Mean" -> {
-                return "You are a jerk";
+            case "statement" -> {
+                switch (act.toLowerCase()) {
+                    case "like" -> {
+                        return "Hello, I am " + this.getName();
+                    }
+                    case "dislike" -> {
+                        return "Goodbye, I am " + this.getName();
+                    }
+                    case "nice" -> {
+                        return "Awwe, thank you";
+                    }
+                    case "mean" -> {
+                        return "Only when I have to be";
+                    }
+                    default -> {
+                        return "I am not sure what you are asking";
+                    }
+                }
             }
-            case "Neutral" -> {
-                return "I am not sure how to respond to that";
+            case "greeting" -> {
+                return "Hello, I am " + this.getName();
+            }
+            case "farewell" -> {
+                return "Goodbye, I am " + this.getName();
+            }
+            case "good morning" -> {
+                return "Good morning, I am " + this.getName();
+            }
+            case "good night" -> {
+                return "Good night, I am " + this.getName();
+            }
+            default -> {
+                return "I am not sure what you are asking";
             }
         }
-        return "I am not sure how to respond to that";
+        return "I am not sure what you are asking";
     }
 
-    public boolean isFaction() {
-        return faction;
+    private String getLikes() {
+        return "I like well behaved children";
+    }
+
+    private String getDislikes() {
+        return "I dislike misbehaving children";
     }
 
     public Map<Integer, Double> getpRep() {
@@ -281,6 +315,9 @@ public class NPC extends Character {
     }
 
     int getAge() {
+        if (this.npcAge == 0) {
+            this.npcAge = 0;
+        }
         return this.npcAge;
     }
 
@@ -478,7 +515,8 @@ public class NPC extends Character {
     private void setRep(String reputation) {
         this.playerRep = reputation;
     }
-    private void adjustPlayerRep(double i, double i0, double i1, double i2) {
+
+    public void adjustPlayerRep(double i, double i0, double i1, double i2) {
         DecimalFormat df = new DecimalFormat("#.#");
         for (Map.Entry<Integer, Double> entry : this.pRep.entrySet()) {
             int key = entry.getKey();
@@ -556,15 +594,25 @@ public class NPC extends Character {
     }
 
     void askForItem(Item item) {
-        if(pRep.get(0) > 0)
-        GameHandler.getGui().display(this.getName() + " is willing to give you " + item.getName(), "black");
-            this.takeItem(item);
-            giveItemToPlayer(item);
+        if (pRep.get(0) > 0) {
+            GameHandler.getGui().display(this.getName() + " is willing to give you " + item.getName(), "black");
+        }
+        this.takeItem(item);
+        giveItemToPlayer(item);
     }
 
     private void takeItem(Item item) {
         this.addItem(item);
         GameHandler.removeItemFromRoom(item);
 
+    }
+
+    private void listQuests() {
+        if (this.quest != null) {
+            GameHandler.getGui().display(this.getName() + " has a quest for you", "black");
+            GameHandler.getGui().display(this.quest.getName(), "black");
+        } else {
+            GameHandler.getGui().display(this.getName() + " has no quests for you", "black");
+        }
     }
 }
