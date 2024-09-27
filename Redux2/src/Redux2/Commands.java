@@ -6,9 +6,9 @@ class Commands {
         String command;
         String argument;
 
-        if(text.contains(" ")){
-          command = text.substring(0, text.indexOf(" "));
-          argument = text.substring(text.indexOf(" ") + 1);
+        if (text.contains(" ")) {
+            command = text.substring(0, text.indexOf(" "));
+            argument = text.substring(text.indexOf(" ") + 1);
         } else {
             command = text;
             argument = "";
@@ -36,6 +36,10 @@ class Commands {
                     GameHandler.getGui().display("You asked for help", "Black");
                 case "quit" ->
                     GameHandler.getGui().display("You quit the game", "Black");
+                case "quests" -> {
+                    GameHandler.getGui().display("You checked your quests", "Black");
+                    Player.displayQuests();
+                }
                 default ->
                     GameHandler.getGui().display("Invalid command", "Black");
 

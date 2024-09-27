@@ -316,7 +316,7 @@ public class GameHandler {
         GameHandler.fileSection4 = fileSection4;
     }
 
-    static void giveQuestToPlayer(Quest quest) {
+    public static void giveQuestToPlayer(Quest quest) {
         Quest quest1 = quests.get(quests.indexOf(quest));
         Player.addQuest(quest1);
     }
@@ -363,7 +363,7 @@ public class GameHandler {
                     }
 
                     // Display the sections
-                    getGui().display(content.toString(), "Black"); // Display everything before first '#'
+                    if(!content.isEmpty()){getGui().display(content.toString(), "Black");} // Display everything before first '#'
                     if (section2.length() > 0) {
                         fileSection2 = section2.toString(); // Display second section
                     }
@@ -451,17 +451,20 @@ public class GameHandler {
 
     static void playerTimeOut(int i, String act, NPC npc) {
         boolean apology = false;
-        String[] timeoutOptions = {"I am Sorry", "Screw You"};
         getGui().lockButtons();
         getGui().display("You have been timed out", "Red");
         while (!apology) {
-            getGui().display("Please select \"I am Sorry from the menu.\"", "Black");
+            String[] acts = {"I stole","I pranked someone","Vandalism","I picked on someone","I skipped class","I was trespassing","sneaking"};
             String response = (String) JOptionPane.showInputDialog(null,
-                    "Are you sorry?",
-                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                    null, timeoutOptions, timeoutOptions[0]);
+            "Why did you steal?",
+            "Choose", JOptionPane.QUESTION_MESSAGE,
+            null, acts, acts[0]);
             switch (response) {
                 case "I stole" -> {
+                    if(!act.equals("Stealing")){
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
                     String[] reasons = {"Because I thought it was fun", "I wanted it", "I was peer-pressured", "I was upset", "I didn't think it mattered", "I was bored"};
                     response = (String) JOptionPane.showInputDialog(null,
                             "Why did you steal?",
@@ -1173,6 +1176,15 @@ public class GameHandler {
         demoRoom.addItem(trainingPants);
         demoRoom.addItem(trash);
         demoRoom.addNPC(npcs.get("Ms_Sagely"));
+        demoRoom.addNPC(npcs.get("Dawn"));
+        demoRoom.addNPC(npcs.get("Taliber"));
+        demoRoom.addNPC(npcs.get("Susy"));
+        demoRoom.addNPC(npcs.get("Farah"));
+        demoRoom.addNPC(npcs.get("Dr_White"));
+        demoRoom.addNPC(npcs.get("Ms_White"));
+        demoRoom.addNPC(npcs.get("Aureus"));
+        demoRoom.addNPC(npcs.get("Jessie"));
+
 
     }
 

@@ -16,6 +16,11 @@ public class Item {
     private boolean contraband;
     private boolean updated = false;
     private boolean equipped;
+    private boolean vandalized;
+
+    public boolean isVandalized() {
+        return vandalized;
+    }
 
     public Item(String name, String description, String type, boolean takable) {
         this.name = name;
@@ -76,6 +81,7 @@ public class Item {
     }
 
     public void use() {
+        if(!broken){
         switch (this.type) {
             case "Consumable" ->
                 GameHandler.getGui().display("You used the " + this.name, "Black");
@@ -88,7 +94,11 @@ public class Item {
             default ->
                 GameHandler.getGui().display("You can't use that item.", "red");
         }
+    } else {
+            GameHandler.getGui().display("You can't use that item, it's broken", "red");
+        }
     }
+
 
     public void removeItemByName(String itemName) {
         for (Item item : this.items) {
@@ -300,8 +310,12 @@ public class Item {
 
     }
 
-    boolean isEquipped() {
+    public boolean isEquipped() {
         return equipped;
+    }
+
+    void setVandalized(boolean b) {
+       this.vandalized=b;
     }
 
 }

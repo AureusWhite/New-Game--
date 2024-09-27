@@ -242,8 +242,18 @@ public class Room {
         GameHandler.getGui().display("You led", "Black");
     }
 
-    public void play(String selectedToy) {
-        GameHandler.getGui().display("You played with " + selectedToy, "Black");
+    public void play(String selectedNPC, String selectedToy2) {
+        NPC npc = this.getNPCByName(selectedNPC);
+        Item toy = this.getItemByName(selectedToy2);
+        if (npc == null) {
+            GameHandler.getGui().display("That NPC does not exist", "Black");
+        } else if (toy == null) {
+            GameHandler.getGui().display("That toy does not exist", "Black");
+        } else {
+            GameHandler.getGui().display("You played with " + npc.getName() + " using " + toy.getName(), "Black");
+            npc.playedWith(toy);
+        }
+        
     }
 
     public void prank() {
@@ -290,6 +300,7 @@ public class Room {
             int outcome = (int) (Math.random() * 100);
             if (outcome < 50) {
                 GameHandler.getGui().display("You successfully sabotaged " + item.getName(), "Black");
+                breakItem(item);
             } else {
                 GameHandler.getGui().display("You failed to sabotage " + item.getName(), "Black");
                 this.getFirstNPC().caughtPlayer("sabotage");
@@ -304,8 +315,9 @@ public class Room {
         } else {
             GameHandler.getGui().display("You attempt to vandalize " + item.getName(), "Black");
             int outcome = (int) (Math.random() * 100);
-            if (outcome < 50) {
+            if (outcome < 99) {
                 GameHandler.getGui().display("You successfully vandalized " + item.getName(), "Black");
+                vandalizeItem(item);
             } else {
                 GameHandler.getGui().display("You failed to vandalize " + item.getName(), "Black");
                 this.getFirstNPC().caughtPlayer("Vandalism");
@@ -408,5 +420,16 @@ public class Room {
     }
     public String getType() {
         return this.type;
+    }
+
+    private void breakItem(Item item) {
+        item.setBroken(true);
+        item.setName(name.concat(" (Broken)"));
+    }
+
+    private void vandalizeItem(Item item) {
+        item.setVandalized(true);
+        item.setName(item.getName().concat(" (Vandalized)"));
+        item.setDescription("This item is painted in the colors of "+Player.alignment+"<br> The logo scribbled onto it supports "+Player.alignment+"<br>"+item.getDescription());
     }
 }

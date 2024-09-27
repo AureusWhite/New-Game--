@@ -42,7 +42,7 @@ public class GUI extends JFrame {
 
     public GUI() {
         setTitle("Busy Beavers by Jackal Face games");
-        setSize(1200, 900);
+        setSize(1600, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -224,6 +224,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
+            updateSidePanels();
         });
         dialogButton.addActionListener(e -> {
             if (!locked) {
@@ -261,10 +262,10 @@ public class GUI extends JFrame {
                                 options[0]);
                         switch (selectedOption) {
                             case 0 -> {
-                                String persuasions[] = {"Cry","Pout","Silly","Mediate"};
+                                String persuasions[] = {"Cry", "Pout", "Silly", "Mediate"};
                                 String selectedPersuasion = (String) JOptionPane.showInputDialog(
                                         null,
-                                        "How do you persuasde ? "+npc.getName(), 
+                                        "How do you persuasde ? " + npc.getName(),
                                         "Dialog",
                                         JOptionPane.QUESTION_MESSAGE,
                                         null,
@@ -272,17 +273,17 @@ public class GUI extends JFrame {
                                         persuasions[0]);
                                 switch (selectedPersuasion) {
                                     case "Cry" -> {
-                                        GameHandler.getGui().display(npc.getResponse("persuasion","Cry"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("persuasion", "Cry"), "Black");
 
                                     }
                                     case "Pout" -> {
-                                        GameHandler.getGui().display(npc.getResponse("persuasion","Pout"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("persuasion", "Pout"), "Black");
                                     }
                                     case "Silly" -> {
-                                        GameHandler.getGui().display(npc.getResponse("persuasion","Silly"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("persuasion", "Silly"), "Black");
                                     }
                                     case "Mediate" -> {
-                                        GameHandler.getGui().display(npc.getResponse("persuasion","Mediate"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("persuasion", "Mediate"), "Black");
                                     }
                                 }
 
@@ -299,16 +300,16 @@ public class GUI extends JFrame {
                                         questions[0]);
                                 switch (selectedQuestion) {
                                     case "What is your name?" -> {
-                                        GameHandler.getGui().display(npc.getResponse("question","name"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("question", "name"), "Black");
                                     }
                                     case "How old are you?" -> {
-                                        GameHandler.getGui().display(npc.getResponse("question","age"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("question", "age"), "Black");
                                     }
                                     case "What do you like?" -> {
-                                        GameHandler.getGui().display(npc.getResponse("question","like"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("question", "like"), "Black");
                                     }
                                     case "What do you dislike?" -> {
-                                        GameHandler.getGui().display(npc.getResponse("question","dislike"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("question", "dislike"), "Black");
                                     }
                                 }
                             }
@@ -324,16 +325,16 @@ public class GUI extends JFrame {
                                         statements[0]);
                                 switch (selectedStatement) {
                                     case "I like you" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement","like"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("statement", "like"), "Black");
                                     }
                                     case "I don't like you" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement","dislike"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("statement", "dislike"), "Black");
                                     }
                                     case "You are nice" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement","nice"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("statement", "nice"), "Black");
                                     }
                                     case "You are mean" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement","mean"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("statement", "mean"), "Black");
                                     }
                                 }
                             }
@@ -349,16 +350,16 @@ public class GUI extends JFrame {
                                         greetings[0]);
                                 switch (selectedGreeting) {
                                     case "Hello" -> {
-                                        GameHandler.getGui().display(npc.getResponse("greeting","hello"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("greeting", "hello"), "Black");
                                     }
                                     case "Goodbye" -> {
-                                        GameHandler.getGui().display(npc.getResponse("greeting","goodbye"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("greeting", "goodbye"), "Black");
                                     }
                                     case "Good Morning" -> {
-                                        GameHandler.getGui().display(npc.getResponse("greeting","morning"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("greeting", "morning"), "Black");
                                     }
                                     case "Good Night" -> {
-                                        GameHandler.getGui().display(npc.getResponse("greeting","night"), "Black");
+                                        GameHandler.getGui().display(npc.getResponse("greeting", "night"), "Black");
                                     }
                                 }
                             }
@@ -369,6 +370,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
+            updateSidePanels();
         });
         learnButton.addActionListener(e -> {
             if (!locked) {
@@ -410,7 +412,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
-
+            updateSidePanels();
         });
         inventoryButton.addActionListener(e -> {
             if (!locked) {
@@ -521,6 +523,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
+            updateSidePanels();
         });
         carebutton.addActionListener(e -> {
             if (!locked) {
@@ -539,10 +542,9 @@ public class GUI extends JFrame {
                     if (selectedCare != null) {
                         switch (selectedCare) {
                             case "Nap" -> {
-                                Player.displayQuests();
+                                Player.nap();
                             }
                             case "Potty" -> {
-                                GameHandler.getGui().display("You take the beaver to the potty", "Black");
                                 Player.potty();
                             }
                             case "Tantrum" -> {
@@ -563,6 +565,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
+            updateSidePanels();
         });
         socializeButton.addActionListener(e -> {
             if (!locked) {
@@ -581,28 +584,58 @@ public class GUI extends JFrame {
                     if (selectedSocialize != null) {
                         switch (selectedSocialize) {
                             case "Play" -> {
-                                String[] choises = Player.room.getToyChoices();
-                                if (choises.length == 0) {
-                                    GameHandler.getGui().display("There are no toys to play with", "Black");
+                                String[] npcChoises = Player.room.getNPCChoises();
+                                if (npcChoises.length == 0) {
+                                    GameHandler.getGui().display("There is no one to play with", "Black");
                                     return;
                                 }
-                                String selectedToy = (String) JOptionPane.showInputDialog(
+                                for (int i = 0; i < npcChoises.length; i++) {
+                                    npcChoises[i] = npcChoises[i].replace("_", " ");
+                                }
+                                String selectedNPC = (String) JOptionPane.showInputDialog(
                                         null,
-                                        "What do you want to play with?",
+                                        "Who do you want to play with?",
                                         "Play",
                                         JOptionPane.QUESTION_MESSAGE,
                                         null,
-                                        choises,
-                                        choises[0]);
-                                if (selectedToy != null) {
-                                    Player.getRoom().play(selectedToy);
+                                        npcChoises,
+                                        npcChoises[0]);
+                                if (selectedNPC != null) {
+                                    String[] toyChoises = Player.room.getToyChoices();
+                                    if (toyChoises.length == 0) {
+                                        GameHandler.getGui().display("There are no toys to play with", "Black");
+                                        Player.getRoom().play(selectedNPC, null);
+                                    } else {
+                                        for (int i = 0; i < toyChoises.length; i++) {
+                                            toyChoises[i] = toyChoises[i].replace("_", " ");
+                                        }
+                                        String selectedToy = (String) JOptionPane.showInputDialog(
+                                                null,
+                                                "What do you want to play with?",
+                                                "Play",
+                                                JOptionPane.QUESTION_MESSAGE,
+                                                null,
+                                                toyChoises,
+                                                toyChoises[0]);
+                                        if (selectedToy != null) {
+                                            Player.getRoom().play(selectedNPC, selectedToy);
+                                        } else {
+                                            notify();
+                                        }
+                                    }
                                 } else {
                                     notify();
                                 }
-
                             }
                             case "Help" -> {
-                                GameHandler.getGui().display("You help the beaver", "Black");
+                                for (NPC npc : Player.room.getNPCs()) {
+                                    if (npc.getQuest() != null) {
+                                        GameHandler.getGui().display("You help " + npc.getName() + " with their quest", "Black");
+                                        npc.getQuest().getDescription();
+                                    } else {
+                                        GameHandler.getGui().display("There is no one to help", "Black");
+                                    }
+                                }
                             }
                             case "Lead" -> {
                                 String[] choises = Player.room.getNPCChoises();
@@ -637,32 +670,55 @@ public class GUI extends JFrame {
                                 }
                             }
                             case "Pretend" -> {
-                                if (Player.getQuests().contains(GameHandler.getQuest("Fetch Quest"))) {
-                                    GameHandler.getGui().display("You have already taken this quest", "Black");
-                                } else {
-                                    for (NPC npc : Player.room.getNPCs()) {
-                                        GameHandler.giveQuestToPlayer(GameHandler.getQuest(npc.getQuest().getName()));
-                                        GameHandler.getGui().display("You have taken the " + npc.getQuest().getName(), "Black");
+                                String[] pretendChoices = {"Pirate", "Princess", "Superhero", "Villain"};
+                                String selectedPretend = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to pretend to be?",
+                                        "Pretend",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        pretendChoices,
+                                        pretendChoices[0]);
+                                switch (selectedPretend) {
+                                    case "Pirate" -> {
+                                        GameHandler.getGui().display("You pretend to be a pirate", "Black");
+                                    }
+                                    case "Princess" -> {
+                                        GameHandler.getGui().display("You pretend to be a princess", "Black");
+                                    }
+                                    case "Superhero" -> {
+                                        GameHandler.getGui().display("You pretend to be a superhero", "Black");
+                                    }
+                                    case "Villain" -> {
+                                        GameHandler.getGui().display("You pretend to be a villain", "Black");
                                     }
                                 }
-
-                                Player.displayQuests();
                             }
 
                             case "Dance" -> {
-                                Quest completedQuest = null;
-                                for (Quest quest : Player.getQuests()) {
-
-                                    if (quest.checkCompletion()) {
-                                        GameHandler.getGui().display("You completed the " + quest.getName(), "Black");
-                                        completedQuest = quest;
-                                    } else {
-                                        GameHandler.getGui().display("You did not complete the quest", "Black");
+                                String[] danceChoices = {"Ballet", "Breakdance", "Hip Hop", "Tap"};
+                                String selectedDance = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to dance?",
+                                        "Dance",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        danceChoices,
+                                        danceChoices[0]);
+                                switch (selectedDance) {
+                                    case "Ballet" -> {
+                                        GameHandler.getGui().display("You dance ballet", "Black");
+                                    }
+                                    case "Breakdance" -> {
+                                        GameHandler.getGui().display("You breakdance", "Black");
+                                    }
+                                    case "Hip Hop" -> {
+                                        GameHandler.getGui().display("You dance hip hop", "Black");
+                                    }
+                                    case "Tap" -> {
+                                        GameHandler.getGui().display("You tap dance", "Black");
                                     }
                                 }
-                                GameHandler.getGui().display("removing quest", "Black");
-                                Player.removeQuest(completedQuest);
-                                Player.displayQuests();
 
                             }
 
@@ -672,6 +728,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
+            updateSidePanels();
         });
 
         takeButton.addActionListener(e -> {
@@ -704,6 +761,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
+            updateSidePanels();
         });
         mischiefButton.addActionListener(e -> {
             if (!locked) {
@@ -820,7 +878,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
-
+            updateSidePanels();
         });
         jTextField.addActionListener(e -> {
             synchronized (this) {
@@ -831,6 +889,7 @@ public class GUI extends JFrame {
                     notify();
                 }
             }
+            updateSidePanels();
         });
 
         setVisible(true);

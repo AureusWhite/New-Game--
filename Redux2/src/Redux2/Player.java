@@ -381,19 +381,40 @@ public class Player {
     }
 
     public static void potty() {
-        GameHandler.getGui().display("You went potty.", "Black");
+if(getRoom().getType().equals("Bathroom")){
+    GameHandler.getGui().display("You used the potty.", "Black");
+}else{
+    GameHandler.getGui().display("You can't use the potty here.", "Black");
+}
     }
 
     public static void tantrum() {
-        GameHandler.getGui().display("You threw a tantrum.", "Black");
+        if(resilience < 10){
+            GameHandler.getGui().display("You had a tantrum.", "Black");
+            setResilience(resilience+=10);
+        }else{
+            GameHandler.getGui().display("You are too resilient for a tantrum.", "Black");
+        }
     }
 
     public static void eatDrink() {
-        GameHandler.getGui().display("You ate and drank.", "Black");
+        for(Consumable consumable : consumables){
+            if(consumable.getType().equals("Food")){
+                consumable.use();
+            }
+            if(consumable.getType().equals("Drink")){
+                consumable.use();
+            }
+        }
     }
 
     public static void reflect() {
-        GameHandler.getGui().display("You reflected on your day.", "Black");
+        if(getResilience()<10){
+            GameHandler.getGui().display("You reflected on your actions.", "Black");
+            setResilience(resilience+=10);
+        }else{
+            GameHandler.getGui().display("You are too resilient for reflection.", "Black");
+        }
     }
 
     public static void displayInventory() {
@@ -529,16 +550,6 @@ public class Player {
     public static String[] getFavorites() {
         return favorites;
     }
-
-    /*public static void giveItemToNPC(Item item, NPC npc) {
-        if (hasItem(item)) {
-            npc.reciveItem(item);
-            removeItem(item);
-        } else {
-            GameHandler.getGui().display("You don't have that item.", "Black");
-        }
-    }
-     */
     public static void sneak() {
         if (getSkillLevel(Skill.MOTOR) < 4) {
             GameHandler.getGui().display("You can't sneak.", "Black");
@@ -699,17 +710,20 @@ public class Player {
         Player.quests.add(quest1);
     }
 
-    static void displayQuests() {
+    public static void displayQuests() {
+        if (quests.isEmpty()) {
+            GameHandler.getGui().display("You have no quests.", "Black");
+        }
         for (Quest quest : quests) {
             GameHandler.getGui().display(quest.getName(), "Black");
         }
     }
 
-    static ArrayList<Quest> getQuests() {
+    public static ArrayList<Quest> getQuests() {
         return quests;
     }
 
-    static void removeQuest(Quest aThis) {
+    public static void removeQuest(Quest aThis) {
         quests.remove(aThis);
     }
 

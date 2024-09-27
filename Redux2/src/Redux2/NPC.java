@@ -25,7 +25,6 @@ public class NPC extends Character {
     private String type;
     private int suspicion;
     private String playerRep = "Good";
-    private String reason = "";
     private String alignment;
     boolean follower;
     private Quest quest;
@@ -64,16 +63,19 @@ public class NPC extends Character {
     }
 
     public String getDialog() {
+        GameHandler.fileSection2 = "Hello, I am " + this.getName().replace("_", " ");
+        GameHandler.fileSection3 = "Good afternoon, I am " + this.getName().replace("_", " ");
+        GameHandler.fileSection4 = "Good evening, I am " + this.getName().replace("_", " ");
         GameHandler.readFile(this.getName());
         switch (GameHandler.getClock().getTimeOfDay()) {
             case "Morning" -> {
                 return GameHandler.fileSection2;
             }
             case "Afternoon" -> {
-                return "Good afternoon, I am " + this.getName().replace("_", " ") + ".";
+                return GameHandler.fileSection3;
             }
             case "Evening" -> {
-                return "Good evening, I am " + this.getName().replace("_", " ") + ".";
+                return GameHandler.fileSection4;
             }
             case "Night" -> {
                 return "Good night, I am " + this.getName().replace("_", " ") + ".";
@@ -119,7 +121,7 @@ public class NPC extends Character {
             }
             case "adult" -> {
                 GameHandler.getGui().display("You are caught by " + this.getName() + " while " + act, "black");
-                this.disipline(act);
+                this.disipline(act, this, 10);
             }
         }
     }
@@ -148,10 +150,6 @@ public class NPC extends Character {
         this.type = type;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
     public void setFaction(boolean faction) {
         this.faction = faction;
     }
@@ -178,10 +176,6 @@ public class NPC extends Character {
 
     public int getSuspicion() {
         return suspicion;
-    }
-
-    public String getReason() {
-        return reason;
     }
 
     public void setAlignment(String string) {
@@ -329,191 +323,38 @@ public class NPC extends Character {
         for (NPC npc : this.getRoom().getNPCs()) {
             if (npc.getType().equals("adult")) {
                 GameHandler.getGui().display("You are caught by " + this.getName() + " while " + act, "black");
-                this.disipline(act);
+                this.disipline(act,npc,10);
             }
         }
     }
 
-    private void disipline(String act) {
+    private void disipline(String act, NPC npc, int i) {
         switch (act.toLowerCase()) {
             case "stealing" -> {
-                switch (this.playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                        setRep("Bad");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
+                GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
+                GameHandler.playerTimeOut(i, act, npc);
             }
-            case "vandalism" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
-            }
-            case "sabotage" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                        setRep("Bad");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
-            }
-            case "bullying" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
-            }
-            case "cheating" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
-            }
-            case "lying" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
-            }
-            case "skipping" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
+            case "pranking" -> {
+                GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
+                GameHandler.playerTimeOut(i, act, npc);
             }
             case "fighting" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
+                GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
+                GameHandler.playerTimeOut(i, act, npc);
             }
-            case "tresspassing" -> {
-                switch (playerRep) {
-                    case "Good" -> {
-                        GameHandler.getGui().display(this.getName() + ": I will give you a second chance, but if you are caught again, you lose privilages", "black");
-                        setRep("Mischievous");
-                    }
-                    case "Mischievous" -> {
-                        GameHandler.getGui().display(this.getName() + ": You misbehaved before and I let it slide, but I will not tolerate it again", "black");
-                        Player.getPunished(act, 1, this, "Time out");
-                        setRep("Bad");
-                    }
-                    case "Bad" -> {
-                        GameHandler.getGui().display(this.getName() + ": You again? I am getting tired of seeing your name on the discipline list", "black");
-                        Player.getPunished(act, 2, this, "Time out");
-                    }
-                    default -> {
-                    }
-                }
+            case "lying" -> {
+                GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
+                GameHandler.playerTimeOut(i, act, npc);
             }
-            default -> {
-                break;
+            case "cheating" -> {
+                GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
+                GameHandler.playerTimeOut(i, act, npc);
             }
         }
     }
 
     private String getType() {
         return this.type;
-    }
-
-    private void setRep(String reputation) {
-        this.playerRep = reputation;
     }
 
     public void adjustPlayerRep(double i, double i0, double i1, double i2) {
@@ -613,6 +454,14 @@ public class NPC extends Character {
             GameHandler.getGui().display(this.quest.getName(), "black");
         } else {
             GameHandler.getGui().display(this.getName() + " has no quests for you", "black");
+        }
+    }
+
+    void playedWith(Item toy) {
+        if (!this.getType().equals("child")) {
+            GameHandler.getGui().display(this.getName() + " is playing with " + toy.getName()+" with you.", "black");
+        } else {
+            GameHandler.getGui().display(this.getName() + " is not interested in playing with you", "black");
         }
     }
 }
