@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 public class Player {
 
@@ -31,7 +32,7 @@ public class Player {
     static String[] pronouns;
     private static String[] favorites;
     private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
-    private static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
+    static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
 
     private static boolean leader = true;
     private static boolean playerIsHidden;
@@ -77,7 +78,35 @@ public class Player {
             }
         }));
         socialAbilities.put(Ability.NAME, new Effect("Names", (argument) -> {
-            System.out.println("Naming...");
+            if(GameHandler.getNPCByName(argument) != null){
+                NPC npc1 = GameHandler.getNPCByName(argument);
+                GameHandler.getGui().display("You named the " + npc1.getName(), "Black");
+                NPC.followPlayer(npc1);
+            }else{
+                if(GameHandler.getItemByName(argument) != null){
+                    Item item = GameHandler.getItemByName(argument);
+                    GameHandler.getGui().display("You named the " + item.getName(), "Black");
+                    NPC npc1 = getRoom().getFirstNPC();
+                    GameHandler.getGui().display(Player.getRoom().getFirstNPC()+":"+"You want the " + item.getName()+"?", "Black");
+                    String answer = JOptionPane.showInputDialog("Yes or No");
+                    if(answer.equalsIgnoreCase("Yes")){
+                        if(Player.getRoom().hasItem(item)){
+                            GameHandler.getGui().display(npc1.getName()+": You may have the "+item.getName(), "Black");
+                        }
+
+                        
+                    }
+
+                }else{
+                    if(GameHandler.getRoomByName(argument) != null){
+                        Room room1 = GameHandler.getRoomByName(argument);
+                        GameHandler.getGui().display("You named the " + room1.getName(), "Black");
+                        room1.setName(argument);
+                    }else{
+                        GameHandler.getGui().display("You can't name that.", "Black");
+                    }
+                }
+            }
         }));
         socialAbilities.put(Ability.ASK, new Effect("Asks", (argument) -> {
             System.out.println("Asking...");
@@ -221,7 +250,6 @@ public class Player {
 
     public static void setRoom(Room room1) {
         room = room1;
-        room.initializeRoomFiles();
         if (room == GameHandler.getRoomByName("Demo_Room")) {
             GameHandler.demo();
         }
@@ -560,6 +588,7 @@ if(getRoom().getType().equals("Bathroom")){
             {
                 if (playerIsHidden) {
                     GameHandler.getGui().display("You are already hidden.", "Black");
+                    playerIsHidden = false;
                     return;
                 }
                 if (!playerIsHidden) {
@@ -577,7 +606,7 @@ if(getRoom().getType().equals("Bathroom")){
                     return;
                 }
                 int outcome = (int) (Math.random() * 100);
-                if (outcome < getSkillLevel(Skill.MOTOR) * 15) {
+                if (outcome > getSkillLevel(Skill.MOTOR) - 3) {
                     GameHandler.getGui().display("You were seen.", "Black");
                     Player.getRoom().getFirstNPC().setSuspicion(1, "sneaking");
                     Player.setHidden(false);
@@ -690,18 +719,6 @@ if(getRoom().getType().equals("Bathroom")){
     static void addItem(Item item) {
         Pinventory.add(item);
     }
-
-    static void getPunished(String act, int i, NPC npc, String punishment) {
-        switch (punishment) {
-            case "Time Out" ->
-                timeOut(i, act, npc);
-            case "Spanking" ->
-                GameHandler.getGui().display("You were spanked for " + act + " by " + npc.getName(), "Black");
-            default ->
-                GameHandler.getGui().display("You were punished for " + act + " by " + npc.getName(), "Black");
-        }
-    }
-
     static void setLeader(boolean b) {
         leader = b;
     }
@@ -910,13 +927,6 @@ if(getRoom().getType().equals("Bathroom")){
     private static int getThirst() {
         return thirst;
     }
-
-    private static void timeOut(int i, String act, NPC npc) {
-        GameHandler.getGui().clearTextPane();
-        GameHandler.playerTimeOut(i, act, npc);
-        GameHandler.getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
-    }
-
     private static void setStats(int age) {
         int totalStats = 0;
 
@@ -971,6 +981,16 @@ if(getRoom().getType().equals("Bathroom")){
     private static void setHidden(boolean b) {
         playerIsHidden = b;
     }
+
+    public static int giveMoney(int price) {
+        if(money >= price){
+            money -= price;
+            return 1;
+        }else{
+            GameHandler.getGui().display("You don't have enough money.", "Black");
+            return 0;
+        }
+}
 
     public Player(String name, String discription, Room room) {
 

@@ -49,7 +49,7 @@ public class NPC extends Character {
     public void reciveItem(Item item) {
         this.addItem(item);
         Player.removeItem(item);
-        if(item.equals(this.getQuest().getRequiredItem())){
+        if (item.equals(this.getQuest().getRequiredItem())) {
             this.getQuest().setCompleted(true);
             GameHandler.getGui().display("You have completed the quest", "black");
             this.setQuest(null);
@@ -93,17 +93,15 @@ public class NPC extends Character {
             switch (num) {
                 case 0 -> {
                     GameHandler.getGui().display("You walk up and place a pickle into " + this.getName() + "'s pocket.", "black");
-                    Player.getPunished("pranking", 1, this, "Time out");
+                    caughtPlayer("pranking");
                     break;
                 }
                 case 1 -> {
                     GameHandler.getGui().display("You put a plastic spider into " + this.getName() + "'s hair.", "black");
-                    Player.getPunished("pranking", 1, this, "Time out");
+                    caughtPlayer("pranking");
                     break;
                 }
             }
-            GameHandler.playerTimeOut(10, "Pranking", this);
-            GameHandler.getGui().display(this.getName() + " is not amused by your prank", "black");
         } else {
             GameHandler.getGui().display(this.getName() + " is not amused by your prank", "black");
         }
@@ -323,7 +321,7 @@ public class NPC extends Character {
         for (NPC npc : this.getRoom().getNPCs()) {
             if (npc.getType().equals("adult")) {
                 GameHandler.getGui().display("You are caught by " + this.getName() + " while " + act, "black");
-                this.disipline(act,npc,10);
+                this.disipline(act, npc, 10);
             }
         }
     }
@@ -338,18 +336,27 @@ public class NPC extends Character {
                 GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
                 GameHandler.playerTimeOut(i, act, npc);
             }
-            case "fighting" -> {
+            case "vandalism" -> {
                 GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
                 GameHandler.playerTimeOut(i, act, npc);
             }
-            case "lying" -> {
+            case "climbed" -> {
                 GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
                 GameHandler.playerTimeOut(i, act, npc);
             }
-            case "cheating" -> {
+            case "skipped" -> {
                 GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
                 GameHandler.playerTimeOut(i, act, npc);
             }
+            case"trespassing" -> {
+                GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
+                GameHandler.playerTimeOut(i, act, npc);
+            }
+            case "sneaking" -> {
+                GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
+                GameHandler.playerTimeOut(i, act, npc);
+            }
+
         }
     }
 
@@ -459,9 +466,47 @@ public class NPC extends Character {
 
     void playedWith(Item toy) {
         if (!this.getType().equals("child")) {
-            GameHandler.getGui().display(this.getName() + " is playing with " + toy.getName()+" with you.", "black");
+            GameHandler.getGui().display(this.getName() + " is playing with " + toy.getName() + " with you.", "black");
         } else {
             GameHandler.getGui().display(this.getName() + " is not interested in playing with you", "black");
         }
     }
+    void trade(Item givenItem, String takenItem) {
+        for (Item item : this.getInventory()) {
+            if (item.getName().equals(takenItem) && Math.abs(item.getPrice() - givenItem.getPrice()) <= 1) {
+                this.removeItem(item);
+                this.addItem(givenItem);
+                Player.removeItem(givenItem);
+                Player.addItem(item);
+                GameHandler.getGui().display("You have traded " + givenItem.getName() + " for " + item.getName(), "black");
+                break;
+            } else {
+                GameHandler.getGui().display("The trade was not successful", "black");
+                break;
+            }
+        }
+    }
+    String[] getItemChoices() {
+        String[] items = new String[this.getInventory().size()];
+        for (int i = 0; i < this.getInventory().size(); i++) {
+                items[i] = this.getInventory().get(i).getName();
+            }
+        return items;
+    }
+
+    void barter() {
+        Random random = new Random();
+        int num = random.nextInt(2);
+        switch (num) {
+            case 0 -> {
+                GameHandler.getGui().display(this.getName() + " is not interested in bartering with you", "black");
+            }
+            case 1 -> {
+                GameHandler.getGui().display(this.getName() + " is willing to barter with you", "black");
+                GameHandler.getGui().display("What would you like to trade?", "black");
+            }
+        }
+    }
+
+
 }

@@ -7,7 +7,7 @@ public class Item {
     private String name;
     private String description;
     private String type;
-    private boolean takable;
+     boolean takable;
     private boolean locked;
     private boolean broken;
     private ArrayList<Item> items;
@@ -17,6 +17,7 @@ public class Item {
     private boolean updated = false;
     private boolean equipped;
     private boolean vandalized;
+    private int price;
 
     public boolean isVandalized() {
         return vandalized;
@@ -33,6 +34,7 @@ public class Item {
         this.locked = false;
         this.broken = false;
         this.items = new ArrayList<>();
+        this.price = 0;
     }
 
     public Item(String name, String discription) {
@@ -110,7 +112,6 @@ public class Item {
     }
 
     public void addItem(Item item) {
-        this.items.add(item);
     }
 
     public void removeItem(Item item) {
@@ -167,7 +168,8 @@ public class Item {
             }
         }
     }
-
+    public void interact() {
+    }
     public String getName() {
         return this.name;
     }
@@ -258,64 +260,20 @@ public class Item {
     public void setUpdated(boolean updated) {
         this.updated = updated;
     }
-
-    void setBuff(String buff) {
-        switch (buff) {
-            case "Motor" -> {
-                Player.stats.put("Motor", Player.stats.get("Motor") + 1);
-                GameHandler.getGui().display("You have increased your Motor skill by 1", "black");
-                GameHandler.getGui().display(String.valueOf(Player.stats.get("Motor")), "black");
-            }
-            case "Imagenation" -> {
-                Player.stats.put("Imagenation", Player.stats.get("Imagenation") + 1);
-                GameHandler.getGui().display("You have increased your Imagenation skill by 1", "black");
-                GameHandler.getGui().display(String.valueOf(Player.stats.get("Imagenation")), "black");
-            }
-            case "Social" -> {
-                Player.stats.put("Social", Player.stats.get("Social") + 1);
-                GameHandler.getGui().display("You have increased your Social skill by 1", "black");
-                GameHandler.getGui().display(String.valueOf(Player.stats.get("Social")), "black");
-            }
-            case "Emotional" -> {
-                Player.stats.put("Emotional", Player.stats.get("Emotional") + 1);
-                GameHandler.getGui().display("You have increased your Emotional skill by 1", "black");
-                GameHandler.getGui().display(String.valueOf(Player.stats.get("Emotional")), "black");
-            }
-            case "Learning" -> {
-                Player.stats.put("Learning", Player.stats.get("Learning") + 1);
-                GameHandler.getGui().display("You have increased your Learning skill by 1", "black");
-                GameHandler.getGui().display(String.valueOf(Player.stats.get("Learning")), "black");
-            }
-            case "Study Buddy" -> {
-                Player.perks.put("Study Buddy", true);
-                GameHandler.getGui().display("You have unlocked the Study Buddy perk", "black");
-            }
-            case "Tea Party Guest" -> {
-                Player.perks.put("Tea Party Guest", true);
-                GameHandler.getGui().display("You have unlocked the Tea Party Guest perk", "black");
-            }
-            case "Imagenary Friend" -> {
-                Player.perks.put("Imagenary Friend", true);
-                GameHandler.getGui().display("You have unlocked the Imagenary Friend perk", "black");
-            }
-            case "Dress Up" -> {
-                Player.perks.put("Dress Up", true);
-                GameHandler.getGui().display("You have unlocked the Dress Up perk", "black");
-            }
-            case "Soothing" -> {
-                Player.perks.put("Soothing", true);
-                GameHandler.getGui().display("You have unlocked the Soothing perk", "black");
-            }
-        }
-
-    }
-
     public boolean isEquipped() {
         return equipped;
     }
 
     void setVandalized(boolean b) {
        this.vandalized=b;
+    }
+
+    int getPrice() {
+        return this.price;
+    }
+
+    void setPrice(int i) {
+        this.price = i;
     }
 
 }

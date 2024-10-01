@@ -35,7 +35,10 @@ public class GUI extends JFrame {
 
     private Color lightPink;
 
-    private final JButton takeButton, moveButton, dialogButton, learnButton, inventoryButton, carebutton, socializeButton, mischiefButton;
+    private final JButton takeButton,
+     moveButton, dialogButton, learnButton,
+      inventoryButton, carebutton, socializeButton,
+       mischiefButton,interactButton,parkourButton;
     private boolean locked;
     private JPanel npcPanel, itemPanel, extraPanel;
     private JPanel panelContainer;
@@ -139,6 +142,10 @@ public class GUI extends JFrame {
         jTextField.setFont(new Font("Arial", Font.PLAIN, 16));
 
         // Create buttons
+        parkourButton = new JButton("Parkour");
+        parkourButton.setFont(new Font("Arial", Font.BOLD, 16));
+        interactButton = new JButton("Interact");
+        interactButton.setFont(new Font("Arial", Font.BOLD, 16));
         takeButton = new JButton("Take");
         takeButton.setFont(new Font("Arial", Font.BOLD, 16));
         moveButton = new JButton("Move");
@@ -166,17 +173,22 @@ public class GUI extends JFrame {
         socializeButton.setPreferredSize(buttonSize);
         takeButton.setPreferredSize(buttonSize);
         mischiefButton.setPreferredSize(buttonSize);
+        parkourButton.setPreferredSize(buttonSize);
+        interactButton.setPreferredSize(buttonSize);
+
 
         // Add buttons to panel
         btnPanel.add(mischiefButton);
         btnPanel.add(socializeButton);
         btnPanel.add(moveButton);
         btnPanel.add(dialogButton);
+        btnPanel.add(parkourButton);
         btnPanel.add(jTextField);
         btnPanel.add(learnButton);
         btnPanel.add(inventoryButton);
         btnPanel.add(carebutton);
         btnPanel.add(takeButton);
+        btnPanel.add(interactButton);
 
         // Add borders to components
         statsPanel.setBorder(new LineBorder(Color.BLACK, 2));
@@ -191,6 +203,9 @@ public class GUI extends JFrame {
         socializeButton.setBorder(new LineBorder(Color.BLACK, 2));
         takeButton.setBorder(new LineBorder(Color.BLACK, 2));
         mischiefButton.setBorder(new LineBorder(Color.BLACK, 2));
+        parkourButton.setBorder(new LineBorder(Color.BLACK, 2));
+        interactButton.setBorder(new LineBorder(Color.BLACK, 2));
+
 
         // Add action listeners to buttons
         moveButton.addActionListener(e -> {
@@ -202,7 +217,6 @@ public class GUI extends JFrame {
                         exits[i] = exits[i].replace("_", " ");
 
                     }
-
                     String selectedExit = (String) JOptionPane.showInputDialog(null,
                             "Choose an exit",
                             "Exits",
@@ -211,14 +225,77 @@ public class GUI extends JFrame {
 
                     if (selectedExit != null) {
                         Room tempRoom = Player.getRoom();
+                        Room room = GameHandler.getRoomByName(selectedExit.replace(" ", "_"));
                         GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
-                        Player.setRoom(GameHandler.getRoomByName(selectedExit.replace(" ", "_")));
+                        Player.setRoom(room);
+                        room.initializeRoomFiles();
                         for (NPC npc : tempRoom.getNPCs()) {
                             npc.setSuspicion(0);
                             if (npc.isFollower()) {
                                 npc.setRoom(Player.getRoom());
                             }
                         }
+                    } else {
+                        notify();
+                    }
+                }
+            }
+            updateSidePanels();
+        });
+        parkourButton.addActionListener(e -> {
+            if (!locked) {
+                synchronized (this) {
+                    notify();
+                    String[] parkourables = Player.room.getParkourables();
+                    if (parkourables.length == 0) {
+                        GameHandler.getGui().display("There is nothing to parkour on", "Black");
+                        return;
+                    }
+                    for (int i = 0; i < parkourables.length; i++) {
+                        parkourables[i] = parkourables[i].replace("_", " ");
+                    }
+                    String selectedParkourable = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Choose an parkourable",
+                            "Parkourables",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            parkourables,
+                            parkourables[0]);
+                    if (selectedParkourable != null) {
+                        GameHandler.getGui().display("You parkour with the " + selectedParkourable + ".", "Black");
+                        Player.room.parkour(selectedParkourable);
+                    } else {
+                        notify();
+                    }
+                }
+            }
+            updateSidePanels();
+        });
+        interactButton.addActionListener(e -> {
+            if (!locked) {
+                synchronized (this) {
+                    notify();
+                    String[] interactables = Player.room.getInteractables();
+                    if (interactables.length == 0) {
+                        GameHandler.getGui().display("There is nothing to interact with", "Black");
+                        return;
+                    }
+                    for (int i = 0; i < interactables.length; i++) {
+                        interactables[i] = interactables[i].replace("_", " ");
+                    }
+                    String selectedInteractable = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Choose an interactable",
+                            "Interactables",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            interactables,
+                            interactables[0]);
+                    if (selectedInteractable != null) {
+                        Item item1 = GameHandler.getItemByName(selectedInteractable);
+                        GameHandler.getGui().display("You interact with the " + selectedInteractable + ".", "Black");
+                        item1.interact();
                     } else {
                         notify();
                     }
@@ -251,7 +328,7 @@ public class GUI extends JFrame {
                         GameHandler.getGui().display("You talk to the " + selectedNPC + ".", "Black");
                         NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
                         GameHandler.getGui().display(npc.getDialog(), "Black");
-                        String[] options = {"Persuade", "Ask a question.", "Make a statement", "Greetings"};
+                        String[] options = {"Persuade", "Ask a question.", "Make a statement", "Greetings","Barter/Trade"};
                         int selectedOption = JOptionPane.showOptionDialog(null,
                                 "What do you want to say?",
                                 "Dialog",
@@ -274,7 +351,6 @@ public class GUI extends JFrame {
                                 switch (selectedPersuasion) {
                                     case "Cry" -> {
                                         GameHandler.getGui().display(npc.getResponse("persuasion", "Cry"), "Black");
-
                                     }
                                     case "Pout" -> {
                                         GameHandler.getGui().display(npc.getResponse("persuasion", "Pout"), "Black");
@@ -285,6 +361,7 @@ public class GUI extends JFrame {
                                     case "Mediate" -> {
                                         GameHandler.getGui().display(npc.getResponse("persuasion", "Mediate"), "Black");
                                     }
+                                    
                                 }
 
                             }
@@ -363,8 +440,45 @@ public class GUI extends JFrame {
                                     }
                                 }
                             }
+                            case 4 -> {
+                                String barter[] = {"Trade", "Barter"};
+                                String selectedBarter = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to do?",
+                                        "Dialog",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        barter,
+                                        barter[0]);
+                                switch (selectedBarter) {
+                                    case "Trade" -> {
+                                        String items[] = Player.getItemChoises();
+                                        String selectedItem = (String) JOptionPane.showInputDialog(
+                                                null,
+                                                "What do you want to trade?",
+                                                "Dialog",
+                                                JOptionPane.QUESTION_MESSAGE,
+                                                null,
+                                                items,
+                                                items[0]);
+                                        Item givenItem = GameHandler.getItemByName(selectedItem);
+                                        String takenItems[] = npc.getItemChoices();
+                                        String takenItem = (String) JOptionPane.showInputDialog(
+                                                null,
+                                                "What do you want to trade for?",
+                                                "Dialog",
+                                                JOptionPane.QUESTION_MESSAGE,
+                                                null,
+                                                takenItems,
+                                                takenItems[0]);
+                                        npc.trade(givenItem,takenItem);
+                                    }
+                                    case "Barter" -> {
+                                        npc.barter();
+                                    }
+                                }
+                            }
                         }
-
                     } else {
                         notify();
                     }
@@ -372,6 +486,7 @@ public class GUI extends JFrame {
             }
             updateSidePanels();
         });
+
         learnButton.addActionListener(e -> {
             if (!locked) {
                 synchronized (this) {
@@ -683,7 +798,7 @@ public class GUI extends JFrame {
                                     case "Pirate" -> {
                                         GameHandler.getGui().display("You pretend to be a pirate", "Black");
                                     }
-                                    case "Princess" -> {
+                                    case "Prince(ss)" -> {
                                         GameHandler.getGui().display("You pretend to be a princess", "Black");
                                     }
                                     case "Superhero" -> {
@@ -739,7 +854,11 @@ public class GUI extends JFrame {
                         GameHandler.getGui().display("There is nothing to take", "Black");
                         return;
                     }
-                    String[] items = Player.room.getItemChoises();
+                    String[] items = Player.room.getItemChoices();
+                    if (items.length == 0) {
+                        GameHandler.getGui().display("There is nothing to take", "Black");
+                        return;
+                    }
                     for (int i = 0; i < items.length; i++) {
                         items[i] = items[i].replace("_", " ");
                     }

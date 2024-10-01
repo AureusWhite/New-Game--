@@ -41,12 +41,14 @@ public class Game {
 
     public void beginGame(GameHandler gamehandler) {
         gamehandler.buildRooms();
+        gamehandler.populateRooms();
         gamehandler.buildExits();
         GameHandler.createQuests();
         gamehandler.playIntro();
         Player.initializeSkills();
-        //gamehandler.setupPlayer();
+        gamehandler.setupPlayer();
         GameHandler.getGui().unlockButtons();
+        gamehandler.giveItems();
         gamehandler.playGame();
         gamehandler.endGame();
     }

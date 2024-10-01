@@ -11,55 +11,28 @@
                 | '--------------' | '--------------' | '--------------' | '--------------' |
                  '----------------' '----------------' '----------------' '----------------'
     <h1>A Text Adventure Game by JackalFac:E Games</h1>
-    
-    <h2>Introduction and Prologue</h2>
-    <p>
-        In the not-so-distant future, humanity achieved a medical breakthrough: the ability to revert cells into stem cells, 
-        effectively rejuvenating the body. This miracle of science, however, came at a steep price. Early on, poorer nations 
-        and marginalized peoples rebelled against the notion of the wealthy buying their way to immortality, while the 
-        disadvantaged were left to suffer and die. Initially, the rejuvenation process was expensive and rare, but with global 
-        funding pouring in, a multinational effort was undertaken to complete the treatment within the lifetime of its very creators.
-    </p>
-    <p>
-        Researchers were among the first to test rejuvenation, ensuring that fresh young minds could continue to perfect the technology. 
-        Eventually, under the auspices of the <strong>United Nations of Earth (UNE)</strong>, the rejuvenation process became universally 
-        accessible and free for all. However, with functional immortality came unforeseen challenges.
-    </p>
-    <p>
-        The concept of prison as a punishment, which once subtracted precious years from one's finite lifespan, became obsolete. 
-        Incarceration no longer served as an effective deterrent in this new world. So, an unusual solution was devised: instead of 
-        imprisonment, criminals and 'undesirables' were regressed into children, shrinking in both size and stature, making them 
-        easier to manage. They became known as <strong>rejuves</strong>.
-    </p>
-    <p>
-        However, this method led to yet another crisis: overpopulation. The UNE’s response was to introduce a maturity-inhibiting mechanism 
-        in the rejuvenation process, halting physical growth until individuals could prove their readiness for adult responsibilities. 
-        As a result, the world saw very few naturally born children. Society found its lost youth in us—the rejuvenated.
-    </p>
-    <p>
-        But this system wasn’t without problems. The question of whether rejuves should be allowed to return to their adult lives 
-        stirred heated debates. While their adult memories remained, the rejuves’ physical immaturity often caused behavioral complications. 
-        Many mistakenly believed their retained adult memories gave them wisdom, but their emotional maturity often betrayed their youthful appearance.
-    </p>
+<h2>Introduction and Prologue</h2>
+<p>
+    In the near future, humanity made an incredible discovery: a way to make old cells young again, giving people the ability to live much longer. But this amazing science wasn’t available to everyone at first. Many people were upset because only the richest could afford it, leaving everyone else to grow old and pass away. To fix this, countries around the world worked together to make the treatment free for everyone, so no one would be left out.
+</p>
+<p>
+    Scientists were the first to try it, making sure that smart, young minds could keep improving the process. Soon, under the <strong>United Nations of Earth (UNE)</strong>, anyone could get the rejuvenation treatment. It seemed like a dream come true, but living forever brought some problems no one expected.
+</p>
+<p>
+    One of the biggest challenges was what to do with people who broke the law. In the old days, taking away time from someone’s life was a big punishment. But when people stopped aging, jail didn’t work the same way. So, a new solution was created: instead of prison, people were turned back into children, shrinking down and becoming easier to manage. These people became known as <strong>rejuves</strong>.
+</p>
+<p>
+    But this idea caused even more problems. The world became crowded with rejuves, and hardly any new children were being born. To manage this, the UNE changed the rejuvenation process so people couldn’t grow up again until they were ready to take on adult responsibilities. Now, society looked to the rejuves as their source of youth.
+</p>
+<p>
+    Still, it wasn’t perfect. People argued about whether rejuves should be allowed to grow up again. Even though they kept their adult memories, they didn’t always act like grown-ups. Many thought their old memories made them wise, but their young bodies often made them behave like children, leading to lots of confusion.
+</p>
 
-    <h2>The Revolutionary Impact of Rejuvenation</h2>
-    <p>
-        The introduction of rejuvenation marked a seismic shift in medical science, offering something no other advancement ever had: 
-        <strong>functional immortality</strong>. While people still died, it became a much rarer occurrence. The days of slow, inevitable 
-        aging were left behind, as rejuvenation therapy reverted each cell to its stem cell state, transforming old, diseased bodies 
-        into virtually new ones.
-    </p>
-    <p>
-        However, there was a significant drawback to this seemingly miraculous treatment. The rejuvenated cells were as young as the bodies 
-        they created, skipping the natural hormonal and epigenetic milestones that occur with age. The mind of a rejuve, while preserved to 
-        the best of the process’s abilities, had to adapt to a smaller body and compromised brain structure—particularly in the frontal lobes. 
-        Though explicit memories remained, much of the procedural knowledge (like motor skills and instinctual reactions) was lost. Rejuves 
-        initially found themselves as helpless as infants.
-    </p>
-
-    <h2>The Need for Formal Structure</h2>
-    <p>
-        To address these developmental gaps, a formal structure was put in place to support rejuves, funded by wealthy elites eager to cheat death. 
-        Schools were established to help them regain skills, repurposing old developmental psychology frameworks to fit their unique needs.
-    </p>
-    <h3>Press enter in the text field to continue</h3>
+<h2>The Impact of Rejuvenation</h2>
+<p>
+    Rejuvenation changed everything. It gave people the chance to live much longer lives, almost like immortality. People still died, but it became very rare. The aging process stopped as cells were turned back into young ones, making old bodies new again.
+</p>
+<p>
+    But there was a downside. The cells in a rejuve’s body were young, but they skipped over some important parts of growing up. While rejuves kept most of their memories, their smaller bodies and younger brains made things harder. They had to relearn many simple things, like moving or talking, and at first, rejuves were almost like babies, needing lots of help until they could figure things out again.
+</p>
+<h3>Press enter in the text field to continue</h3>

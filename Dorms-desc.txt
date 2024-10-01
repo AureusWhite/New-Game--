@@ -1,9 +1,21 @@
+<h1 style="text-align:center;"><strong>The Rejuve Dormitories</strong></h1>
 
-    <p>The dorms are designed with comfort and practicality in mind, offering a cozy retreat for rejuves. Each dorm room features a series of neatly arranged beds, each equipped with soft, colorful bedding that adds a touch of warmth and cheer to the space. The walls are painted in soothing tones, with a mix of light colors that create a calm and relaxing atmosphere.</p>
+<h2>🛏 Cozy Corners of Calm</h2>
+<p>
+Welcome to the <strong>Rejuve Dormitories</strong>, a peaceful retreat designed for quiet rest and gentle dreams. Each room is thoughtfully arranged with neat rows of <strong>soft, colorful beds</strong> that look as inviting as a warm hug after a long day of learning. The bedding comes in a rainbow of cheerful hues, adding a playful splash of color against the backdrop of walls painted in <strong>soothing pastels</strong>. This delicate balance of coziness and calm creates a space where even the most active minds can find tranquility.</p>
 
-    <p>Alongside the beds, each room includes personal storage cubbies for keeping belongings organized. These cubbies are built into the walls, providing ample space for clothing, personal items, and school supplies. A small desk and chair are also provided, giving each rejuve a quiet spot to work on homework or engage in creative activities.</p>
+<h2>🎒 A Place for Everything</h2>
+<p>
+Tucked beside each bed are <strong>personal storage cubbies</strong>, carefully built into the walls, ready to hold the treasures of the day. Whether it’s a beloved stuffed animal, school supplies, or a freshly drawn masterpiece, these cubbies provide plenty of space to keep everything organized. And for those moments of quiet focus, a small <strong>desk and chair</strong> await at the foot of each bed—a perfect spot for completing homework, doodling secret plans, or writing notes to friends.</p>
 
-    <p>Windows in each dorm allow for natural light to brighten the rooms, and curtains can be drawn for privacy or to create a more restful environment. The flooring is practical and easy to clean, with soft rugs adding a touch of comfort underfoot. There are also small, colorful rugs placed around the beds to add a bit of extra coziness.</p>
+<h2>🌞 Sunshine and Soft Rugs</h2>
+<p>
+The dorm rooms are brightened by the soft glow of natural light filtering through wide windows, which can be shaded with <strong>curtains</strong> when it’s time to settle down for a nap. Below the beds, <strong>soft, colorful rugs</strong> are carefully placed, adding a touch of extra coziness and a pop of playful color to the floor. These rugs feel like a warm cloud beneath your feet, making it a delight to slip out of bed in the morning. And though the floors are easy to clean, they’re still cushioned enough to ensure that no cold toes are found here!</p>
 
-    <p>The dorms are well-ventilated, ensuring a fresh and pleasant environment. Each room is designed to be both functional and inviting, creating a space where rejuves can feel at home while they rest and recharge for the day ahead.</p>
+<h2>💨 Fresh Air and Quiet Spaces</h2>
+<p>
+Each dorm is designed with both comfort and practicality in mind, ensuring that every room is <strong>well-ventilated</strong> and filled with fresh air. There’s a gentle hum of peace in the atmosphere, with no loud horseplay allowed—just the soft sounds of friends reading, drawing, or drifting off to sleep. The environment is designed to be restful, a space where rejuves can recharge after a day full of adventures, knowing that their little corner of the world is safe, warm, and perfectly theirs.</p>
 
+<h2>🌙 Rest and Recharge</h2>
+<p>
+The dorms may be quiet, but they are far from boring. This is a space of calm, where the gentle rhythm of the day comes to a pause. As the rejuves tuck themselves in beneath the <strong>soft, colorful blankets</strong>, the dorms transform into a sanctuary of rest, a place where dreams take flight and tomorrow’s adventures await. No loud voices, no rushing—just the peaceful serenity of a place designed for recharging both mind and body.</p>

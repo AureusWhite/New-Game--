@@ -363,7 +363,9 @@ public class GameHandler {
                     }
 
                     // Display the sections
-                    if(!content.isEmpty()){getGui().display(content.toString(), "Black");} // Display everything before first '#'
+                    if (!content.isEmpty()) {
+                        getGui().display(content.toString(), "Black");
+                    } // Display everything before first '#'
                     if (section2.length() > 0) {
                         fileSection2 = section2.toString(); // Display second section
                     }
@@ -452,558 +454,224 @@ public class GameHandler {
     static void playerTimeOut(int i, String act, NPC npc) {
         boolean apology = false;
         getGui().lockButtons();
-        getGui().display("You have been timed out", "Red");
+        GameHandler.getGui().clearTextPane();
+        GameHandler.getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
         while (!apology) {
-            String[] acts = {"I stole","I pranked someone","Vandalism","I picked on someone","I skipped class","I was trespassing","sneaking"};
+            String[] acts = {"stealing", "pranking", "Vandalism", "Skipped", "Trespassing", "Sneaking", "climbed", "I don't know"};
             String response = (String) JOptionPane.showInputDialog(null,
-            "Why did you steal?",
-            "Choose", JOptionPane.QUESTION_MESSAGE,
-            null, acts, acts[0]);
+                    "What did you do?",
+                    "Choose", JOptionPane.QUESTION_MESSAGE,
+                    null, acts, acts[0]);
+            if (response == null) {
+                GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                break;
+            }
             switch (response) {
-                case "I stole" -> {
-                    if(!act.equals("Stealing")){
+                case "stealing" -> {
+                    if (!act.equalsIgnoreCase("stealing")) {
                         getGui().display("That's not what you did", "Red");
                         break;
                     }
-                    String[] reasons = {"Because I thought it was fun", "I wanted it", "I was peer-pressured", "I was upset", "I didn't think it mattered", "I was bored"};
+                    String[] reasons = {"Fun", "Profit",};
                     response = (String) JOptionPane.showInputDialog(null,
                             "Why did you steal?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
                     switch (response) {
-                        case "Because I thought it was fun" -> {
-                            String[] wrong = {"Stealing is wrong", "It's not okay to steal", "Stealing is unfair", "Stealing is hurtful", "It's against the rules"};
-                            response = (String) JOptionPane.showInputDialog(null,
-                                    "Is stealing wrong?",
-                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                    null, wrong, wrong[0]);
-
-                            switch (response) {
-                                case "Stealing is wrong" -> {
-                                    String[] why = {"I don't really know", "I wouldn't like it if someone stole from me", "I could get caught", "It's not fair to others", "It causes harm", "It goes against my values"};
-                                    response = (String) JOptionPane.showInputDialog(null,
-                                            "Why is stealing wrong?",
-                                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                                            null, why, why[0]);
-
-                                    switch (response) {
-                                        case "I don't really know" -> {
-                                            String[] yesNo = {"Yes", "No"};
-                                            getGui().display("Stealing hurts others, and it’s important to respect what belongs to them. How would you feel if someone took something of yours?", "Black");
-                                            getGui().display("Will you steal again?", "Black");
-                                            response = (String) JOptionPane.showInputDialog(null,
-                                                    "Will you steal again?",
-                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                                    null, yesNo, yesNo[0]);
-                                            switch (response) {
-                                                case "Yes" -> {
-                                                    getGui().display("Stealing isn’t the right choice. Think about others’ feelings.", "Black");
-                                                    break;
-                                                }
-                                                case "No" -> {
-                                                    getGui().display("That’s a good decision. Respecting others is important.", "Black");
-                                                    apology = true;
-                                                    break;
-                                                }
-                                                default -> {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        case "I wouldn't like it if someone stole from me" -> {
-                                            getGui().display("Exactly, treating others how you want to be treated is important.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I could get caught" -> {
-                                            getGui().display("Yes, but it’s about more than that—it’s about doing the right thing.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It's not fair to others" -> {
-                                            getGui().display("Exactly! Fairness is key.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It causes harm" -> {
-                                            getGui().display("Right, stealing affects others negatively.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It goes against my values" -> {
-                                            getGui().display("That’s a strong reason—following your values is important.", "Black");
-                                            apology = true;
-                                        }
-                                        default -> {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
                         }
                     }
                 }
-                case "I pranked someone" -> {
-                    String[] reasons = {"Because I thought it was funny", "I wanted attention", "I was peer-pressured", "I was upset", "I didn't think they'd mind", "I was bored"};
+                case "pranking" -> {
+                    if (!act.equalsIgnoreCase("pranking")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
                             "Why did you prank someone?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
                     switch (response) {
-                        case "Because I thought it was funny" -> {
-                            String[] wrong = {"Pranking can be hurtful", "Not everyone enjoys being pranked", "Pranking isn't always fun", "It can go too far", "Pranks can be harmful"};
-                            response = (String) JOptionPane.showInputDialog(null,
-                                    "Is pranking wrong?",
-                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                    null, wrong, wrong[0]);
-
-                            switch (response) {
-                                case "Pranking can be hurtful" -> {
-                                    String[] why = {"I didn’t think about that", "I wouldn’t like it if someone pranked me", "It could embarrass them", "It could make them upset", "I don’t want to hurt anyone", "It’s just not kind"};
-                                    response = (String) JOptionPane.showInputDialog(null,
-                                            "Why is pranking wrong?",
-                                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                                            null, why, why[0]);
-
-                                    switch (response) {
-                                        case "I didn’t think about that" -> {
-                                            String[] yesNo = {"Yes", "No"};
-                                            getGui().display("Pranks can seem fun at first, but they often hurt or embarrass others. How would you feel if someone did it to you?", "Black");
-                                            getGui().display("Will you prank again?", "Black");
-                                            response = (String) JOptionPane.showInputDialog(null,
-                                                    "Will you prank again?",
-                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                                    null, yesNo, yesNo[0]);
-
-                                            switch (response) {
-                                                case "Yes" -> {
-                                                    getGui().display("Pranks are not always harmless. Consider the other person’s feelings.", "Black");
-                                                    break;
-                                                }
-                                                case "No" -> {
-                                                    getGui().display("Good decision. Being thoughtful about others is important.", "Black");
-                                                    apology = true;
-                                                    break;
-                                                }
-                                                default -> {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        case "I wouldn’t like it if someone pranked me" -> {
-                                            getGui().display("Exactly, treating others the way you'd like to be treated is important.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It could embarrass them" -> {
-                                            getGui().display("Right, nobody likes feeling embarrassed in front of others.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It could make them upset" -> {
-                                            getGui().display("Yes, and it’s important to avoid causing harm to others.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I don’t want to hurt anyone" -> {
-                                            getGui().display("That’s the right attitude, pranks can sometimes hurt more than you realize.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It’s just not kind" -> {
-                                            getGui().display("Exactly! Being kind and considerate is always better than a prank.", "Black");
-                                            apology = true;
-                                        }
-                                        default -> {
-                                            break;
-
-                                        }
-                                    }
-                                }
-                            }
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
                         }
                     }
                 }
                 case "Vandalism" -> {
-                    String[] reasons = {"I thought it would be fun", "I was angry", "I wanted to make a statement", "I was pressured into it", "I didn’t care about the consequences", "I was bored"};
+                    if (!act.equalsIgnoreCase("Vandalism")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you vandalize something?",
+                            "Why did you vandalize?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
                     switch (response) {
-                        case "I thought it would be fun" -> {
-                            String[] wrong = {"Vandalism is destructive", "You shouldn’t damage other people's property", "Vandalism isn’t right", "It’s harmful", "It’s disrespectful"};
-                            response = (String) JOptionPane.showInputDialog(null,
-                                    "Is vandalism wrong?",
-                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                    null, wrong, wrong[0]);
-
-                            switch (response) {
-                                case "Vandalism is destructive" -> {
-                                    String[] why = {"I didn’t realize", "I wouldn’t like it if someone vandalized my things", "It’s illegal", "It causes trouble for others", "It hurts the community", "It’s disrespectful"};
-                                    response = (String) JOptionPane.showInputDialog(null,
-                                            "Why is vandalism wrong?",
-                                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                                            null, why, why[0]);
-
-                                    switch (response) {
-                                        case "I didn’t realize" -> {
-                                            String[] yesNo = {"Yes", "No"};
-                                            getGui().display("Vandalism damages property and can hurt the community. How would you feel if someone vandalized your things?", "Black");
-                                            getGui().display("Will you vandalize again?", "Black");
-                                            response = (String) JOptionPane.showInputDialog(null,
-                                                    "Will you vandalize again?",
-                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                                    null, yesNo, yesNo[0]);
-
-                                            switch (response) {
-                                                case "Yes" -> {
-                                                    getGui().display("Vandalism isn’t the right choice. Consider the impact on others.", "Black");
-                                                    break;
-                                                }
-                                                case "No" -> {
-                                                    getGui().display("That’s a good decision. Respecting others’ property is important.", "Black");
-                                                    apology = true;
-                                                    break;
-                                                }
-                                                default -> {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        case "I wouldn’t like it if someone vandalized my things" -> {
-                                            getGui().display("Exactly, it’s important to treat others’ property with respect.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It’s illegal" -> {
-                                            getGui().display("Yes, and breaking the law has serious consequences.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It causes trouble for others" -> {
-                                            getGui().display("Exactly, vandalism causes unnecessary problems for everyone.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It hurts the community" -> {
-                                            getGui().display("Right, vandalism damages the environment we all share.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It’s disrespectful" -> {
-                                            getGui().display("That’s a good point, vandalism shows a lack of respect for others.", "Black");
-                                            apology = true;
-                                        }
-                                        default -> {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
                         }
                     }
                 }
-                case "I picked on someone" -> {
-                    String[] reasons = {"I thought it was funny", "I was trying to fit in", "I was angry", "I wanted attention", "I was bored", "I didn't think they'd mind"};
+                case "Pickedon" -> {
+                    if (!act.equalsIgnoreCase("Pickedon")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
                             "Why did you pick on someone?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
                     switch (response) {
-                        case "I thought it was funny" -> {
-                            String[] wrong = {"Picking on others is harmful", "It’s hurtful to make fun of people", "Bullying is never okay", "It’s not kind", "It hurts people’s feelings"};
-                            response = (String) JOptionPane.showInputDialog(null,
-                                    "Is picking on someone wrong?",
-                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                    null, wrong, wrong[0]);
-
-                            switch (response) {
-                                case "Picking on others is harmful" -> {
-                                    String[] why = {"I didn't think about it", "I wouldn't like it if someone picked on me", "It can hurt them", "I don't want to make someone feel bad", "It's unkind", "It’s unfair to target others"};
-                                    response = (String) JOptionPane.showInputDialog(null,
-                                            "Why is picking on someone wrong?",
-                                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                                            null, why, why[0]);
-
-                                    switch (response) {
-                                        case "I didn't think about it" -> {
-                                            String[] yesNo = {"Yes", "No"};
-                                            getGui().display("Picking on others can cause real harm, even if it seems like a joke. How would you feel if someone picked on you?", "Black");
-                                            getGui().display("Will you pick on someone again?", "Black");
-                                            response = (String) JOptionPane.showInputDialog(null,
-                                                    "Will you pick on someone again?",
-                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                                    null, yesNo, yesNo[0]);
-
-                                            switch (response) {
-                                                case "Yes" -> {
-                                                    getGui().display("It’s important to be kind to others. Picking on someone isn’t the right choice.", "Black");
-                                                    break;
-                                                }
-                                                case "No" -> {
-                                                    getGui().display("Good decision. Treating people with respect is always the best choice.", "Black");
-                                                    apology = true;
-                                                    break;
-                                                }
-                                                default -> {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        case "I wouldn't like it if someone picked on me" -> {
-                                            getGui().display("Exactly, it’s important to treat others the way you’d want to be treated.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It can hurt them" -> {
-                                            getGui().display("Yes, picking on someone can damage their feelings, even if it doesn’t seem like a big deal.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I don't want to make someone feel bad" -> {
-                                            getGui().display("That’s the right mindset. Being considerate of others’ feelings is important.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It's unkind" -> {
-                                            getGui().display("Correct, kindness and respect are always better than hurtful actions.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It’s unfair to target others" -> {
-                                            getGui().display("Absolutely, it’s wrong to single out or target someone. Everyone deserves respect.", "Black");
-                                            apology = true;
-                                        }
-                                        default -> {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
                         }
                     }
                 }
-                case "I skipped class" -> {
-                    String[] reasons = {"I didn't feel like going", "I wanted to do something else", "I was avoiding something", "I was angry", "I was bored", "I didn’t think it was important"};
+                case "Skipped" -> {
+                    if (!act.equalsIgnoreCase("Skipped")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you skip class?",
+                            "Why did you skip?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
                     switch (response) {
-                        case "I didn't feel like going" -> {
-                            String[] wrong = {"Skipping class is not responsible", "You shouldn’t skip class", "Skipping class can hurt your future", "It’s important to attend class", "Skipping class can have consequences"};
-                            response = (String) JOptionPane.showInputDialog(null,
-                                    "Is skipping class wrong?",
-                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                    null, wrong, wrong[0]);
-
-                            switch (response) {
-                                case "Skipping class is not responsible" -> {
-                                    String[] why = {"I didn't think about it", "I might miss important lessons", "It’s part of my responsibility", "I could fall behind", "It’s disrespectful to the teacher", "Skipping could get me in trouble"};
-                                    response = (String) JOptionPane.showInputDialog(null,
-                                            "Why is skipping class wrong?",
-                                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                                            null, why, why[0]);
-
-                                    switch (response) {
-                                        case "I didn't think about it" -> {
-                                            String[] yesNo = {"Yes", "No"};
-                                            getGui().display("Skipping class can lead to problems down the road, like falling behind or missing important information.", "Black");
-                                            getGui().display("Will you skip class again?", "Black");
-                                            response = (String) JOptionPane.showInputDialog(null,
-                                                    "Will you skip class again?",
-                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                                    null, yesNo, yesNo[0]);
-
-                                            switch (response) {
-                                                case "Yes" -> {
-                                                    getGui().display("Skipping class might seem harmless now, but it can hurt your progress in the long run.", "Black");
-                                                    break;
-                                                }
-                                                case "No" -> {
-                                                    getGui().display("Good choice. Going to class regularly is key to staying on track.", "Black");
-                                                    apology = true;
-                                                    break;
-                                                }
-                                                default -> {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        case "I might miss important lessons" -> {
-                                            getGui().display("Exactly. Skipping class could cause you to miss valuable information.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It’s part of my responsibility" -> {
-                                            getGui().display("Yes, attending class is your responsibility, and skipping can lead to trouble.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I could fall behind" -> {
-                                            getGui().display("Correct. Missing classes can lead to falling behind on important work.", "Black");
-                                            apology = true;
-                                        }
-                                        case "It’s disrespectful to the teacher" -> {
-                                            getGui().display("Good point. Skipping class shows a lack of respect for your teacher’s effort.", "Black");
-                                            apology = true;
-                                        }
-                                        case "Skipping could get me in trouble" -> {
-                                            getGui().display("True. Skipping class can lead to disciplinary actions and bigger problems.", "Black");
-                                            apology = true;
-                                        }
-                                        default -> {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
                         }
                     }
                 }
-                case "I was trespassing" -> {
-                    String[] reasons = {"I was curious", "I wanted to see something", "I was dared", "I was looking for a shortcut", "I didn’t think it was a big deal", "I was bored"};
+                case "Trespassing" -> {
+                    if (!act.equalsIgnoreCase("Trespassing")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
-                            "Why were you trespassing?",
+                            "Why did you trespass?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
                     switch (response) {
-                        case "I was curious" -> {
-                            String[] wrong = {"Trespassing is illegal", "You should respect people's property", "Trespassing is dangerous", "It's not right to go where you don't belong", "Trespassing can lead to trouble"};
-                            response = (String) JOptionPane.showInputDialog(null,
-                                    "Is trespassing wrong?",
-                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                    null, wrong, wrong[0]);
-
-                            switch (response) {
-                                case "Trespassing is illegal" -> {
-                                    String[] why = {"I didn't realize it", "People deserve their privacy", "I don't want to break the law", "I could get hurt or cause damage", "I don't want to get in trouble", "I should respect others' boundaries"};
-                                    response = (String) JOptionPane.showInputDialog(null,
-                                            "Why is trespassing wrong?",
-                                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                                            null, why, why[0]);
-
-                                    switch (response) {
-                                        case "I didn't realize it" -> {
-                                            String[] yesNo = {"Yes", "No"};
-                                            getGui().display("Trespassing can have legal consequences, and it's important to be aware of boundaries.", "Black");
-                                            getGui().display("Will you trespass again?", "Black");
-                                            response = (String) JOptionPane.showInputDialog(null,
-                                                    "Will you trespass again?",
-                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                                    null, yesNo, yesNo[0]);
-
-                                            switch (response) {
-                                                case "Yes" -> {
-                                                    getGui().display("You should really avoid trespassing, it could cause problems.", "Black");
-                                                    break;
-                                                }
-                                                case "No" -> {
-                                                    getGui().display("Good. It's important to respect people's property.", "Black");
-                                                    apology = true;
-                                                    break;
-                                                }
-                                                default -> {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        case "People deserve their privacy" -> {
-                                            getGui().display("Exactly. Everyone has a right to their privacy, and trespassing violates that.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I don't want to break the law" -> {
-                                            getGui().display("That's right. Trespassing is illegal and can lead to consequences.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I could get hurt or cause damage" -> {
-                                            getGui().display("Yes, trespassing can be dangerous for you or others.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I don't want to get in trouble" -> {
-                                            getGui().display("Good thinking. Avoiding trouble is always a smart move.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I should respect others' boundaries" -> {
-                                            getGui().display("Absolutely, respecting boundaries is important.", "Black");
-                                            apology = true;
-                                        }
-                                        default -> {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
                         }
                     }
                 }
-                case "sneaking" -> {
-                    String[] reasons = {"I was curious", "I wanted to see something", "I was dared", "I was bored", "I wanted to surprise someone", "I thought it would be funny"};
+                case "Sneaking" -> {
+                    if (!act.equalsIgnoreCase("Sneaking")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
                             "Why did you sneak?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
                     switch (response) {
-                        case "I was curious" -> {
-                            String[] wrong = {"Sneaking can be disrespectful", "You should not sneak", "Sneaking can lead to trouble", "It's not kind to invade someone's space", "Sneaking can hurt feelings"};
-                            response = (String) JOptionPane.showInputDialog(null,
-                                    "Is sneaking wrong?",
-                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                    null, wrong, wrong[0]);
-
-                            switch (response) {
-                                case "Sneaking can be disrespectful" -> {
-                                    String[] why = {"I dunno", "I wouldn't like it if someone sneaked on me", "I don't want to get in trouble", "I don't want to hurt anyone", "I don't want to be mean"};
-                                    response = (String) JOptionPane.showInputDialog(null,
-                                            "Why is sneaking wrong?",
-                                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                                            null, why, why[0]);
-
-                                    switch (response) {
-                                        case "I dunno" -> {
-                                            String[] yesNo = {"Yes", "No"};
-                                            getGui().display("Sneaking can invade someone’s privacy. How would you feel if someone sneaked on you?", "Black");
-                                            getGui().display("Will you sneak again?", "Black");
-                                            response = (String) JOptionPane.showInputDialog(null,
-                                                    "Will you sneak again?",
-                                                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                                                    null, yesNo, yesNo[0]);
-
-                                            switch (response) {
-                                                case "Yes" -> {
-                                                    getGui().display("You should think carefully before sneaking again.", "Black");
-                                                    break;
-                                                }
-                                                case "No" -> {
-                                                    getGui().display("Good decision! Respecting others is important.", "Black");
-                                                    apology = true;
-                                                    break;
-                                                }
-                                                default -> {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        case "I wouldn't like it if someone sneaked on me" -> {
-                                            getGui().display("Exactly! It's important to treat others how you would want to be treated.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I don't want to get in trouble" -> {
-                                            getGui().display("It's wise to avoid getting into trouble. Think before you act.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I don't want to hurt anyone" -> {
-                                            getGui().display("That’s right! Sneaking can hurt people's feelings.", "Black");
-                                            apology = true;
-                                        }
-                                        case "I don't want to be mean" -> {
-                                            getGui().display("Yes, sneaking can come off as mean or inconsiderate. Great awareness!", "Black");
-                                            apology = true;
-                                        }
-                                        default -> {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
                         }
                     }
                 }
+                case "climbed" -> {
+                    if (!act.equalsIgnoreCase("climbed")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
+                    response = (String) JOptionPane.showInputDialog(null,
+                            "Why did you climb?",
+                            "Choose", JOptionPane.QUESTION_MESSAGE,
+                            null, reasons, reasons[0]);
+
+                    if (response == null) {
+                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        break;
+                    }
+                    switch (response) {
+                        case "Fun" -> {
+                            apology = true;
+                        }
+                        case "Profit" -> {
+                            apology = true;
+                        }
+                    }
+                }
+                case "I don't know" -> {
+                    getGui().display("You will stay here until you give the correct answers.", "Red");
+                    break;
+                }
             }
         }
-        getGui().unlockButtons();
+        if (apology) {
+            getGui().display("You have been forgiven", "Green");
+            getGui().unlockButtons();
+        } else {
+            getGui().display("You will stay here until you give the correct answers.", "Red");
+        }
     }
-
     private Container box;
     public Room recoveryRoom, kitchen, mainRoom,
             dorms, bathroom, hallway, stairs, basement,
@@ -1024,7 +692,10 @@ public class GameHandler {
             binoculars, camera, videoCamera, tapeRecorder, radio, television,
             computer, tablet, phone, speaker, headphones, microphone, keyboard,
             mouse, monitor, printer, scanner, projector, whiteboard, chalkboard,
-            smartboard, globe, map, calendar, compass, protractor;
+            smartboard, globe, map, calendar, compass, protractor, canvas, snackShop;
+
+    private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
+            jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim;
 
     private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
     private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
@@ -1041,33 +712,39 @@ public class GameHandler {
 
     public void setUpNPCs() {
 
-        NPC mssagely = new NPC("Ms_Sagely", "A wise old owl who has been around for centuries.", foyer, "adult");
-        npcs.put("Ms_Sagely", mssagely);
-        NPC dawn = new NPC("Dawn", "An ERE student who is eager to learn.", foyer, "child");
+        msSagely = new NPC("Ms_Sagely", "A wisen old woman whos presence is as comforting as it is dignified.", foyer, "adult");
+        npcs.put("Ms_Sagely", msSagely);
+        dawn = new NPC("Dawn", "An ERE Teacher and assistant to Ms Sagely, she is dressed in fun and colorful clothing.", foyer, "child");
         npcs.put("Dawn", dawn);
-        NPC taliber = new NPC("Taliber", "A student who is always up to something.", foyer, "child");
+        taliber = new NPC("Taliber", "A rejuve and prefect of about seven, he seems to be someone who the others want to follow.", foyer, "child");
         npcs.put("Taliber", taliber);
-        NPC susy = new NPC("Susy", "A student who is always up to something.", foyer, "child");
+        susy = new NPC("Susy", "A rejuve and prefect, she acts a lot older than the eight or so she looks like. She wears a white apron and and a pink chiefs hat near always. ", foyer, "child");
         npcs.put("Susy", susy);
-        NPC farah = new NPC("Farah", "A student who is always up to something.", foyer, "child");
+        farah = new NPC("Farah", "A rejuve and prefect, she looks alot older than the other students here. The others seem to come to her for advice and help, unlike the other prefects who throw their weight around.", foyer, "child");
         npcs.put("Farah", farah);
-        NPC drWhite = new NPC("Dr_White", "A doctor who is always up to something.", foyer, "adult");
+        drWhite = new NPC("Dr_White", "A thin and tall man, Dr White observes more than he talks. He can be seen standing off to the side as the other adults do their jobs.", foyer, "adult");
         npcs.put("Dr_White", drWhite);
-        NPC msWhite = new NPC("Ms_White", "A teacher who is always up to something.", foyer, "adult");
+        msWhite = new NPC("Ms_White", "The rejuve/pediatric nurse, also a doctor of her own right how ever she is rarely seen", foyer, "adult");
         npcs.put("Ms_White", msWhite);
-        NPC aureus = new NPC("Aureus", "A student who is always up to something.", foyer, "child");
+        aureus = new NPC("Aureus", "This girl a rejuve of about 4 is as feisty as she is short, she is always wearing a dog eared touque, even to bed or when it's 100 degrees out.", foyer, "child");
         npcs.put("Aureus", aureus);
-        NPC Jessie = new NPC("Jessie", "A student who is always up to something.", foyer, "child");
-        npcs.put("Jessie", Jessie);
+        jessiem = new NPC("Jessie", "This is jessie, brother to Jessie. Strangly for being brother and sister they hardly are ever seen together.", foyer, "child");
+        npcs.put("Jessie", jessiem);
+        researchStudent1 = new NPC("Research_Student_M", "As tight liped as the doctor they research under, also with the drab and white coat, He and his colleges sport an emotionless expression and always carry a 'clicker' and notepad.", foyer, "child");
+        npcs.put("Research_Student_M", researchStudent1);
+        researchStudent2 = new NPC("Research_Student_F", "As tight liped as the doctor they research under, also with the drab and white coat, She and her colleges sport an emotionless expression and always carry a 'clicker' and notepad.", foyer, "child");
+        npcs.put("Research_Student_F", researchStudent2);
+        jimthejanitor = new NPC("Jim", "He can be seen cleaning up after the kids, he is a nice man who is always willing to lend a hand.", foyer, "adult");
+        npcs.put("Jim", jimthejanitor);
+        joy = new NPC("Joy", "You're not sure what she does here, but she is always around, she is always smiling when the kids to listen to her tell stories or run arts and crafts.", foyer, "adult");
+        npcs.put("Joy", joy);
+        jessief = new NPC("Jessie", "This is jessie, sister to Jessie. Strangly for being brother and sister they hardly are ever seen together.", foyer, "child");
+        npcs.put("Jessie", jessief);
 
     }
 
     public void moveItem(Item item, Room room) {
         room.getInventory().add(item);
-    }
-
-    public void moveItems() {
-        moveItem(diaper, recoveryRoom);
     }
 
     public Game getGame() {
@@ -1079,7 +756,6 @@ public class GameHandler {
         rooms.put("Kitchen", kitchen);
         mainRoom = new Room("Main_Room", "The main room of the daycare.");
         rooms.put("Main_Room", mainRoom);
-        npcs.get("Dawn").setRoom(mainRoom);
         dorms = new Room("Dorms", "A room where you can sleep.");
         rooms.put("Dorms", dorms);
         bathroom = new Room("Bathroom", "A room where you can clean yourself.");
@@ -1104,7 +780,6 @@ public class GameHandler {
         rooms.put("Back_Yard", backYard);
         cogLabs = new Room("cogLabs", "A room with a sign that says \"Please do not take the box\"");
         rooms.put("cogLabs", cogLabs);
-        cogLabs.addItem(box);
         pool = new Room("Pool", "A pool where you can swim.");
         rooms.put("Pool", pool);
         patio = new Room("Patio", "A patio where you can relax.");
@@ -1157,174 +832,164 @@ public class GameHandler {
         rooms.put("Janitorial_Room", janitorialRoom);
         foyer = new Room("Foyer", "The foyer of the daycare.");
         rooms.put("Foyer", foyer);
-        Player.setRoom(foyer);
-        npcs.get("Ms_Sagely").setRoom(foyer);
-        foyer.addItem(toy);
-        toy.setTakable(true);
-        foyer.addItem(box);
-        foyer.addItem(modelingClay);
         pantry = new Room("Pantry", "A room where you can store food.");
         rooms.put("Pantry", pantry);
         recoveryRoom = new Room("Recovery_Room", "A room where you can recover.");
         rooms.put("Recovery_Room", recoveryRoom);
         demoRoom = new Room("Demo_Room", "A room where you can play with toys.");
         rooms.put("Demo_Room", demoRoom);
+        demoRoom.addItem(snackShop);
         demoRoom.addItem(toy);
-        demoRoom.addItem(box);
-        demoRoom.addItem(diaper);
-        diaper.setTakable(true);
-        demoRoom.addItem(trainingPants);
-        demoRoom.addItem(trash);
-        demoRoom.addNPC(npcs.get("Ms_Sagely"));
-        demoRoom.addNPC(npcs.get("Dawn"));
-        demoRoom.addNPC(npcs.get("Taliber"));
-        demoRoom.addNPC(npcs.get("Susy"));
-        demoRoom.addNPC(npcs.get("Farah"));
-        demoRoom.addNPC(npcs.get("Dr_White"));
-        demoRoom.addNPC(npcs.get("Ms_White"));
-        demoRoom.addNPC(npcs.get("Aureus"));
-        demoRoom.addNPC(npcs.get("Jessie"));
+        demoRoom.addItem(book);
+        foyer.addItem(snackShop);
 
-
+        Player.setRoom(recoveryRoom);
     }
 
     public void createItems() {
+        snackShop = new Shops("Snack Shop", "A shop where you can buy snacks.");
+        items.put("Snack Shop", snackShop);
+        snackShop.setType("Shop/parkour/interactable");
+
         toy = new Item("Toy", "A toy for you to play with.", "Toy", false);
         items.put("Toy", toy);
         toy.setType("Toy");
         coloringBook = new Item("Coloring Book", "A coloring book for you to color in.", "Crafts", true);
         items.put("Coloring Book", coloringBook);
-        coloringBook.setType("Crafts");
+        coloringBook.setType("Crafting/Stationary");
         crayons = new Item("Crayons", "Crayons for you to color with.", "Crafts", true);
         items.put("Crayons", crayons);
-        crayons.setType("Crafts");
+        crayons.setType("Crafting/Supplies");
         markers = new Item("Markers", "Markers for you to color with.", "Crafts", true);
         items.put("Markers", markers);
-        markers.setType("Crafts");
+        markers.setType("Crafting/Supplies");
         paint = new Item("Paint", "Paint for you to paint with.", "Crafts", true);
         items.put("Paint", paint);
-        paint.setType("Crafts");
+        paint.setType("Crafting/Supplies");
+        canvas = new Item("Canvas", "A canvas for you to paint on.", "Crafts", true);
+        items.put("Canvas", canvas);
+        canvas.setType("Crafting/Stationary");
         paintBrush = new Item("Paint Brush", "A paint brush for you to paint with.", "Crafts", true);
         items.put("Paint Brush", paintBrush);
-        paintBrush.setType("Crafts");
+        paintBrush.setType("Craft/Tool");
         glue = new Item("Glue", "Glue for you to glue with.", "Crafts", true);
         items.put("Glue", glue);
-        glue.setType("Crafts");
+        glue.setType("Crafting/Supplies");
         scissors = new Item("Scissors", "Scissors for you to cut with.", "Crafts", true);
         items.put("Scissors", scissors);
-        scissors.setType("Crafts");
+        scissors.setType("Crafting/Tool");
         paper = new Item("Paper", "Paper for you to write on.", "Crafts", true);
         items.put("Paper", paper);
-        paper.setType("Crafts");
+        paper.setType("Crafting/Stationary");
         pencil = new Item("Pencil", "A pencil for you to write with.", "Crafts", true);
         items.put("Pencil", pencil);
-        pencil.setType("Crafts");
+        pencil.setType("Crafting/Supplies");
         eraser = new Item("Eraser", "An eraser for you to erase with.", "Crafts", true);
         items.put("Eraser", eraser);
-        eraser.setType("Crafts");
+        eraser.setType("Crafting/Supplies");
         calculator = new Item("Calculator", "A calculator for you to calculate with.", "Crafts", true);
         items.put("Calculator", calculator);
-        calculator.setType("Crafts");
+        calculator.setType("Educational/Tool");
         ruler = new Item("Ruler", "A ruler for you to measure with.", "Crafts", true);
         items.put("Ruler", ruler);
-        ruler.setType("Crafts");
+        ruler.setType("Crafting/Tool/Educational");
         scale = new Item("Scale", "A scale for you to weigh with.", "Crafts", true);
         items.put("Scale", scale);
-        scale.setType("Crafts");
+        scale.setType("Cooking/Tool/Educational");
         thermometer = new Item("Thermometer", "A thermometer for you to measure temperature with.", "Crafts", true);
         items.put("Thermometer", thermometer);
-        thermometer.setType("Crafts");
+        thermometer.setType("Cooking/Tool/Educational");
         magnifyingGlass = new Item("Magnifying Glass", "A magnifying glass for you to magnify with.", "Crafts", true);
         items.put("Magnifying Glass", magnifyingGlass);
-        magnifyingGlass.setType("Tool");
+        magnifyingGlass.setType("Crafting/Science/Tool");
         telescope = new Item("Telescope", "A telescope for you to see far away with.", "Crafts", true);
         items.put("Telescope", telescope);
-        telescope.setType("Crafts");
+        telescope.setType("Science/Tool");
         microscope = new Item("Microscope", "A microscope for you to see small things with.", "Crafts", true);
         items.put("Microscope", microscope);
-        microscope.setType("Crafts");
+        microscope.setType("Science/Tool");
         binoculars = new Item("Binoculars", "Binoculars for you to see far away with.", "Crafts", true);
         items.put("Binoculars", binoculars);
-        binoculars.setType("Crafts");
+        binoculars.setType("Exploration/Tool/Educational");
         camera = new Item("Camera", "A camera for you to take pictures with.", "Crafts", true);
         items.put("Camera", camera);
-        camera.setType("Crafts");
+        camera.setType("Tool/Social/Entertainment");
         videoCamera = new Item("Video Camera", "A video camera for you to take videos with.", "Crafts", true);
         items.put("Video Camera", videoCamera);
-        videoCamera.setType("Crafts");
+        videoCamera.setType("Tech/Tool/Entertainment");
         tapeRecorder = new Item("Tape Recorder", "A tape recorder for you to record with.", "Crafts", true);
         items.put("Tape Recorder", tapeRecorder);
-        tapeRecorder.setType("Crafts");
+        tapeRecorder.setType("Tech/Tool/Entertainment");
         radio = new Item("Radio", "A radio for you to listen to music with.", "Crafts", true);
         items.put("Radio", radio);
-        radio.setType("Crafts");
+        radio.setType("Music/Educational/Entertainment");
         television = new Item("Television", "A television for you to watch TV with.", "Crafts", true);
         items.put("Television", television);
-        television.setType("Crafts");
+        television.setType("Entertainment/Educational");
         computer = new Item("Computer", "A computer for you to use.", "Crafts", true);
         items.put("Computer", computer);
-        computer.setType("Crafts");
+        computer.setType("Tool/Educational/Entertainment");
         tablet = new Item("Tablet", "A tablet for you to use.", "Crafts", true);
         items.put("Tablet", tablet);
-        tablet.setType("Crafts");
+        tablet.setType("Tool/Educational/Entertainment");
         phone = new Item("Phone", "A phone for you to use.", "Crafts", true);
         items.put("Phone", phone);
-        phone.setType("Crafts");
+        phone.setType("Tool/Communication/Entertainment");
         speaker = new Item("Speaker", "A speaker for you to listen to music with.", "Crafts", true);
         items.put("Speaker", speaker);
-        speaker.setType("Crafts");
+        speaker.setType("Music/Furniture");
         headphones = new Item("Headphones", "Headphones for you to listen to music with.", "Crafts", true);
         items.put("Headphones", headphones);
-        headphones.setType("Crafts");
+        headphones.setType("Music/Equipment");
         microphone = new Item("Microphone", "A microphone for you to record with.", "Crafts", true);
         items.put("Microphone", microphone);
-        microphone.setType("Crafts");
+        microphone.setType("Music/Equipment");
         keyboard = new Item("Keyboard", "A keyboard for you to type with.", "Crafts", true);
         items.put("Keyboard", keyboard);
-        keyboard.setType("Crafts");
+        keyboard.setType("Tool/Tech");
         mouse = new Item("Mouse", "A mouse for you to click with.", "Crafts", true);
         items.put("Mouse", mouse);
-        mouse.setType("Crafts");
+        mouse.setType("Tool/Tech");
         monitor = new Item("Monitor", "A monitor for you to see with.", "Crafts", true);
         items.put("Monitor", monitor);
-        monitor.setType("Crafts");
+        monitor.setType("Furniture/Tech");
         printer = new Item("Printer", "A printer for you to print with.", "Crafts", true);
         items.put("Printer", printer);
-        printer.setType("Crafts");
+        printer.setType("Furniture/Tech");
         scanner = new Item("Scanner", "A scanner for you to scan with.", "Crafts", true);
         items.put("Scanner", scanner);
-        scanner.setType("Crafts");
+        scanner.setType("Furniture/Tech");
         projector = new Item("Projector", "A projector for you to project with.", "Crafts", true);
         items.put("Projector", projector);
-        projector.setType("Crafts");
+        projector.setType("Tech/Furniture/Entertainment");
         whiteboard = new Item("Whiteboard", "A whiteboard for you to write on.", "Crafts", true);
         items.put("Whiteboard", whiteboard);
-        whiteboard.setType("Crafts");
+        whiteboard.setType("Educational/Furniture/Crafting");
         chalkboard = new Item("Chalkboard", "A chalkboard for you to write on.", "Crafts", true);
         items.put("Chalkboard", chalkboard);
-        chalkboard.setType("Crafts");
+        chalkboard.setType("Educational/Furniture/Crafting");
         smartboard = new Item("Smartboard", "A smartboard for you to write on.", "Crafts", true);
         items.put("Smartboard", smartboard);
-        smartboard.setType("Crafts");
+        smartboard.setType("Educational/Tech/Crafting");
         globe = new Item("Globe", "A globe for you to learn about the world.", "Crafts", true);
         items.put("Globe", globe);
-        globe.setType("Crafts");
+        globe.setType("Educational/Science");
         map = new Item("Map", "A map for you to learn about the world.", "Crafts", true);
         items.put("Map", map);
         map.setType("Crafts");
         calendar = new Item("Calendar", "A calendar for you to keep track of time.", "Crafts", true);
         items.put("Calendar", calendar);
-        calendar.setType("Crafts");
+        calendar.setType("Educational/Tool");
         compass = new Item("Compass", "A compass for you to find your way.", "Crafts", true);
         items.put("Compass", compass);
-        compass.setType("Crafts");
+        compass.setType("Educational/Tool/Exploration");
         protractor = new Item("Protractor", "A protractor for you to measure angles with.", "Crafts", true);
         items.put("Protractor", protractor);
-        protractor.setType("Crafts");
+        protractor.setType("Science/Tool/Educational");
 
         modelingClay = new Item("Modeling Clay", "Modeling clay for you to play with.", "Crafts", true);
         items.put("Modeling Clay", modelingClay);
-        modelingClay.setType("Crafts");
+        modelingClay.setType("Crafting Supplies");
         trash = new Item("Trash", "Trash that needs to be thrown away.", "Trash", true);
         items.put("Trash", trash);
         trash.setType("Trash");
@@ -1341,10 +1006,6 @@ public class GameHandler {
         box.setType("Furniture");
         box.setContraband(true);
         items.put("Box", box);
-        box.addItem(diaper);
-        Player.addItem(diaper);
-        Player.addItem(book);
-        Player.addItem(trainingPants);
     }
 
     public void playIntro() {
@@ -1357,8 +1018,8 @@ public class GameHandler {
     }
 
     public void setupPlayer() {
-        setCharacterBio();
-        setCharacterAlignment();
+        Player.setMoney(9);
+        //setCharacterBio();
         updateStatus();
         Game.setRunning(true);
         getGui().unlockButtons();
@@ -1366,12 +1027,6 @@ public class GameHandler {
 
     public void playGame() {
         playTutorial();
-        playChapter1();
-        playChapter2();
-        playChapter3();
-        playChapter4();
-        playChapter5();
-        playEnding();
     }
 
     public void endGame() {
@@ -1961,21 +1616,7 @@ public class GameHandler {
         this.modelingClay = modelingClay;
     }
 
-    private void setCharacterAlignment() {
-        getGui().display("Choose your alignment: Rebel or Loyalist.", "Black");
-        readFile("alignments");
-        Player.setAlignment(getGui().getInput());
-    }
-
-    private void playChapter2() {
-        if (Player.alignment.equalsIgnoreCase("Rebel")) {
-            readFile("rebelChapter2");
-        } else {
-            readFile("loyalistChapter2");
-        }
-    }
-
-    private void setCharacterBio() {
+    public void setCharacterBio() {
         explainCharacterBio();
         dialogWithFuzzy();
 
@@ -1999,22 +1640,23 @@ public class GameHandler {
         items.put(color + " " + toy1, playersToy);
         playersToy.setType("Toy");
         Player.addItem(playersToy);
-        getGui().display("Fuzzy: What does your " + color + " " + toy1 + " do? ", "Black");
+        getGui().display("Fuzzy: What does your " + color + " " + toy1 + " help you practice?", "Black");
         String toyFuction = (String) JOptionPane.showInputDialog(null,
                 "Choose an exit",
                 "Exits",
                 JOptionPane.QUESTION_MESSAGE,
                 null, toyBuffs, toyBuffs[0]);
-        if (toyFuction.equalsIgnoreCase("Motor")) {
-            playersToy.setBuff("Motor");
-        } else if (toyFuction.equalsIgnoreCase("Social")) {
-            playersToy.setBuff("Social");
-        } else if (toyFuction.equalsIgnoreCase("Emotional")) {
-            playersToy.setBuff("Emotional");
-        } else if (toyFuction.equalsIgnoreCase("Imagenation")) {
-            playersToy.setBuff("Imagenation");
-        } else if (toyFuction.equalsIgnoreCase("Learning")) {
-            playersToy.setBuff("Learning");
+        switch (toyFuction) {
+            case "Motor" ->
+                Player.levelUpSkill(Skill.MOTOR);
+            case "Social" ->
+                Player.levelUpSkill(Skill.SOCIAL);
+            case "Imagination" ->
+                Player.levelUpSkill(Skill.IMAGINATION);
+            case "Learning" ->
+                Player.levelUpSkill(Skill.LEARNING);
+            case "Emotional" ->
+                Player.levelUpSkill(Skill.EMOTIONAL);
         }
         getGui().display(playersToy.getName() + " " + playersToy.getDescription(), "Black");
 
@@ -2032,16 +1674,17 @@ public class GameHandler {
                 "Exits",
                 JOptionPane.QUESTION_MESSAGE,
                 null, stuffyBuffs, stuffyBuffs[0]);
-        if (stuffyFuction.equalsIgnoreCase("Calms me down")) {
-            stuffy.setBuff("Soothing");
-        } else if (stuffyFuction.equalsIgnoreCase("Helps me play pretend")) {
-            stuffy.setBuff("Imagenary Friend");
-        } else if (stuffyFuction.equalsIgnoreCase("Helps me make friends")) {
-            stuffy.setBuff("Tea Party Guest");
-        } else if (stuffyFuction.equalsIgnoreCase("Keeps me focused")) {
-            stuffy.setBuff("Study Buddy");
-        } else if (stuffyFuction.equalsIgnoreCase("I dress it")) {
-            stuffy.setBuff("Dress Up");
+        switch (stuffyFuction) {
+            case "Calms me down" ->
+                Player.perks.put("Soothing", true);
+            case "Helps me play pretend" ->
+                Player.perks.put("Imagenary Friend", true);
+            case "Helps me make friends" ->
+                Player.perks.put("Tea Party Guest", true);
+            case "Keeps me focused" ->
+                Player.perks.put("Study Buddy", true);
+            case "I dress it" ->
+                Player.perks.put("Dress Up", true);
         }
         getGui().display(stuffy.getName() + " " + stuffy.getDescription(), "Black");
         getGui().display("Fuzzy: What is your favorite food?", "Black");
@@ -2074,47 +1717,61 @@ public class GameHandler {
         readFile("tutorial");
     }
 
-    private void playChapter1() {
-        if (Player.alignment.equalsIgnoreCase("Rebel")) {
-            readFile("rebelChapter1");
-        } else {
-            readFile("loyalistChapter1");
-        }
-    }
-
-    private void playChapter3() {
-        if (Player.alignment.equalsIgnoreCase("Rebel")) {
-            readFile("rebelChapter3");
-        } else {
-            readFile("loyalistChapter3");
-        }
-    }
-
-    private void playChapter4() {
-        if (Player.alignment.equalsIgnoreCase("Rebel")) {
-            readFile("rebelChapter4");
-        } else {
-            readFile("loyalistChapter4");
-        }
-    }
-
-    private void playChapter5() {
-        if (Player.alignment.equalsIgnoreCase("Rebel")) {
-            readFile("rebelChapter5");
-        } else {
-            readFile("loyalistChapter5");
-        }
-    }
-
-    private void playEnding() {
-        if (Player.alignment.equalsIgnoreCase("Rebel")) {
-            readFile("rebelEnding");
-        } else {
-            readFile("loyalistEnding");
-        }
-    }
-
     private void playOutro() {
         readFile("outro");
+    }
+
+    void populateRooms() {
+        //basement.addNPC();
+        //attic.addNPC();
+        garage.addNPC(jim);
+        //garden.addNPC();
+        //driveway.addNPC();
+        //frontYard.addNPC();
+        //backYard.addNPC();
+        cogLabs.addNPC(researchStudent1);
+        //pool.addNPC();
+        //patio.addNPC();
+        //deck.addNPC();
+        //porch.addNPC();
+        //balcony.addNPC();
+        //roof.addNPC();
+        //cubbies.addNPC();
+        //dramaArea.addNPC();
+        //changingRoom.addNPC();
+        //floorPlay.addNPC();
+        //quietArea.addNPC();
+        //homeWorkArea.addNPC();
+        //playHouse.addNPC();
+        treeHouse.addNPC(taliber);
+        storyBookVillage.addNPC(joy);
+        //pillowPile.addNPC();
+        //snackArea.addNPC();
+        //greenHall.addNPC();
+        //blueHall.addNPC();
+        //redHall.addNPC();
+        //peddleToys.addNPC();
+        //lemonaidStand.addNPC();
+        //toolShed.addNPC();
+        //TRSRoom.addNPC();
+        //janitorialRoom.addNPC();
+        kitchen.addNPC(susy);
+        foyer.addNPC(drWhite);
+        //pantry.addNPC();
+        //recoveryRoom.addNPC();
+        //demoRoom.addNPC();
+    }
+
+    public void giveItems() {
+        Player.addItem(diaper);
+        drWhite.addItem(box);
+        foyer.addItem(box);
+        box.addItem(trash);
+        box.addItem(toy);
+        snackShop.addItem(diaper);
+        snackShop.addItem(toy);
+        toy.setPrice(5);
+        diaper.setPrice(5);
+        box.setPrice(6);
     }
 }

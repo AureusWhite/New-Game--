@@ -1,9 +1,9 @@
 package Redux2;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Room {
 
@@ -103,14 +103,17 @@ public class Room {
         }
         return items;
     }
-
-    public String[] getItemChoises() {
-        String[] items = new String[this.getArrayInventory().size()];
-        for (int i = 0; i < this.getArrayInventory().size(); i++) {
-            items[i] = this.getArrayInventory().get(i).getName();
+    public String[] getItemChoices() {
+        List<String> filteredItems = new ArrayList<>();
+        for (Item item : this.getArrayInventory()) {
+            String itemName = item.getName();
+            if (!itemName.toLowerCase().contains("shop")) {
+                filteredItems.add(itemName);
+            }
         }
-        return items;
+        return filteredItems.toArray(String[]::new);
     }
+
 
     public Item getItemByName(String string) {
         for (Item item : this.getArrayInventory()) {
@@ -285,7 +288,7 @@ public class Room {
                 GameHandler.getGui().display("You successfully stole " + takings.getName(), "Black");
             } else {
                 GameHandler.getGui().display("You failed to steal " + takings.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("Stealing");
+                this.getFirstNPC().caughtPlayer("stealing");
 
             }
         }
@@ -298,12 +301,12 @@ public class Room {
         } else {
             GameHandler.getGui().display("You attempt to sabotage " + item.getName(), "Black");
             int outcome = (int) (Math.random() * 100);
-            if (outcome < 50) {
+            if (outcome > 99) {
                 GameHandler.getGui().display("You successfully sabotaged " + item.getName(), "Black");
                 breakItem(item);
             } else {
                 GameHandler.getGui().display("You failed to sabotage " + item.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("sabotage");
+                this.getFirstNPC().caughtPlayer("Vandalism");
             }
         }
 
@@ -315,12 +318,12 @@ public class Room {
         } else {
             GameHandler.getGui().display("You attempt to vandalize " + item.getName(), "Black");
             int outcome = (int) (Math.random() * 100);
-            if (outcome < 99) {
+            if (outcome > 99) {
                 GameHandler.getGui().display("You successfully vandalized " + item.getName(), "Black");
                 vandalizeItem(item);
             } else {
                 GameHandler.getGui().display("You failed to vandalize " + item.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("Vandalism");
+                this.getFirstNPC().caughtPlayer("vandalism");
             }
         }
     }
@@ -354,7 +357,7 @@ public class Room {
     }
 
     public String[] getToyChoices() {
-        String[] items = this.getItemChoises();
+        String[] items = this.getItemChoices();
         String[] toys = new String[items.length];
         int i = 0;
         for (String itemName : items) {
@@ -431,5 +434,59 @@ public class Room {
         item.setVandalized(true);
         item.setName(item.getName().concat(" (Vandalized)"));
         item.setDescription("This item is painted in the colors of "+Player.alignment+"<br> The logo scribbled onto it supports "+Player.alignment+"<br>"+item.getDescription());
+    }
+
+    boolean hasItem(Item item) {
+        for (Item item1 : this.getArrayInventory()) {
+            if (item1.equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    String[] getParkourables() {
+        List<String> filteredItems = new ArrayList<>();
+        for (Item item : this.getArrayInventory()) {
+            String itemType = item.getType();
+            if (itemType.toLowerCase().contains("parkour")) {
+                filteredItems.add(item.getName());
+            }
+        }
+        return filteredItems.toArray(String[]::new);
+    }
+
+    void parkour(String selectedParkourable) {
+        Item parkourable = this.getItemByName(selectedParkourable);
+        if (parkourable == null) {
+            GameHandler.getGui().display("That item does not exist", "Black");
+        } else {
+            if (Player.getSkillLevel(Skill.MOTOR)>5) {
+                GameHandler.getGui().display("You parkoured over " + parkourable.getName(), "Black");
+            } else {
+                GameHandler.getGui().display("You failed to parkour over " + parkourable.getName(), "Black");
+                this.getFirstNPC().caughtPlayer("climbed");
+            }
+        }
+    }
+
+    String[] getInteractables() {
+        List<String> filteredItems = new ArrayList<>();
+        for (Item item : this.getArrayInventory()) {
+            String itemType = item.getType();
+            if (itemType.toLowerCase().contains("interactable")) {
+                filteredItems.add(item.getName());
+            }
+        }
+        return filteredItems.toArray(String[]::new);
+    }
+
+    public void interact(String selectedInteractable) {
+        Item interactable = this.getItemByName(selectedInteractable);
+        if (interactable == null) {
+            GameHandler.getGui().display("That item does not exist", "Black");
+        } else {
+            GameHandler.getGui().display("You interacted with " + interactable.getName(), "Black");
+        }
     }
 }
