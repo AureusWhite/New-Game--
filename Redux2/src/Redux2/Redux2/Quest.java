@@ -106,45 +106,4 @@ public class Quest {
         this.requiredRoom = requiredRoom;
     }
 
-    public boolean checkCompletion() {
-        GameHandler.getGui().display("Checking completion", this.getName());
-        switch (this.type) {
-            case "fetch" -> {
-                if (Player.hasItem(this.requiredItem)) {
-                    this.completed = true;
-                    GameHandler.getGui().display("You did the thing", this.getName());
-                    Player.removeItem(requiredItem);
-                } else {
-                    GameHandler.getGui().display("You did not do the thing", this.getName());
-                }
-                break;
-            }
-            case "escort" -> {
-                if (requiredEscort.getRoom() == requiredRoom) {
-                    GameHandler.getGui().display(requiredEscort.getName() + " is in " + requiredRoom.getName(), "black");
-                    this.completed = true;
-                    GameHandler.getGui().display("You did the thing", this.getName());
-                } else {
-                    GameHandler.getGui().display("You did not do the thing", this.getName());
-                }
-                break;
-            }
-            case "tidyUp" -> {
-                GameHandler.getGui().display("Checking for" + this.requiredItem.getName(), "black");
-                if (!requiredRoom.getInventory().contains(this.requiredItem)) {
-                    this.completed = true;
-                    GameHandler.getGui().display("You did the thing", this.getName());
-                    GameHandler.getGui().display("You found a " + this.requiredItem, "black");
-                } else {
-                    GameHandler.getGui().display("You did not do the thing", "black");
-
-                }
-                break;
-
-            }
-        }
-        return this.completed;
-
-    }
-
 }

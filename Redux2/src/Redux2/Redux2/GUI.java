@@ -38,7 +38,7 @@ public class GUI extends JFrame {
     private final JButton takeButton,
      moveButton, dialogButton, learnButton,
       inventoryButton, carebutton, socializeButton,
-       mischiefButton,interactButton,parkourButton;
+       mischiefButton,interactButton,parkourButton,extraButton,equipmentButton;
     private boolean locked;
     private JPanel npcPanel, itemPanel, extraPanel;
     private JPanel panelContainer;
@@ -66,7 +66,7 @@ public class GUI extends JFrame {
         npcPanel.setLayout(new BoxLayout(npcPanel, BoxLayout.Y_AXIS));
         npcPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
         npcPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the panel
-        npcPanel.setPreferredSize(new Dimension(100, 1));
+        npcPanel.setPreferredSize(new Dimension(150, 1));
 
         // Add NPCs label
         JLabel npcsLabel = new JLabel("NPCs:", JLabel.CENTER); // Center the label text
@@ -74,7 +74,7 @@ public class GUI extends JFrame {
         npcsLabel.setOpaque(true);
         npcsLabel.setBackground(periwinkle);
         npcsLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5)); // Thicker border
-        npcsLabel.setPreferredSize(new Dimension(100, 1)); // Adjust size if needed
+        npcsLabel.setPreferredSize(new Dimension(150, 1)); // Adjust size if needed
         npcPanel.add(npcsLabel);
 
         itemPanel = new JPanel();
@@ -142,6 +142,10 @@ public class GUI extends JFrame {
         jTextField.setFont(new Font("Arial", Font.PLAIN, 16));
 
         // Create buttons
+        extraButton = new JButton("Extra");
+        extraButton.setFont(new Font("Arial", Font.BOLD, 16));
+        equipmentButton = new JButton("Equipment");
+        equipmentButton.setFont(new Font("Arial", Font.BOLD, 16));
         parkourButton = new JButton("Parkour");
         parkourButton.setFont(new Font("Arial", Font.BOLD, 16));
         interactButton = new JButton("Interact");
@@ -165,6 +169,8 @@ public class GUI extends JFrame {
 
         // Set button size
         Dimension buttonSize = new Dimension(100, 50);
+        extraButton.setPreferredSize(buttonSize);
+        equipmentButton.setPreferredSize(buttonSize);
         moveButton.setPreferredSize(buttonSize);
         dialogButton.setPreferredSize(buttonSize);
         learnButton.setPreferredSize(buttonSize);
@@ -178,12 +184,14 @@ public class GUI extends JFrame {
 
 
         // Add buttons to panel
+        btnPanel.add(extraButton);
         btnPanel.add(mischiefButton);
         btnPanel.add(socializeButton);
         btnPanel.add(moveButton);
         btnPanel.add(dialogButton);
         btnPanel.add(parkourButton);
         btnPanel.add(jTextField);
+        btnPanel.add(equipmentButton);
         btnPanel.add(learnButton);
         btnPanel.add(inventoryButton);
         btnPanel.add(carebutton);
@@ -205,6 +213,9 @@ public class GUI extends JFrame {
         mischiefButton.setBorder(new LineBorder(Color.BLACK, 2));
         parkourButton.setBorder(new LineBorder(Color.BLACK, 2));
         interactButton.setBorder(new LineBorder(Color.BLACK, 2));
+        extraButton.setBorder(new LineBorder(Color.BLACK, 2));
+        equipmentButton.setBorder(new LineBorder(Color.BLACK, 2));
+
 
 
         // Add action listeners to buttons
@@ -212,28 +223,73 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] exits = Player.room.getExits();
-                    for (int i = 0; i < exits.length; i++) {
-                        exits[i] = exits[i].replace("_", " ");
-
-                    }
-                    String selectedExit = (String) JOptionPane.showInputDialog(null,
-                            "Choose an exit",
-                            "Exits",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null, exits, exits[0]);
-
-                    if (selectedExit != null) {
-                        Room tempRoom = Player.getRoom();
-                        Room room = GameHandler.getRoomByName(selectedExit.replace(" ", "_"));
-                        GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
-                        Player.setRoom(room);
-                        room.initializeRoomFiles();
-                        for (NPC npc : tempRoom.getNPCs()) {
-                            npc.setSuspicion(0);
-                            if (npc.isFollower()) {
-                                npc.setRoom(Player.getRoom());
+                    if (Player.isNude()) {
+                        display("Fuzzy blocks your path with his large fuzzy frame", "Black");
+                        display("Fuzzy: You can't go out like that, you need to put your uniform on", "Black");
+                        display("use the 'Take' button and select 'Equip' to put on your uniform", "Black");
+                        System.out.println("Player is nude, blocking movement."); // Debug statement
+                        return;
+                    } else {
+                        String[] exits = Player.room.getExits();
+                        for (int i = 0; i < exits.length; i++) {
+                            exits[i] = exits[i].replace("_", " ");
+                        }
+                        String selectedExit = (String) JOptionPane.showInputDialog(null,
+                                "Choose an exit",
+                                "Exits",
+                                JOptionPane.QUESTION_MESSAGE,
+                                null, exits, exits[0]);
+        
+                        if (selectedExit != null) {
+                            Room tempRoom = Player.getRoom();
+                            Room room = GameHandler.getRoomByName(selectedExit.replace(" ", "_"));
+                            GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
+                            Player.setRoom(room);
+                            room.initializeRoomFiles();
+                            for (NPC npc : tempRoom.getNPCs()) {
+                                npc.setSuspicion(0);
+                                if (npc.isFollower()) {
+                                    npc.setRoom(Player.getRoom());
+                                }
                             }
+                        } else {
+                            notify();
+                        }
+                    }
+                }
+                updateSidePanels();
+            }
+        });
+        equipmentButton.addActionListener(e -> {
+            if (!locked) {
+                synchronized (this) {
+                    notify();
+                    String[] equipment = Player.getEquipmentChoices();
+                    if (equipment.length == 0) {
+                        GameHandler.getGui().display("You have no equipment", "Black");
+                        return;
+                    }
+                    for (int i = 0; i < equipment.length; i++) {
+                        equipment[i] = equipment[i].replace("_", " ");
+                    }
+                    String selectedEquipment = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Choose an equipment",
+                            "Equipment",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            equipment,
+                            equipment[0]);
+                    if (selectedEquipment != null) {
+                        Equipment item = (Equipment) GameHandler.getItemByName(selectedEquipment);
+                        if (item.isEquipped()) {
+                            item.setEquipped(false);
+                            Player.unequip(item);
+                            GameHandler.getGui().display("You unequip the " + selectedEquipment + ".", "Black");
+                        } else {
+                            item.setEquipped(true);
+                            Player.equip(item, item.getSlot());
+                            GameHandler.getGui().display("You equip the " + selectedEquipment + ".", "Black");
                         }
                     } else {
                         notify();
@@ -533,21 +589,21 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] options = {"Use", "Drop", "Throw Away", "Put up", "Give"};
+                    String[] options = {"Use", "Drop", "Throw Away", "Put up", "Give","Put in Pockets"};
                     String[] inventory = Player.getItemChoises();
-                    if (inventory.length == 0) {
-                        GameHandler.getGui().display("You have nothing in your pockets", "Black");
+                    if (inventory==null) {
+                        GameHandler.getGui().display("You have nothing", "Black");
                         return;
                     }
                     String selectedItem = (String) JOptionPane.showInputDialog(
                             null,
-                            "What's in the bag?",
+                            "What cha got?",
                             "Inventory",
                             JOptionPane.QUESTION_MESSAGE,
                             null,
                             inventory,
                             inventory[0]);
-                    if (selectedItem != null && !selectedItem.equals("Nothing")) {
+                    if (selectedItem != null && !selectedItem.contains("-")) {
                         int action = JOptionPane.showOptionDialog(null,
                                 "What do you want to do with the " + selectedItem + "?",
                                 "Inventory",
@@ -628,12 +684,23 @@ public class GUI extends JFrame {
                                     notify();
                                 }
                             }
+                            case 5 ->{
+                                if(Player.getPockets().size() >= Player.getPocketSize()){
+                                    GameHandler.getGui().display("You have no more room in your pockets", "Black");
+                                    return;
+                                } else {
+                                    Player.getPockets().add(GameHandler.getItemByName(selectedItem));
+                                    Player.removeItem(GameHandler.getItemByName(selectedItem));
+                                    GameHandler.getGui().display("You put the " + selectedItem + " in your pockets", "Black");
+                                }
+                            }
                             default -> {
                                 notify();
                                 GameHandler.getGui().display("You have nothing in your pockets", "Black");
                             }
                         }
                     } else {
+                        GameHandler.getGui().display("You can't do that.", "");
                         notify();
                     }
                 }
@@ -873,7 +940,6 @@ public class GUI extends JFrame {
                     if (selectedItem != null) {
                         Item item = GameHandler.getItemByName(selectedItem);
                         Player.addItem(item);
-                        GameHandler.getGui().display("You take the " + selectedItem + ".", "Black");
                         Player.getRoom().removeItem(item);
                     } else {
                         notify();
@@ -1148,7 +1214,7 @@ public class GUI extends JFrame {
 
         // Add ITEMS label
         JLabel itemsLabel = new JLabel("ITEMS:", JLabel.CENTER);
-        itemsLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        itemsLabel.setFont(new Font("Arial", Font.BOLD, 14));
         itemsLabel.setOpaque(true);
         itemsLabel.setBackground(periwinkle);
         itemsLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));
@@ -1159,7 +1225,7 @@ public class GUI extends JFrame {
         for (Item item : Player.room.getArrayInventory()) {
             if (item != null) {
                 JLabel itemLabel = new JLabel(item.getName(), JLabel.CENTER);
-                itemLabel.setFont(new Font("Arial", Font.BOLD, 16));
+                itemLabel.setFont(new Font("Arial", Font.BOLD, 14));
                 itemLabel.setOpaque(true);
                 itemLabel.setBackground(periwinkle);
                 itemLabel.setBorder(BorderFactory.createLineBorder(Color.PINK, 5));

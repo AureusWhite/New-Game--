@@ -1,0 +1,88 @@
+<h2>Paw and Prowess – Turn Structure Guide</h2>
+
+<p><strong>Overview:</strong> Each turn is shared between both players, with each player performing actions during each phase. The order of play in each phase is determined by the paw's attributes, allowing strategic choices based on a paw’s strengths. The turn is divided into the following phases:</p>
+
+<h3>Phase 1: Strategy Phase</h3>
+<ul>
+  <li><strong>Governing Attribute:</strong> Intelligence</li>
+  <li><strong>Turn Order:</strong> The player with the highest Intelligence chooses whether to act first or second.</li>
+  <li><strong>Action:</strong> 
+    <ul>
+      <li>Each player may either <strong>play a card</strong> from their hand or <strong>draw and discard</strong> one card.</li>
+      <li>Cards played can include buffs, debuffs, or strategic setup cards.</li>
+      <li>If no useful card is drawn, players may discard it to gain a <strong>boon</strong>, such as drawing another card next turn or gaining a small advantage.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Phase 2: Ability Phase</h3>
+<ul>
+  <li><strong>Governing Attribute:</strong> Ability</li>
+  <li><strong>Turn Order:</strong> The player with the highest Ability chooses whether to act first or second.</li>
+  <li><strong>Action:</strong> 
+    <ul>
+      <li>The player may <strong>tap</strong> their paw to activate a special ability.</li>
+      <li>Tapped paws cannot defend during the Attack/Defend phase.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Phase 3: Attack/Defend Phase</h3>
+<ul>
+  <li><strong>Governing Attribute:</strong> Attack</li>
+  <li><strong>Turn Order:</strong> The player with the highest Attack always goes first.</li>
+  <li><strong>Actions:</strong> 
+    <ul>
+      <li>The attacking player <strong>makes an attack</strong> based on their current Attack power.</li>
+      <li>The defending player reduces the damage using their <strong>Defense</strong> stat, but only if their paw is <strong>untapped</strong>.</li>
+      <li>Tapped paws cannot defend, and take full damage from the attack.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Phase 4: Final Phase</h3>
+<ul>
+  <li><strong>Shared Phase:</strong> Both players act simultaneously.</li>
+  <li><strong>Actions:</strong> 
+    <ul>
+      <li>Both players <strong>untap</strong> their paws.</li>
+      <li>Each player may choose to <strong>play a card</strong> or use an ability (e.g., healing or applying buffs/debuffs).</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>End of Turn: Lethal Damage Check</h3>
+<ul>
+  <li>At the end of the turn, both paws are checked for <strong>lethal damage</strong>.</li>
+  <li>If a paw’s HP is reduced to 0 or lower, it is knocked out, and the opponent is declared the winner.</li>
+  <li>If no paw is knocked out, the game continues with a new turn.</li>
+</ul>
+
+<h3>Turn Example:</h3>
+<ul>
+  <li><strong>Strategy Phase:</strong>
+    <ul>
+      <li>Player A has higher Intelligence and chooses to go first. They play a buff card, increasing their paw’s Attack by +2.</li>
+      <li>Player B follows, drawing and discarding a card, gaining a boon of drawing an extra card next turn.</li>
+    </ul>
+  </li>
+  <li><strong>Ability Phase:</strong>
+    <ul>
+      <li>Player B has higher Ability and taps their paw to activate a special ability that deals +1 damage for the next attack.</li>
+      <li>Player A keeps their paw untapped to defend.</li>
+    </ul>
+  </li>
+  <li><strong>Attack/Defend Phase:</strong>
+    <ul>
+      <li>Player A has higher Attack and strikes first with a total of 6 Attack.</li>
+      <li>Player B has 3 Defense but is tapped and cannot defend, so they take the full 6 damage.</li>
+    </ul>
+  </li>
+  <li><strong>Final Phase:</strong>
+    <ul>
+      <li>Both players untap their paws.</li>
+      <li>Player B plays a healing card, restoring 3 HP. Player A plays a debuff, reducing Player B’s Attack by -1 for the next turn.</li>
+    </ul>
+  </li>
+  <li><strong>End of Turn:</strong> Neither paw has been knocked out, so the game continues.</li>
+</ul>

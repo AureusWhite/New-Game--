@@ -12,7 +12,9 @@ public class Player {
 
     public static String alignment = "Newbie";
     public static int age;
-    public static ArrayList<Item> Pinventory = new ArrayList<>();
+    public static ArrayList<Item> backpack = new ArrayList<>();
+    public static ArrayList<Item> pockets = new ArrayList<>();
+    public static ArrayList<Item> hands = new ArrayList<>();
     public static ArrayList<Consumable> consumables = new ArrayList<>();
     public static HashMap<String, Equipment> equipment = new HashMap<>();
     public static ArrayList<Quest> quests = new ArrayList<>();
@@ -28,17 +30,32 @@ public class Player {
     private static String name;
     private static int thirst = 100;
     private static int hunger = 100;
+    private static int pocketSize = 0;
+    private static int backpackSize = 0;
     private static int energy;
     static String[] pronouns;
     private static String[] favorites;
     private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
     static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
-
+    private static ArrayList<Card> pawDeck = new ArrayList<>();
+    private static ArrayList<Card> hand = new ArrayList<>();
+    
     private static boolean leader = true;
     private static boolean playerIsHidden;
+    private static boolean pottyTrained = false;
+    private static int blatter;
+    private static int maturity = 0;
 
     public static void setEnergy(int energy) {
         Player.energy = energy;
+    }
+    public static void setPawDeck(ArrayList<Card> pawDeck1) {
+        pawDeck = pawDeck1;
+    }
+    public static void setHand(){
+        for(int i = 0; i < 5; i++){
+            hand.add(pawDeck.get(i));
+        }
     }
 
     public static void initializeSkills() {
@@ -78,31 +95,30 @@ public class Player {
             }
         }));
         socialAbilities.put(Ability.NAME, new Effect("Names", (argument) -> {
-            if(GameHandler.getNPCByName(argument) != null){
+            if (GameHandler.getNPCByName(argument) != null) {
                 NPC npc1 = GameHandler.getNPCByName(argument);
                 GameHandler.getGui().display("You named the " + npc1.getName(), "Black");
                 NPC.followPlayer(npc1);
-            }else{
-                if(GameHandler.getItemByName(argument) != null){
+            } else {
+                if (GameHandler.getItemByName(argument) != null) {
                     Item item = GameHandler.getItemByName(argument);
                     GameHandler.getGui().display("You named the " + item.getName(), "Black");
                     NPC npc1 = getRoom().getFirstNPC();
-                    GameHandler.getGui().display(Player.getRoom().getFirstNPC()+":"+"You want the " + item.getName()+"?", "Black");
+                    GameHandler.getGui().display(Player.getRoom().getFirstNPC() + ":" + "You want the " + item.getName() + "?", "Black");
                     String answer = JOptionPane.showInputDialog("Yes or No");
-                    if(answer.equalsIgnoreCase("Yes")){
-                        if(Player.getRoom().hasItem(item)){
-                            GameHandler.getGui().display(npc1.getName()+": You may have the "+item.getName(), "Black");
+                    if (answer.equalsIgnoreCase("Yes")) {
+                        if (Player.getRoom().hasItem(item)) {
+                            GameHandler.getGui().display(npc1.getName() + ": You may have the " + item.getName(), "Black");
                         }
 
-                        
                     }
 
-                }else{
-                    if(GameHandler.getRoomByName(argument) != null){
+                } else {
+                    if (GameHandler.getRoomByName(argument) != null) {
                         Room room1 = GameHandler.getRoomByName(argument);
                         GameHandler.getGui().display("You named the " + room1.getName(), "Black");
                         room1.setName(argument);
-                    }else{
+                    } else {
                         GameHandler.getGui().display("You can't name that.", "Black");
                     }
                 }
@@ -259,11 +275,6 @@ public class Player {
         return Player.room;
     }
 
-    public static void takeItem(Item item) {
-        addItem(item);
-        getRoom().removeItem(item);
-    }
-
     public static void setAge(String input) {
         GameHandler.getGui().display("Please enter your age.", "Black");
         while (!input.matches("[2-9]+")) {
@@ -284,16 +295,36 @@ public class Player {
     }
 
     public static void equip(Equipment equipment1, String slot) {
-        if (!equipment.containsKey(slot)) {
-            equipment.put(slot, equipment1);
-            equipment1.setEquipped(true);
-        } else {
+        // Check if the slot already has an item equipped
+        if (equipment.containsKey(slot)) {
             Equipment currentEquipment = equipment.get(slot);
-            if (currentEquipment != null) {
-                currentEquipment.setEquipped(false);
-            }
+            currentEquipment.setEquipped(false);
+            Player.equipment.remove(currentEquipment.getSlot());
+            dropItem(equipment1);
+        } else {
+            // Equip the item
             equipment.put(slot, equipment1);
             equipment1.setEquipped(true);
+            calculatePockets();
+        }
+    }
+
+    public static void unequip(Equipment equipment1) {
+        equipment1.setEquipped(false);
+        equipment.remove(equipment1.getSlot());
+        dropItem(equipment1);
+        calculatePockets();
+    }
+
+    public static void calculatePockets() {
+        pocketSize = 0;
+        backpackSize = 0;
+        for (Equipment equip : equipment.values()) {
+            if (equip.getSlot().equalsIgnoreCase("back")) {
+                backpackSize += equip.getPockets();
+            } else {
+                pocketSize += equip.getPockets();
+            }
         }
     }
 
@@ -311,10 +342,6 @@ public class Player {
 
     public static void setResilience(int resilience1) {
         resilience = resilience1;
-    }
-
-    public static void setInventory(ArrayList<Item> inventory) {
-        Pinventory = inventory;
     }
 
     public static void setConsumables(ArrayList<Consumable> consumables1) {
@@ -357,20 +384,41 @@ public class Player {
         return resilience;
     }
 
-    public static ArrayList<Item> getInventory() {
-        return Pinventory;
-    }
-
     public static String[] getItemChoises() {
-        String[] items = new String[Player.getInventory().size()];
-        for (int i = 0; i < Player.getInventory().size(); i++) {
-            if (!Player.getInventory().get(i).isEquipped()) {
-                items[i] = Player.getInventory().get(i).getName();
-            } else {
-                items[i] = Player.getInventory().get(i).getName() + " (Equipped)";
+        if (pockets.isEmpty() && backpack.isEmpty() && hands.isEmpty()) {
+            return null;
+        }
+
+        List<String> itemsList = new ArrayList<>();
+
+        if (!hands.isEmpty()) {
+            itemsList.add("-Hands-");
+            for (Item item : hands) {
+                if (item != null && item.getName() != null && !item.getName().equals("")) {
+                    itemsList.add(item.getName());
+                }
             }
         }
-        return items;
+
+        if (!pockets.isEmpty()) {
+            itemsList.add("-Pockets-");
+            for (Item item : pockets) {
+                if (item != null && item.getName() != null && !item.getName().equals("")) {
+                    itemsList.add(item.getName());
+                }
+            }
+        }
+
+        if (!backpack.isEmpty()) {
+            itemsList.add("-Backpack-");
+            for (Item item : backpack) {
+                if (item != null && item.getName() != null && !item.getName().equals("")) {
+                    itemsList.add(item.getName());
+                }
+            }
+        }
+
+        return itemsList.toArray(String[]::new);
     }
 
     public static String getAlignment() {
@@ -409,45 +457,74 @@ public class Player {
     }
 
     public static void potty() {
-if(getRoom().getType().equals("Bathroom")){
-    GameHandler.getGui().display("You used the potty.", "Black");
-}else{
-    GameHandler.getGui().display("You can't use the potty here.", "Black");
-}
+        if (getRoom().getType().equals("Bathroom")) {
+            if (Player.getPottyTrained()) {
+                GameHandler.getGui().display("You used the potty.", "Black");
+                setBlatter(0);
+                addMaturity(1);
+                addXP(getMaturity());
+            } else {
+                GameHandler.getGui().display("You are not potty trained.", "Black");
+            }
+        } else {
+            setBlatter(101);
+            checkBlatter();
+        }
+    }
+
+    private static void setBlatter(int i) {
+        blatter = i;
+    }
+
+    public static void checkBlatter() {
+        if (blatter > 100) {
+            accident();
+            setBlatter(0);
+        }
+        if (pottyTrained) {
+            switch (blatter) {
+                case 100 ->
+                    GameHandler.getGui().display("You need to use the potty now.", "Black");
+                case 75 ->
+                    GameHandler.getGui().display("You need to potty soon.", "Black");
+                case 50 ->
+                    GameHandler.getGui().display("You should use the potty.", "Black");
+                case 25 ->
+                    GameHandler.getGui().display("You might need to potty.", "Black");
+                case 0 ->
+                    GameHandler.getGui().display("You do not need to potty.", "Black");
+            }
+        } else {
+
+        }
     }
 
     public static void tantrum() {
-        if(resilience < 10){
+        if (resilience < 10) {
             GameHandler.getGui().display("You had a tantrum.", "Black");
-            setResilience(resilience+=10);
-        }else{
+            setResilience(resilience += 10);
+        } else {
             GameHandler.getGui().display("You are too resilient for a tantrum.", "Black");
         }
     }
 
     public static void eatDrink() {
-        for(Consumable consumable : consumables){
-            if(consumable.getType().equals("Food")){
+        for (Consumable consumable : consumables) {
+            if (consumable.getType().equals("Food")) {
                 consumable.use();
             }
-            if(consumable.getType().equals("Drink")){
+            if (consumable.getType().equals("Drink")) {
                 consumable.use();
             }
         }
     }
 
     public static void reflect() {
-        if(getResilience()<10){
+        if (getResilience() < 10) {
             GameHandler.getGui().display("You reflected on your actions.", "Black");
-            setResilience(resilience+=10);
-        }else{
+            setResilience(resilience += 10);
+        } else {
             GameHandler.getGui().display("You are too resilient for reflection.", "Black");
-        }
-    }
-
-    public static void displayInventory() {
-        for (Item item : Pinventory) {
-            GameHandler.getGui().display(item.getName() + "in your pockets", "Black");
         }
     }
 
@@ -578,6 +655,7 @@ if(getRoom().getType().equals("Bathroom")){
     public static String[] getFavorites() {
         return favorites;
     }
+
     public static void sneak() {
         if (getSkillLevel(Skill.MOTOR) < 4) {
             GameHandler.getGui().display("You can't sneak.", "Black");
@@ -637,15 +715,6 @@ if(getRoom().getType().equals("Bathroom")){
         getRoom().getItemByName(puzzle).solve();
     }
 
-    public static Item getItemByType(String string) {
-        for (Item item : Pinventory) {
-            if (item.getType().equals(string)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
     public static boolean isLeader() {
         return leader;
     }
@@ -653,14 +722,6 @@ if(getRoom().getType().equals("Bathroom")){
     public static void setFavorites(String color, String food, String toy, String game, String book, String subject, String activity) {
         favorites = new String[]{color, food, toy, game, book, subject, activity};
 
-    }
-
-    public static ArrayList<Item> getPinventory() {
-        return Pinventory;
-    }
-
-    public static void setPinventory(ArrayList<Item> pinventory) {
-        Pinventory = pinventory;
     }
 
     public static ArrayList<Consumable> getConsumables() {
@@ -713,12 +774,61 @@ if(getRoom().getType().equals("Bathroom")){
     }
 
     static void removeItem(Item item) {
-        Pinventory.remove(item);
+        if (item == null) {
+            GameHandler.getGui().display("Item does not exsist?", "Black");
+        }
+        locateItem(item).remove(item);
     }
 
     static void addItem(Item item) {
-        Pinventory.add(item);
+        String[] options = {"Pockets", "Backpack", "Hands", "Equip"};
+        int choice = JOptionPane.showOptionDialog(null, "Where would you like to put the " + item.getName() + "?", "Choose a location", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        switch (choice) {
+            case 0 -> {
+                if (pockets.size() < pocketSize) {
+                    GameHandler.getGui().display("You put the " + item.getName() + " in your pockets", "Black");
+                    pockets.add(item);
+                } else {
+                    GameHandler.getGui().display("Your pockets are full or you don't have any", "Black");
+                    getRoom().addItem(item);
+                }
+                break;
+            }
+            case 1 -> {
+                if (backpack.size() < backpackSize) {
+                    GameHandler.getGui().display("You put the " + item.getName() + "in your backpack", "Black");
+                    backpack.add(item);
+                    break;
+                } else {
+                    GameHandler.getGui().display("Your backpack is full or you don't have one.", "Black");
+                    getRoom().addItem(item);
+                }
+                break;
+            }
+            case 2 -> {
+                if (hands.size() < 2) {
+                    GameHandler.getGui().display("You hold the " + item.getName() + " in your hand", "Black");
+                    hands.add(item);
+                    break;
+                } else {
+                    GameHandler.getGui().display("You can't hold that.", "Black");
+                    getRoom().addItem(item);
+                }
+                break;
+            }
+            case 3 -> {
+                if (item instanceof Equipment equipment1) {
+                    equip(equipment1, equipment1.getSlot());
+                    break;
+                } else {
+                    GameHandler.getGui().display("You can't equip that.", "Black");
+                    getRoom().addItem(item);
+                }
+                break;
+            }
+        }
     }
+
     static void setLeader(boolean b) {
         leader = b;
     }
@@ -763,15 +873,6 @@ if(getRoom().getType().equals("Bathroom")){
         GUI.getJTextField().setText("");
         Player.pronouns = new String[]{subjective, objective, possessive, reference};
         GameHandler.getGui().display("Your pronouns are: " + subjective + ", " + objective + ", " + possessive + ", " + reference, "Black");
-    }
-
-    static boolean hasItem(Item item2) {
-        for (Item item : Pinventory) {
-            if (item.getName().equals(item2.getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static boolean canPerform(Skill skill, Ability ability) {
@@ -927,6 +1028,7 @@ if(getRoom().getType().equals("Bathroom")){
     private static int getThirst() {
         return thirst;
     }
+
     private static void setStats(int age) {
         int totalStats = 0;
 
@@ -983,14 +1085,99 @@ if(getRoom().getType().equals("Bathroom")){
     }
 
     public static int giveMoney(int price) {
-        if(money >= price){
+        if (money >= price) {
             money -= price;
             return 1;
-        }else{
+        } else {
             GameHandler.getGui().display("You don't have enough money.", "Black");
             return 0;
         }
-}
+    }
+
+    static int getPocketSize() {
+        return pocketSize;
+    }
+
+    private static ArrayList<Item> locateItem(Item item) {
+        if (pockets.contains(item)) {
+            return pockets;
+        }
+        if (backpack.contains(item)) {
+            return backpack;
+        }
+        if (hands.contains(item)) {
+            return hands;
+        }
+        return null;
+    }
+
+    static String[] getEquipmentChoices() {
+        int i = 0;
+        String[] items = new String[equipment.size()];
+        for (Equipment item : equipment.values()) {
+            if (item != null && item.getName() != null && !item.getName().equals("")) {
+                items[i] = item.getName();
+                i++;
+            } else {
+                GameHandler.getGui().display("You have no equipment.", "Black");
+            }
+
+        }
+        return items;
+    }
+
+    private static boolean getPottyTrained() {
+        return pottyTrained;
+    }
+
+    private static int getMaturity() {
+        return maturity;
+    }
+
+    private static void addMaturity(int i) {
+        maturity += i;
+    }
+
+    public static boolean isPottyTrained() {
+        return pottyTrained;
+    }
+
+    public static void setPottyTrained(boolean pottyTrained) {
+        Player.pottyTrained = pottyTrained;
+    }
+
+    public static boolean isNude() {
+        if (equipment.containsKey("Underpants") && equipment.containsKey("Top") && equipment.containsKey("Bottom") && equipment.containsKey("Shoes")) {
+            return false;
+        } else {
+            if (!equipment.containsKey("Underpants")) {
+                GameHandler.getGui().display("You are missing underpants.", "Black");
+                return true;
+            } else if (!equipment.containsKey("Bottom")) {
+                GameHandler.getGui().display("You are missing a bottom.", "Black");
+                return true;
+            } else if (!equipment.containsKey("Top")) {
+                GameHandler.getGui().display("You are missing a top.", "Black");
+                return true;
+            } else if (!equipment.containsKey("Shoes")) {
+                GameHandler.getGui().display("You are missing shoes.", "Black");
+                return true;
+            }
+            return true;
+        }
+    }
+
+    public static ArrayList<Card> getHand() {
+        return hand;
+    }
+
+    public static void setHand(ArrayList<Card> hand) {
+        Player.hand = hand;
+    }
+
+    static ArrayList<Card> getPawDeck() {
+        return pawDeck;
+    }
 
     public Player(String name, String discription, Room room) {
 
@@ -1024,6 +1211,10 @@ if(getRoom().getType().equals("Bathroom")){
         abilities.get(skill).put(ability, effect);
     }
 
+    public static ArrayList<Item> getPockets() {
+        return pockets;
+    }
+
     public void removeAbility(Skill skill, Ability ability) {
         abilities.get(skill).remove(ability);
     }
@@ -1036,7 +1227,7 @@ if(getRoom().getType().equals("Bathroom")){
         pronouns = new String[]{subjective, objective, possessive, reference};
     }
 
-    public void dropItem(Item item) {
+    public static void dropItem(Item item) {
         if (item.isEquipped()) {
             GameHandler.getGui().display("You may not drop an equipped item.", "Black");
         } else {
@@ -1046,4 +1237,20 @@ if(getRoom().getType().equals("Bathroom")){
         }
     }
 
+    private static void accident() {
+        GameHandler.getGui().display("You had an accident.", "Black");
+        setBlatter(0);
+        addMaturity(-5);
+
+        Equipment underpants = equipment.get("Underpants");
+        GameHandler.getGui().display(underpants.getName(), "Black");
+        switch (underpants.getName()) {
+            case "Diaper" -> {
+                underpants.setCondition("Soaked");
+                GameHandler.getGui().display("Your " + underpants.getName() + " is leaking.", "Black");
+            }
+            default ->
+                throw new AssertionError();
+        }
+    }
 }

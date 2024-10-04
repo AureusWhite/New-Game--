@@ -83,22 +83,7 @@ public class Item {
     }
 
     public void use() {
-        if(!broken){
-        switch (this.type) {
-            case "Consumable" ->
-                GameHandler.getGui().display("You used the " + this.name, "Black");
-            case "Equipment" -> {
-                GameHandler.getGui().display("You equipped the " + this.name, "Black");
-                Player.equip((Equipment) this, this.slot);
-            }
-            case "QuestItem" ->
-                GameHandler.getGui().display("You used the " + this.name, "Black");
-            default ->
-                GameHandler.getGui().display("You can't use that item.", "red");
-        }
-    } else {
-            GameHandler.getGui().display("You can't use that item, it's broken", "red");
-        }
+        GameHandler.getGui().display("You used the " + this.name, "black");
     }
 
 

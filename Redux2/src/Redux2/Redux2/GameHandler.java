@@ -672,6 +672,7 @@ public class GameHandler {
             getGui().display("You will stay here until you give the correct answers.", "Red");
         }
     }
+
     private Container box;
     public Room recoveryRoom, kitchen, mainRoom,
             dorms, bathroom, hallway, stairs, basement,
@@ -684,7 +685,7 @@ public class GameHandler {
             peddleToys, lemonaidStand, toolShed, TRSRoom,
             janitorialRoom, foyer, pantry, roof, demoRoom, cogLabs;
 
-    private Equipment trainingPants, diaper;
+    private Equipment trainingPants, diaper, thickDiapers, backPack, underPants, uniformTop, uniformBottom, uniformHat, uniformShoes, uniBackPack;
 
     private Item toy, book, trash, modelingClay, coloringBook, crayons,
             markers, paint, paintBrush, glue, scissors, paper, pencil, eraser,
@@ -695,7 +696,7 @@ public class GameHandler {
             smartboard, globe, map, calendar, compass, protractor, canvas, snackShop;
 
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
-            jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim;
+            jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
 
     private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
     private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
@@ -711,7 +712,9 @@ public class GameHandler {
     }
 
     public void setUpNPCs() {
-
+        fuzzy = new NPC("Fuzzy", "A large stuffed bear, he is always around and always seems to be watching.", foyer, "companion");
+        npcs.put("Fuzzy", fuzzy);
+        fuzzy.setFollower(true);
         msSagely = new NPC("Ms_Sagely", "A wisen old woman whos presence is as comforting as it is dignified.", foyer, "adult");
         npcs.put("Ms_Sagely", msSagely);
         dawn = new NPC("Dawn", "An ERE Teacher and assistant to Ms Sagely, she is dressed in fun and colorful clothing.", foyer, "child");
@@ -754,94 +757,188 @@ public class GameHandler {
     public void buildRooms() {
         kitchen = new Room("Kitchen", "A room where you can cook food.");
         rooms.put("Kitchen", kitchen);
+        kitchen.setType("Kitchen");
+
         mainRoom = new Room("Main_Room", "The main room of the daycare.");
         rooms.put("Main_Room", mainRoom);
+        mainRoom.setType("Green Room");
+
         dorms = new Room("Dorms", "A room where you can sleep.");
         rooms.put("Dorms", dorms);
+        dorms.setType("Green Room");
+
         bathroom = new Room("Bathroom", "A room where you can clean yourself.");
         rooms.put("Bathroom", bathroom);
+        bathroom.setType("Bathroom");
+
         hallway = new Room("Hallway", "A hallway that connects the rooms.");
         rooms.put("Hallway", hallway);
+        hallway.setType("Red Room");
+
         stairs = new Room("Stairs", "A staircase that leads to the basement and attic.");
         rooms.put("Stairs", stairs);
+        stairs.setType("Red Room");
+
         basement = new Room("Basement", "A room where you can store things.");
         rooms.put("Basement", basement);
+        basement.setType("Red Room");
+
         attic = new Room("Attic", "A room where you can store things.");
         rooms.put("Attic", attic);
+        attic.setType("Red Room");
+
         garage = new Room("Garage", "A room where you can store vehicles.");
         rooms.put("Garage", garage);
+        garage.setType("Red Room");
+
         garden = new Room("Garden", "A room where you can grow plants.");
         rooms.put("Garden", garden);
+        garden.setType("Blue Room");
+
         driveway = new Room("Driveway", "A driveway that leads to the street.");
         rooms.put("Driveway", driveway);
+        driveway.setType("Red Room");
+
         frontYard = new Room("Front_Yard", "The front yard of the daycare.");
         rooms.put("Front_Yard", frontYard);
+        frontYard.setType("Blue Room");
+
         backYard = new Room("Back_Yard", "The back yard of the daycare.");
         rooms.put("Back_Yard", backYard);
+        backYard.setType("Blue Room");
+
         cogLabs = new Room("cogLabs", "A room with a sign that says \"Please do not take the box\"");
         rooms.put("cogLabs", cogLabs);
+        cogLabs.setType("Blue Room");
+
         pool = new Room("Pool", "A pool where you can swim.");
         rooms.put("Pool", pool);
+        pool.setType("Red Room");
+
         patio = new Room("Patio", "A patio where you can relax.");
         rooms.put("Patio", patio);
+        patio.setType("Blue Room");
+
         deck = new Room("Deck", "A deck where you can relax.");
         rooms.put("Deck", deck);
+        deck.setType("Blue Room");
+
         porch = new Room("Porch", "A porch where you can relax.");
         rooms.put("Porch", porch);
+        porch.setType("Blue Room");
+
         balcony = new Room("Balcony", "A balcony where you can relax.");
         rooms.put("Balcony", balcony);
+        balcony.setType("Blue Room");
+
         roof = new Room("Roof", "A roof where you can relax.");
         rooms.put("Roof", roof);
+        roof.setType("Red Room");
+
         cubbies = new Room("Cubbies", "A room where you can store your things.");
         rooms.put("Cubbies", cubbies);
+        cubbies.setType("Green Room");
+
         dramaArea = new Room("Drama_Area", "A room where you can act out plays.");
         rooms.put("Drama_Area", dramaArea);
+        dramaArea.setType("Green Room");
+
         changingRoom = new Room("Changing_Room", "A room where you can change your clothes.");
         rooms.put("Changing_Room", changingRoom);
+        changingRoom.setType("Green Room");
+
         floorPlay = new Room("Floor_Play", "A room where you can play on the floor.");
         rooms.put("Floor_Play", floorPlay);
+        floorPlay.setType("Green Room");
+
         quietArea = new Room("Quiet_Area", "A room where you can relax.");
         rooms.put("Quiet_Area", quietArea);
+        quietArea.setType("Green Room");
+
         homeWorkArea = new Room("Homework_Area", "A room where you can do your homework.");
         rooms.put("Homework_Area", homeWorkArea);
+        homeWorkArea.setType("Green Room");
+
         playHouse = new Room("Play_House", "A room where you can play house.");
         rooms.put("Play_House", playHouse);
+        playHouse.setType("Blue Room");
+
         treeHouse = new Room("Tree_House", "A room where you can play in a tree house.");
         rooms.put("Tree_House", treeHouse);
+        treeHouse.setType("Blue Room");
+
         storyBookVillage = new Room("Storybook_Village", "A room where you can read books.");
         rooms.put("Storybook_Village", storyBookVillage);
+        storyBookVillage.setType("Green Room");
         pillowPile = new Room("Pillow_Pile", "A room where you can relax on a pile of pillows.");
         rooms.put("Pillow_Pile", pillowPile);
+        pillowPile.setType("Green Room");
+
         snackArea = new Room("Snack_Area", "A room where you can eat snacks.");
         rooms.put("Snack_Area", snackArea);
+        snackArea.setType("Green Room");
+
         greenHall = new Room("Green_Hall", "A hallway that connects the rooms.");
         rooms.put("Green_Hall", greenHall);
+        greenHall.setType("Green Room");
+
         blueHall = new Room("Blue_Hall", "A hallway that connects the rooms.");
         rooms.put("Blue_Hall", blueHall);
+        blueHall.setType("Blue Room");
+
         redHall = new Room("Red_Hall", "A hallway that connects the rooms.");
         rooms.put("Red_Hall", redHall);
+        redHall.setType("Red Room");
+
         peddleToys = new Room("Peddle_Toys", "A room where you can play with peddle toys.");
         rooms.put("Peddle_Toys", peddleToys);
+        peddleToys.setType("Blue Room");
+
         lemonaidStand = new Room("Lemonaid_Stand", "A room where you can sell lemonaid.");
         rooms.put("Lemonaid_Stand", lemonaidStand);
+        lemonaidStand.setType("Blue Room");
+
         toolShed = new Room("Tool_Shed", "A shed where you can store tools.");
         rooms.put("Tool_Shed", toolShed);
+        toolShed.setType("Red Room");
+
         TRSRoom = new Room("TRSRoom", "A room where you can relax.");
         rooms.put("TRSRoom", TRSRoom);
+        TRSRoom.setType("Red Room");
+
         janitorialRoom = new Room("Janitorial_Room", "A room where you can clean.");
         rooms.put("Janitorial_Room", janitorialRoom);
+        janitorialRoom.setType("Red Room");
+
         foyer = new Room("Foyer", "The foyer of the daycare.");
         rooms.put("Foyer", foyer);
+        foyer.setType("Green Room");
+
         pantry = new Room("Pantry", "A room where you can store food.");
         rooms.put("Pantry", pantry);
+        pantry.setType("Kitchen");
+
         recoveryRoom = new Room("Recovery_Room", "A room where you can recover.");
         rooms.put("Recovery_Room", recoveryRoom);
+        recoveryRoom.setType("Red Room");
+
         demoRoom = new Room("Demo_Room", "A room where you can play with toys.");
         rooms.put("Demo_Room", demoRoom);
+        demoRoom.setType("Blue Room");
+
         demoRoom.addItem(snackShop);
         demoRoom.addItem(toy);
         demoRoom.addItem(book);
         foyer.addItem(snackShop);
+        recoveryRoom.addItem(trainingPants);
+        recoveryRoom.addItem(diaper);
+        recoveryRoom.addItem(backPack);
+        recoveryRoom.addItem(underPants);
+        recoveryRoom.addItem(uniformTop);
+        recoveryRoom.addItem(uniformBottom);
+        recoveryRoom.addItem(uniformHat);
+        recoveryRoom.addItem(uniformShoes);
+        recoveryRoom.addItem(uniBackPack);
 
         Player.setRoom(recoveryRoom);
     }
@@ -850,7 +947,9 @@ public class GameHandler {
         snackShop = new Shops("Snack Shop", "A shop where you can buy snacks.");
         items.put("Snack Shop", snackShop);
         snackShop.setType("Shop/parkour/interactable");
-
+        backPack = new Equipment("Back Pack", "A back pack for you to carry things in.", "Equipment");
+        items.put("Back Pack", backPack);
+        backPack.setType("Equipment/Storage");
         toy = new Item("Toy", "A toy for you to play with.", "Toy", false);
         items.put("Toy", toy);
         toy.setType("Toy");
@@ -993,9 +1092,12 @@ public class GameHandler {
         trash = new Item("Trash", "Trash that needs to be thrown away.", "Trash", true);
         items.put("Trash", trash);
         trash.setType("Trash");
-        diaper = new Equipment("Diaper", "A diaper for you, a baby.", "Underpants");
+        diaper = new Equipment("Diaper", "A diaper for you, a baby :P.", "Underpants");
         items.put("Diaper", diaper);
         diaper.setType("Equipment");
+        thickDiapers = new Equipment("Thick Diapers", "A diaper for you, a baby.", "Underpants");
+        items.put("Thick Diapers", thickDiapers);
+        thickDiapers.setType("Equipment");
         book = new Item("Book", "A book for you to read.", "Book", true);
         items.put("Book", book);
         book.setType("Book");
@@ -1006,6 +1108,34 @@ public class GameHandler {
         box.setType("Furniture");
         box.setContraband(true);
         items.put("Box", box);
+        underPants = new Equipment("Underpants", "Underpants, for you, a big kid", "Underpants");
+        items.put("Underpants", underPants);
+        underPants.setType("Equipment");
+        uniformTop = new Equipment("Uniform Top", "A top for your uniform", "Top");
+        items.put("Uniform Top", uniformTop);
+        uniformTop.setType("Equipment");
+        uniformBottom = new Equipment("Uniform Bottom", "A bottom for your uniform", "Bottom");
+        items.put("Uniform Bottom", uniformBottom);
+        uniformBottom.setType("Equipment");
+        uniformHat = new Equipment("Uniform Hat", "A hat for your uniform", "Hat");
+        items.put("Uniform Hat", uniformHat);
+        uniformHat.setType("Equipment");
+        uniformShoes = new Equipment("Uniform Shoes", "Shoes for your uniform", "Shoes");
+        items.put("Uniform Shoes", uniformShoes);
+        uniformShoes.setType("Equipment");
+        uniBackPack = new Equipment("Uniform Back Pack", "A back pack for your uniform", "Back Pack");
+        items.put("Uniform Back Pack", uniBackPack);
+        uniBackPack.setType("Equipment");
+        uniBackPack.setSlot("Back");
+        uniformBottom.setSlot("Bottom");
+        uniformTop.setSlot("Top");
+        uniformHat.setSlot("Hat");
+        uniformShoes.setSlot("Shoes");
+        trainingPants.setSlot("Underpants");
+        diaper.setSlot("Underpants");
+        thickDiapers.setSlot("Underpants");
+        underPants.setSlot("Underpants");
+
     }
 
     public void playIntro() {
@@ -1719,6 +1849,7 @@ public class GameHandler {
 
     private void playOutro() {
         readFile("outro");
+        PawsAndProwess pawgame = new PawsAndProwess();
     }
 
     void populateRooms() {
@@ -1758,20 +1889,24 @@ public class GameHandler {
         kitchen.addNPC(susy);
         foyer.addNPC(drWhite);
         //pantry.addNPC();
-        //recoveryRoom.addNPC();
+        recoveryRoom.addNPC(fuzzy);
         //demoRoom.addNPC();
     }
 
     public void giveItems() {
-        Player.addItem(diaper);
         drWhite.addItem(box);
         foyer.addItem(box);
         box.addItem(trash);
         box.addItem(toy);
-        snackShop.addItem(diaper);
+        snackShop.addItem(thickDiapers);
         snackShop.addItem(toy);
         toy.setPrice(5);
         diaper.setPrice(5);
+        diaper.setPockets(1);
+        thickDiapers.setPrice(5);
+        thickDiapers.setPockets(2);
+        uniBackPack.setPockets(5);
+        backPack.setPockets(10);
         box.setPrice(6);
     }
 }

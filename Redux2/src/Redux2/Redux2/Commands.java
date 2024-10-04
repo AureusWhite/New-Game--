@@ -28,8 +28,8 @@ class Commands {
                 }
                 case "point" ->
                     Player.performAction(Skill.SOCIAL, Ability.POINT, argument);
-                case "talk" ->
-                    GameHandler.getGui().display("You talked", "Black");
+                case "draw" ->
+                    PawsAndProwess.drawCard();
                 case "inventory" ->
                     GameHandler.getGui().display("You checked your inventory", "Black");
                 case "help" ->

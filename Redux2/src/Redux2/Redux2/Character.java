@@ -62,11 +62,6 @@ public class Character {
     public void useItem(Consumable consumable) {
         consumable.use(this);
     }
-
-    public void equipItem(Equipment equipment) {
-        equipment.equip(this);
-    }
-
     public int getHunger() {
         return this.hunger;
     }

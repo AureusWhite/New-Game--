@@ -489,4 +489,8 @@ public class Room {
             GameHandler.getGui().display("You interacted with " + interactable.getName(), "Black");
         }
     }
+
+    void setType(String type) {
+        this.type = type;
+    }
 }
