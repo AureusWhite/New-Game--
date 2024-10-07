@@ -23,9 +23,6 @@ public class PawFigure extends Item {
         // Randomly pick an ability
         this.ability = PawsAbility.values()[random.nextInt(PawsAbility.values().length)];
 
-        // Randomly pick a rarity (80% Common, 20% Rare)
-        this.rarity = (random.nextInt(100) < 20) ? PawsRarity.RARE : PawsRarity.COMMON;
-
         // Base stats for the Paw (you can adjust these numbers)
         int baseAttack = random.nextInt(5) + 5;
         int baseDefense = random.nextInt(5) + 5;

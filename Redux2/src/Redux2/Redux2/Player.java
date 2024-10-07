@@ -58,11 +58,6 @@ public class Player {
         return paws;
 
     }
-
-    static void setPaws(ArrayList<Paw> playerPaws) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public ArrayList<Item> gatHands() {
         return hands;
     }

@@ -1,32 +1,29 @@
 package Redux2;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Paw implements java.io.Serializable {
+public class Paw implements Serializable{
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private PawsColor color;
     private PawsRarity rarity;
-
+    Random rand = new Random();
     private PawsAbility pawability;
-    private int attack;
+    private int attack = 1;
 
-    private int defense;
-    private boolean tapped;
+    private int defense = 1;
+    private boolean tapped = false;
     private final String discription;
-    private int speed;
+    private int speed = 1;
     private PawAbility ability;
     private int hp = 25;
-    private int stealth;
-    private boolean confused;
-    private int power;
-    private int intellect;
+    private int stealth = 1;
+    private boolean confused = false;
+    private int power = 1;
+    private int intellect = 1;
     private int energy = 10;
     private ArrayList<Paw> paws;
 
@@ -47,28 +44,6 @@ public class Paw implements java.io.Serializable {
     public PawsRarity getRarity() {
         return rarity;
     }
-public ArrayList<Paw> loadPaws(String fileName) {
-    try (FileInputStream fileIn = new FileInputStream(fileName+".ser");
-         ObjectInputStream in = new ObjectInputStream(fileIn)) {
-        paws = (ArrayList<Paw>) in.readObject();
-        System.out.println("Serialized data is loaded from paws.ser");
-    } catch (IOException i) {
-        i.printStackTrace();
-    } catch (ClassNotFoundException c) {
-        System.out.println("Paw class not found");
-        c.printStackTrace();
-    }
-    return paws;
-}
-public void savePaws(String fileName) {
-    try (FileOutputStream fileOut = new FileOutputStream(fileName+".ser");
-         ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-        out.writeObject(paws);
-        System.out.println("Serialized data is saved in paws.ser");
-    } catch (IOException i) {
-        i.printStackTrace();
-    }
-}
     public PawsAbility getPawability() {
         return pawability;
     }
@@ -155,6 +130,8 @@ public void savePaws(String fileName) {
 
     public void setPower(int i) {
         this.power = i;
+        int randP = this.rand.nextInt(i);
+        this.setAttack(this.getAttack() + randP);
     }
 
     public int getStealth() {
@@ -173,24 +150,48 @@ public void savePaws(String fileName) {
         this.confused = b;
     }
     public void attack(Paw defending) {
+        if(this.isConfused()) {
+            PawsAndProwess.display(this.getName() + " is confused and does not obey.");
+            int snapoutofit = rand.nextInt(2);
+            if(snapoutofit == 1) {
+                PawsAndProwess.display(this.getName() + " snapped out of it.");
+                this.setConfused(false);
+                return;
+            } else {
+            PawsAndProwess.display(this.getName() + " is still confused.");
+            this.setConfused(true);
+            return;
+        }
+    }
         this.setEnergy(this.getEnergy() - 2);
         if (this.isTapped()) {
             PawsAndProwess.display(this.getName() + " is tapped and cannot attack.");
             this.setTapped(false);
         } else {
+            if(defending.isTapped()) {
+                PawsAndProwess.display(defending.getName() + " is tapped and cannot defend.");
+                defending.setHp(defending.getHp() - this.getAttack());
+                defending.setTapped(false);
+                return;
+            }
             PawsAndProwess.display(this.getName() + " attacked " + defending.getName() + ".");
             PawsAndProwess.display(this.getName() + " lost 2 energy. " + this.getName() + " now has " + this.getEnergy() + " energy.");
             int damage = this.getAttack() - defending.getDefense();
             if (damage > 0) {
                 defending.setHp(defending.getHp() - damage);
-                PawsAndProwess.display(defending.getName() + " took " + damage + " damage.");
+                PawsAndProwess.display(defending.getName() + " took " + damage + " damage.\n");
             } else {
-                PawsAndProwess.display(defending.getName() + " took no damage.");
+                PawsAndProwess.display(defending.getName() + " took no damage.\n");
             }
         }
     }
     public void defend(Paw attacking) {
         this.setEnergy(this.getEnergy() + 2);
+        int hide = rand.nextInt(this.getStealth()+1);
+        if(hide > 5) {
+            PawsAndProwess.display(this.getName() + " is stealthed and cannot be attacked.");
+            return;
+        }
         if (this.isTapped()) {
             PawsAndProwess.display(this.getName() + " is tapped and cannot defend.");
             this.setTapped(false);
@@ -201,9 +202,9 @@ public void savePaws(String fileName) {
             int damage = attacking.getAttack() - this.getDefense();
             if (damage > 0) {
                 this.setHp(this.hp - damage);
-                PawsAndProwess.display(this.getName() + " took " + damage + " damage.");
+                PawsAndProwess.display(this.getName() + " took " + damage + " damage.\n");
             } else {
-                PawsAndProwess.display(this.getName() + " took no damage.");
+                PawsAndProwess.display(this.getName() + " took no damage.\n");
             }
         }
     }
@@ -211,12 +212,10 @@ public void savePaws(String fileName) {
         return this.intellect;
     }
     public int getStrategy() {
-        Random rand = new Random();
         int strategy = rand.nextInt(3);
         return strategy;
     }
     public void takeTurn(Paw playerPaw) {
-        Random rand = new Random();
         int action = rand.nextInt(2);
         switch (action) {
             case 0 -> {
@@ -226,7 +225,13 @@ public void savePaws(String fileName) {
                     this.defend(playerPaw);
                 }
             }
-            case 1 -> this.defend(playerPaw);
+            case 1 -> {
+                if (this.getEnergy() >= 7) {
+                    this.attack(playerPaw);
+                } else {
+                    this.defend(playerPaw);
+                }
+            }
         }
         PawsAndProwess.setPriority();
     }
