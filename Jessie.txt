@@ -1,1 +1,384 @@
 #I am Jessie and I am a boy.
+
+private static JTextArea displayArea;
+    private JButton attackButton, defendButton, playCardButton, drawCardButton, priorityButton;
+    private static final ArrayList<Paw> paws = new ArrayList<>();
+    private static final ArrayList<Card> cards = new ArrayList<>();
+    private static final ArrayList<PawAbility> pawAbilities = new ArrayList<>();
+    private static final HashMap<Integer, Card> pawDeck = new HashMap<>();
+ private Paw playerPaw;
+    private Paw oppnentPaw;
+    private boolean newPick;
+    public PawsAndProwess() {
+        initComponents();
+        initializeGame();
+    }
+
+
+    public void pickAPaw() {
+        String[] chooseCollection = {"Open a Paw Figure", "Choose a Paw"};
+        int choice = JOptionPane.showOptionDialog(null, "Choose a Paw", "Choose a Paw", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, chooseCollection, chooseCollection[0]);
+        if (choice == 0) {
+            openFigure();
+        } else {
+            newPick = true;
+            while (newPick) {
+                if (paws.isEmpty()) {
+                    display("No more Paws available.");
+                    return;
+                }
+    
+                String[] pawNames = new String[paws.size()];
+                for (int i = 0; i < paws.size(); i++) {
+                    pawNames[i] = paws.get(i).getName();
+                }
+    
+                int pawChoice = JOptionPane.showOptionDialog(null, "Choose a paw", "Choose a paw", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pawNames, pawNames[0]);
+                if (pawChoice == -1) {
+                    display("No Paw chosen.");
+                    return;
+                }
+    
+                display("You chose " + paws.get(pawChoice).getName());
+                playerPaw = paws.get(pawChoice);
+                paws.remove(pawChoice);
+    
+                if (paws.isEmpty()) {
+                    display("No more Paws available for the opponent.");
+                    return;
+                }
+    
+                int opponentChoice = (int) (Math.random() * paws.size());
+                display("Your opponent chose " + paws.get(opponentChoice).getName());
+                oppnentPaw = paws.get(opponentChoice);
+                paws.remove(opponentChoice);
+    
+                newPick = false;
+            }
+        }
+    }
+    private void initComponents() {
+        setTitle("Paw and Prowess");
+        setSize(400, 300);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null); // Center window
+        setLayout(new BorderLayout());
+
+        // Display area for game information
+        displayArea = new JTextArea();
+        displayArea.setEditable(false);
+        displayArea.setFont(new Font("Serif", Font.PLAIN, 16));
+        displayArea.setText("Welcome to Paw and Prowess!\n");
+
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Panel for buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+
+        // Attack button
+        attackButton = new JButton("Attack");
+        attackButton.addActionListener((ActionEvent e) -> {
+            performAttack(playerPaw, oppnentPaw);
+        });
+
+        // Defend button
+        defendButton = new JButton("Defend");
+        defendButton.addActionListener((ActionEvent e) -> {
+            performDefend(playerPaw, oppnentPaw);
+        });
+        drawCardButton = new JButton("Draw Card");
+        drawCardButton.addActionListener((ActionEvent e) -> {
+            drawCard();
+        });
+        playCardButton = new JButton("Play Card");
+        playCardButton.addActionListener((ActionEvent e) -> {
+            playCard(playerPaw, oppnentPaw);
+        });
+        priorityButton = new JButton("Priority");
+        priorityButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setPriority();
+            }
+
+            private void setPriority() {
+                display("Setting priority...");
+            }
+        });
+
+        // Add buttons to the panel
+        buttonPanel.add(attackButton);
+        buttonPanel.add(drawCardButton);
+        buttonPanel.add(playCardButton);
+        buttonPanel.add(defendButton);
+        buttonPanel.add(priorityButton);
+
+        // Add button panel to the frame
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        // Set visibility
+        setVisible(true);
+    }
+
+    protected void performDefend(Paw playerPaw, Paw opponentPaw) {
+        display("Defending...");
+        playerPaw.defend(opponentPaw.getAttack());
+    }
+
+    protected void performAttack(Paw playerPaw, Paw opponentPaw) {
+        display("Attacking...");
+        opponentPaw.defend(playerPaw.getAttack());
+    }
+
+    public static ArrayList<PawAbility> getPawAbilities() {
+        return pawAbilities;
+    }
+
+    public static ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public static ArrayList<Paw> getPaws() {
+        return paws;
+    }
+
+    public void createPawGame() {
+        createPaws();
+        createPawAbilities();
+        createPawCards();
+        Player.setPawDeck(PawsAndProwess.shuffleDeck());
+        Player.setHand();
+    }
+
+    private void createPawCards() {
+        cards.clear();
+        pawDeck.clear();
+        Card TrickstersHat = new Card("Trickster's Hat", "Debuff/Trap", (Paw playerPaw1, Paw opponentPaw1) -> {
+            opponentPaw1.setTapped(true);
+            display("Trickster's Hat has been played on " + opponentPaw1.getName() + " and they are now tapped.");
+            display(" Tapped = " + opponentPaw1.isTapped() + "");
+        });
+        Card SpeedySneakers = new Card("Speedy Sneakers", "Buff", (Paw playerPaw1, Paw opponentPaw) -> {
+            playerPaw1.setSpeed(playerPaw.getSpeed() + 1);
+            display("Speedy Sneakers has been played on " + playerPaw.getName() + " and they now have increased speed.");
+            display(" Speed = " + playerPaw.getSpeed() + "");
+        });
+        Card PowerPaw = new Card("Power Paw", "Buff", (Paw playerPaw1, Paw opponentPaw) -> {
+            playerPaw.setPower(playerPaw.getPower() + 1);
+            display("Power Paw has been played on " + playerPaw.getName() + " and they now have increased power.");
+            display(" Power = " + playerPaw.getPower() + "");
+        });
+        Card ShieldingShell = new Card("Shielding Shell", "Buff", (Paw playerPaw1, Paw opponentPaw) -> {
+            playerPaw.setDefense(playerPaw.getDefense() + 1);
+            display("Shielding Shell has been played on " + playerPaw.getName() + " and they now have increased defense.");
+            display(" Defense = " + playerPaw.getDefense() + "");
+        });
+        Card HealingHeart = new Card("Healing Heart", "Buff", (Paw playerPaw1, Paw opponentPaw) -> {
+            playerPaw.setHp(playerPaw.getHp() + 1);
+            display("Healing Heart has been played on " + playerPaw.getName() + " and they now have increased health.");
+            display(" Health = " + playerPaw.getHp() + "");
+        });
+        Card SneakySneakers = new Card("Sneaky Sneakers", "Buff", (Paw playerPaw1, Paw opponentPaw) -> {
+            playerPaw.setStealth(playerPaw.getStealth() + 1);
+            display("Sneaky Sneakers has been played on " + playerPaw.getName() + " and they now have increased stealth.");
+            display(" Stealth = " + playerPaw.getStealth() + "");
+        });
+        Card ConfusionCollar = new Card("Confusion Collar", "Debuff/Trap", (Paw playerPaw1, Paw opponentPaw) -> {
+            opponentPaw.setConfused(true);
+            display("Confusion Collar has been played on " + opponentPaw.getName() + " and they are now confused.");
+            display(" Confused = " + opponentPaw.isConfused() + "");
+        });
+        Card EarthquakeEgg = new Card("Earthquake Egg", "Debuff/Trap", (Paw playerPaw1, Paw opponentPaw) -> {
+            playerPaw.setTapped(true);
+            opponentPaw.setTapped(true);
+            display("Earthquake Egg has been played on " + playerPaw.getName() + " and " + opponentPaw.getName() + " and they are now both tapped.");
+            display(" Tapped = " + playerPaw.isTapped() + " and " + opponentPaw.isTapped() + "");
+        });
+        cards.add(TrickstersHat);
+        cards.add(SpeedySneakers);
+        cards.add(PowerPaw);
+        cards.add(ShieldingShell);
+        cards.add(HealingHeart);
+        cards.add(ConfusionCollar);
+        cards.add(EarthquakeEgg);
+        cards.add(SneakySneakers);
+        pawDeck.put(1, SpeedySneakers);
+        pawDeck.put(2, PowerPaw);
+        pawDeck.put(3, ShieldingShell);
+        pawDeck.put(4, HealingHeart);
+        pawDeck.put(5, ConfusionCollar);
+        pawDeck.put(6, EarthquakeEgg);
+        pawDeck.put(7, SneakySneakers);
+        pawDeck.put(8, TrickstersHat);
+
+    }
+
+    public static ArrayList<Card> shuffleDeck() {
+        ArrayList<Card> shuffledDeck = new ArrayList<>();
+        ArrayList<Integer> deckKeys = new ArrayList<>(pawDeck.keySet());
+        Collections.shuffle(deckKeys);
+        for (int i = 0; i < deckKeys.size(); i++) {
+            shuffledDeck.add(pawDeck.get(deckKeys.get(i)));
+        }
+        return shuffledDeck;
+    }
+
+    private void createPaws() {
+        paws.clear();
+        Paw speedy = new Paw("Speedy", "A quick white rabbit", 1, 1, 1, 3, null, null, null);
+        Paw cheeseTheif = new Paw("Cheese Theif", "A sneaky rat", 1, 1, 1, 2, null, null, null);
+        Paw princess = new Paw("Princess", "A regal cat", 1, 1, 1, 1, null, null, null);
+        Paw cookie = new Paw("Cookie", "A little mouse", 1, 1, 1, 2, null, null, null);
+        Paw queen = new Paw("Queen", "A big fluffy dog", 1, 1, 1, 1, null, null, null);
+        paws.add(speedy);
+        paws.add(cheeseTheif);
+        paws.add(princess);
+        paws.add(cookie);
+        paws.add(queen);
+    }
+
+    private void createPawAbilities() {
+pawAbilities.clear();
+
+        // Create the Quickness ability
+        PawAbility quickness = new PawAbility("Quickness", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            playerPaw1.setSpeed(playerPaw1.getSpeed() + 1);
+            display("Quickness has been activated on " + playerPaw1.getName() + " and they now have increased speed.");
+        });
+        // Create the Sneak ability
+        PawAbility sneak = new PawAbility("Sneak", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            playerPaw1.setStealth(playerPaw1.getStealth() + 1);
+            display("Sneak has been activated on " + playerPaw1.getName() + " and they now have increased stealth.");
+        });
+        // Create the Power ability
+        PawAbility power = new PawAbility("Power", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            playerPaw1.setPower(playerPaw1.getPower() + 1);
+            display("Power has been activated on " + playerPaw1.getName() + " and they now have increased power.");
+        });
+        // Create the Shield ability
+        PawAbility shield = new PawAbility("Shield", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            playerPaw1.setDefense(playerPaw1.getDefense() + 1);
+            display("Shield has been activated on " + playerPaw1.getName() + " and they now have increased defense.");
+        });
+        // Create the Heal ability
+        PawAbility heal = new PawAbility("Heal", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            playerPaw1.setHp(playerPaw1.getHp() + 1);
+            display("Heal has been activated on " + playerPaw1.getName() + " and they now have increased health.");
+        });
+        // Create the Confuse ability
+        PawAbility confuse = new PawAbility("Confuse", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            opponentPaw1.setConfused(true);
+            display("Confuse has been activated on " + opponentPaw1.getName() + " and they are now confused.");
+        });
+        // Create the Tap ability
+        PawAbility pounce = new PawAbility("Pounce", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            opponentPaw1.setTapped(true);
+            display("Pounce has been activated on " + opponentPaw1.getName() + " and they are now tapped.");
+        });
+        // Create the Earthquake ability
+        PawAbility earthquake = new PawAbility("Earthquake", 1, (Paw playerPaw1, Paw opponentPaw1) -> {
+            playerPaw1.setTapped(true);
+            opponentPaw1.setTapped(true);
+            display("Earthquake has been activated on " + playerPaw1.getName() + " and " + opponentPaw1.getName() + " and they are now both tapped.");
+        });
+        pawAbilities.add(quickness);
+        pawAbilities.add(sneak);
+        pawAbilities.add(power);
+        pawAbilities.add(shield);
+        pawAbilities.add(heal);
+        pawAbilities.add(confuse);
+        pawAbilities.add(pounce);
+        pawAbilities.add(earthquake);
+    }
+
+    static void display(String string) {
+        displayArea.append(string + "\n");
+    }
+
+    public static void drawCard() {
+        if (Player.getPawDeck().isEmpty()) {
+            // Reshuffle the deck
+            Player.setPawDeck(shuffleDeck());
+        }
+        if (Player.getHand().size() >= 5) {
+            display("You have too many cards in your hand");
+            String[] options = {"Discard a card", "Keep your hand"};
+            int choice = JOptionPane.showOptionDialog(null, "You have too many cards in your hand",
+                    "Choose an option", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                    null, options, options[0]);
+
+            if (choice == 0) {
+                display("Which card would you like to discard?");
+                String[] cardDraw = new String[Player.getHand().size()];
+                for (int i = 0; i < Player.getHand().size(); i++) {
+                    cardDraw[i] = Player.getHand().get(i).getName();
+                }
+                int cardChoice = JOptionPane.showOptionDialog(null,
+                        "Which card would you like to discard?",
+                        "Choose a card", JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE, null, cardDraw, cardDraw[0]);
+
+                // Discard the chosen card
+                Card discardedCard = Player.getHand().remove(cardChoice);
+                display("You discarded " + discardedCard.getName());
+
+                // Draw a new card
+                Random random = new Random();
+                int index = random.nextInt(Player.getPawDeck().size());
+                Card drawnCard = Player.getPawDeck().get(index);
+                Player.getHand().add(drawnCard);
+                Player.getPawDeck().remove(index);
+                display("You drew " + drawnCard.getName());
+            }
+            return;
+        }
+
+        // If hand size is fine, just draw a card
+        if (Player.getPawDeck().isEmpty()) {
+            Player.setPawDeck(shuffleDeck());
+        }
+        Random random = new Random();
+        int index = random.nextInt(Player.getPawDeck().size());
+        Card drawnCard = Player.getPawDeck().get(index);
+        Player.getHand().add(drawnCard);
+        Player.getPawDeck().remove(index);
+
+        display("You drew a card: " + drawnCard.getName());
+        display("You have " + Player.getHand().size() + " cards in your hand");
+    }
+
+    public static void playCard(Paw playerPaw, Paw opponentPaw) {
+        if (Player.getHand().isEmpty()) {
+            display("You have no cards to play.");
+            return;
+        }
+    
+        // Present card names as options for the player to choose
+        String[] cardNames = new String[Player.getHand().size()];
+        for (int i = 0; i < Player.getHand().size(); i++) {
+            cardNames[i] = Player.getHand().get(i).getName();
+        }
+    
+        // Show a dialog to select which card to play
+        String choice = (String) JOptionPane.showInputDialog(null,
+                "Which card would you like to play?",
+                "Play Card", JOptionPane.QUESTION_MESSAGE, null, cardNames, cardNames[0]);
+    
+        if (choice != null) {
+            for (Card card : Player.getHand()) {
+                if (card.getName().equals(choice)) {
+                    card.play(playerPaw, opponentPaw);  // Pass player and opponent paws to the card's action
+                    Player.getHand().remove(card);
+                    display("You played " + card.getName());
+                    break;
+                }
+            }
+        }
+    }
+
+    public void openFigure() {
+        PawFigure pawFigure1 = new PawFigure();
+        pawFigure1.generateRandomPaw();
+    }

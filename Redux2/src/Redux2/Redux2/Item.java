@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Item {
 
-    private String name;
+    protected String name;
     private String description;
     private String type;
      boolean takable;
@@ -85,7 +85,6 @@ public class Item {
     public void use() {
         GameHandler.getGui().display("You used the " + this.name, "black");
     }
-
 
     public void removeItemByName(String itemName) {
         for (Item item : this.items) {

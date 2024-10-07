@@ -1,7 +1,13 @@
 package Redux2;
 
+import java.util.ArrayList;
+
 class Commands {
 
+    private static PawsAndProwess pawsAndProwess;
+    public static PawsAndProwess getPawsAndProwess() {
+        return pawsAndProwess;
+    }
     public static void execute(String text) {
         String command;
         String argument;
@@ -26,10 +32,12 @@ class Commands {
                 case "cry" -> {
                     Player.performAction(Skill.SOCIAL, Ability.CRY, argument);
                 }
-                case "point" ->
+                case "point" -> {
                     Player.performAction(Skill.SOCIAL, Ability.POINT, argument);
-                case "draw" ->
-                    PawsAndProwess.drawCard();
+                }
+                case "play" -> {
+                    pawsAndProwess = new PawsAndProwess();
+                }
                 case "inventory" ->
                     GameHandler.getGui().display("You checked your inventory", "Black");
                 case "help" ->
@@ -46,6 +54,16 @@ class Commands {
             }
         }
         GUI.getJTextField().setText("");
+        }
+    private ArrayList<Item> hands;
+        public ArrayList<Item> getHands() {
+        return hands;
     }
+        public ArrayList<Item> gatHands(){
+            return Player.getHands();
+        }
+        public void setHands(ArrayList<Item> hands1){
+            this.hands = hands1;
+        }
 
-}
+    }

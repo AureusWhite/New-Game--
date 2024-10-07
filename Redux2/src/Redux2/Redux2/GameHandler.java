@@ -673,6 +673,28 @@ public class GameHandler {
         }
     }
 
+    public static Item getItem(Item item) {
+        for (Item item1 : items.values()) {
+            if (item1.equals(item)) {
+                return item1;
+            }
+        }
+        return null;
+    }
+
+    public static PawFigure getFigureByName(String name) {
+        for (Item item : items.values()) {
+            if (item instanceof PawFigure figure) {
+                if (figure.getName().equalsIgnoreCase(name)) {
+                    getGui().display("This happened!", "Black");
+                    return figure;
+                }
+            }
+        }
+        return null;
+
+    }
+
     private Container box;
     public Room recoveryRoom, kitchen, mainRoom,
             dorms, bathroom, hallway, stairs, basement,
@@ -693,7 +715,7 @@ public class GameHandler {
             binoculars, camera, videoCamera, tapeRecorder, radio, television,
             computer, tablet, phone, speaker, headphones, microphone, keyboard,
             mouse, monitor, printer, scanner, projector, whiteboard, chalkboard,
-            smartboard, globe, map, calendar, compass, protractor, canvas, snackShop;
+            smartboard, globe, map, calendar, compass, protractor, canvas, snackShop,pickapaw,pawFigure,limitedEditionPaw;
 
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
             jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
@@ -939,11 +961,21 @@ public class GameHandler {
         recoveryRoom.addItem(uniformHat);
         recoveryRoom.addItem(uniformShoes);
         recoveryRoom.addItem(uniBackPack);
+        mainRoom.addItem(pickapaw);
 
         Player.setRoom(recoveryRoom);
     }
 
     public void createItems() {
+        pickapaw = new Shops("Pick a Paw", "A shop where you can buy Paws and Paw and Prowess cards.");
+        items.put("Pick a Paw", pickapaw);
+        pickapaw.setType("Shop/Trading/Interactable");
+        pawFigure = new PawFigure();
+        items.put("Paw Figure", pawFigure);
+        pawFigure.setType("Paw");
+        limitedEditionPaw = new Item("Limited Edition Paw", "A limited edition paw.", "Paw", false);
+        items.put("Limited Edition Paw", limitedEditionPaw);
+        limitedEditionPaw.setType("Paw");
         snackShop = new Shops("Snack Shop", "A shop where you can buy snacks.");
         items.put("Snack Shop", snackShop);
         snackShop.setType("Shop/parkour/interactable");
@@ -1849,7 +1881,7 @@ public class GameHandler {
 
     private void playOutro() {
         readFile("outro");
-        PawsAndProwess pawgame = new PawsAndProwess();
+
     }
 
     void populateRooms() {
@@ -1908,5 +1940,11 @@ public class GameHandler {
         uniBackPack.setPockets(5);
         backPack.setPockets(10);
         box.setPrice(6);
+        box.setContraband(true);
+        pickapaw.addItem(pawFigure);
+        pickapaw.addItem(limitedEditionPaw);
+        limitedEditionPaw.setPrice(50);
+        pawFigure.setPrice(10);
+        Player.addItem(pawFigure);
     }
 }

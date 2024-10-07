@@ -39,7 +39,35 @@ public class Player {
     static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
     private static ArrayList<Card> pawDeck = new ArrayList<>();
     private static ArrayList<Card> hand = new ArrayList<>();
-    
+    private static final ArrayList<Paw> paws = new ArrayList<>();
+
+    public static ArrayList<Item> getHands() {
+        return hands;
+    }
+
+    public static boolean hasFigure(boolean b) {
+        for (Item item : hands) {
+            if (item.getName().equals("Paw Figure")) {
+                return b;
+            }
+        }
+        return b;
+    }
+
+    static ArrayList<Paw> getPaws() {
+        return paws;
+
+    }
+
+    static void setPaws(ArrayList<Paw> playerPaws) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ArrayList<Item> gatHands() {
+        return hands;
+    }
+
+    private Ability ability;
     private static boolean leader = true;
     private static boolean playerIsHidden;
     private static boolean pottyTrained = false;
@@ -49,11 +77,14 @@ public class Player {
     public static void setEnergy(int energy) {
         Player.energy = energy;
     }
+
     public static void setPawDeck(ArrayList<Card> pawDeck1) {
         pawDeck = pawDeck1;
     }
-    public static void setHand(){
-        for(int i = 0; i < 5; i++){
+
+    public static void setHand() {
+        hand.clear();
+        for (int i = 0; i < 5; i++) {
             hand.add(pawDeck.get(i));
         }
     }
@@ -1252,5 +1283,35 @@ public class Player {
             default ->
                 throw new AssertionError();
         }
+    }
+
+    public Ability getAbility() {
+        return ability;
+    }
+
+    public void setAbility(Ability ability) {
+        this.ability = ability;
+    }
+
+    public static PawFigure getPawFigure() {
+        PawFigure pawFigure = (PawFigure) GameHandler.getItemByName(getFigureChoices());
+        return pawFigure;
+    }
+
+    private static String getFigureChoices() {
+        String choice = null;   
+        int i = 0;
+        String[] choices = new String[hands.size()];
+        for (Item item : hands) {
+            if (item instanceof PawFigure) {
+                choices[i] = item.getName();
+                i++;
+            } else {
+                GameHandler.getGui().display("You have no figures in your hands", "Black");
+            }
+            choice = (String) JOptionPane.showInputDialog(null, "Choose a figure", "Choose a figure", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]);
+        }
+        return choice; 
+        
     }
 }
