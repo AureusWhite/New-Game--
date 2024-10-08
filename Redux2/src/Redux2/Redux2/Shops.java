@@ -15,7 +15,8 @@ public class Shops extends Item {
 
     @Override
     public void use() {
-        GameHandler.getGui().display("You walk up to the shop and ask to see what's for same", "Black");
+        GameHandler.getGui().display("You walk up to the shop and ask to see what's for sale", "Black");
+        interact();
     }
     @Override
     public void interact() {

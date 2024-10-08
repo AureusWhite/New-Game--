@@ -493,4 +493,13 @@ public class Room {
     void setType(String type) {
         this.type = type;
     }
+
+    public boolean containsItem(String string) {
+        for (Item item : this.getArrayInventory()) {
+            if (item.getName().equalsIgnoreCase(string)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

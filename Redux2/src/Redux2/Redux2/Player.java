@@ -291,12 +291,36 @@ public class Player {
     }
 
     public static void setRoom(Room room1) {
+        GameHandler.updateAchievementsForRoomVisit(room1);
         room = room1;
         if (room == GameHandler.getRoomByName("Demo_Room")) {
             GameHandler.demo();
         }
     }
-
+    public void reduceEnergy(int i) {
+        energy -= i;
+    }
+    public void increaseEnergy(int i) {
+        energy += i;
+    }
+    public void applyFlowBonus() {
+        // Apply the flow bonus to the player's energy
+    }
+    public void dynamicEnergyConsumption(boolean isPhysical, boolean isMental) {
+        // Adjust energy based on activity and time of day
+    }
+    public void applyXPBonus() {
+        // Apply the XP bonus to the player's experience
+    }
+    public void dynamicXPGeneration(boolean isPhysical, boolean isMental) {
+        // Adjust XP based on activity and time of day
+    }
+    public void applyResilienceBonus() {
+        // Apply the resilience bonus to the player's resilience
+    }
+    public void progressiveFlowBonus() {
+        // Increase the flow bonus over time
+    }    
     public static Room getRoom() {
         return Player.room;
     }
@@ -330,6 +354,7 @@ public class Player {
         } else {
             // Equip the item
             equipment.put(slot, equipment1);
+            GameHandler.updateAchievementsForEquip(equipment1);
             equipment1.setEquipped(true);
             calculatePockets();
         }

@@ -36,6 +36,7 @@ public class Game {
         gameHandler.createItems();
         gameHandler.setUpNPCs();
         beginGame(gameHandler);
+        gameHandler.createAchievements();
 
     }
 

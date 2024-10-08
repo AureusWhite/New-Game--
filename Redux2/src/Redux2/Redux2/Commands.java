@@ -48,6 +48,11 @@ class Commands {
                     GameHandler.getGui().display("You checked your quests", "Black");
                     Player.displayQuests();
                 }
+                case "phase" -> {
+                    FatherTime.nextPhase();
+                    GameHandler.getGui().display("You checked the phase", "Black");
+                    GameHandler.getGui().display(FatherTime.getCurrentPhase().toString(), "Black");
+                }
                 default ->
                     GameHandler.getGui().display("Invalid command", "Black");
 

@@ -18,7 +18,7 @@ public class Paw implements Serializable{
     private boolean tapped = false;
     private final String discription;
     private int speed = 1;
-    private PawAbility ability;
+    private PawsAbility ability;
     private int hp = 25;
     private int stealth = 1;
     private boolean confused = false;
@@ -120,7 +120,7 @@ public class Paw implements Serializable{
         return discription;
     }
 
-    public void setAbility(PawAbility ability) {
+    public void setAbility(PawsAbility ability) {
         this.ability = ability;
     }
 
@@ -140,7 +140,7 @@ public class Paw implements Serializable{
     public void setStealth(int i) {
         this.stealth = i;
     }
-    public PawAbility getAbility() {
+    public PawsAbility getAbility() {
         return ability;
     }
     public boolean isConfused() {
@@ -216,25 +216,36 @@ public class Paw implements Serializable{
         return strategy;
     }
     public void takeTurn(Paw playerPaw) {
-        int action = rand.nextInt(2);
+        int action = rand.nextInt(2); // Randomly choose between two actions
+        boolean canPerformSpecial = this.getEnergy() >= this.getAbility().getCost(); // Check if the special can be used
+        boolean attackLikelyToHit = this.getAttack() > playerPaw.getDefense() + 10; // Check if attack is likely to hit
+    
         switch (action) {
             case 0 -> {
                 if (this.getEnergy() >= 2) {
-                    this.attack(playerPaw);
+                    if (attackLikelyToHit) {
+                        this.attack(playerPaw); // Perform attack if likely to hit
+                    } else if (canPerformSpecial) {
+                        PawsAndProwess.usePawAbility(this); // Use special ability
+                        PawsAndProwess.display(this.getName() + " used " + this.getAbility().toString() + ".\n");
+                    } else {
+                        this.defend(playerPaw); // Defend if unable to attack or use special
+                    }
                 } else {
-                    this.defend(playerPaw);
+                    this.defend(playerPaw); // Defend if energy is too low
                 }
             }
             case 1 -> {
                 if (this.getEnergy() >= 7) {
-                    this.attack(playerPaw);
+                    this.attack(playerPaw); // Perform stronger attack
                 } else {
-                    this.defend(playerPaw);
+                    this.defend(playerPaw); // Defend if energy is insufficient
                 }
             }
         }
-        PawsAndProwess.setPriority();
+        PawsAndProwess.setPriority(); // Update priority at the end of the turn
     }
+    
     public int getEnergy() {
         return this.energy;
     }

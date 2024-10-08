@@ -24,6 +24,7 @@ public class GameHandler {
     public static String fileSection2 = "";
     public static String fileSection3 = "";
     public static String fileSection4 = "";
+    private final static ArrayList<Achievements> achievements = new ArrayList<>();
 
     public static Room getRoomByName(String name) {
         return rooms.get(name);
@@ -319,6 +320,28 @@ public class GameHandler {
     public static void giveQuestToPlayer(Quest quest) {
         Quest quest1 = quests.get(quests.indexOf(quest));
         Player.addQuest(quest1);
+    }
+
+    public static Item getItem(Item item) {
+        for (Item item1 : items.values()) {
+            if (item1.equals(item)) {
+                return item1;
+            }
+        }
+        return null;
+    }
+
+    public static PawFigure getFigureByName(String name) {
+        for (Item item : items.values()) {
+            if (item instanceof PawFigure figure) {
+                if (figure.getName().equalsIgnoreCase(name)) {
+                    getGui().display("This happened!", "Black");
+                    return figure;
+                }
+            }
+        }
+        return null;
+
     }
 
     static NPC getNPCByName(String person) {
@@ -673,28 +696,9 @@ public class GameHandler {
         }
     }
 
-    public static Item getItem(Item item) {
-        for (Item item1 : items.values()) {
-            if (item1.equals(item)) {
-                return item1;
-            }
-        }
-        return null;
+    private static ArrayList<Achievements> getAchievements() {
+        return achievements;
     }
-
-    public static PawFigure getFigureByName(String name) {
-        for (Item item : items.values()) {
-            if (item instanceof PawFigure figure) {
-                if (figure.getName().equalsIgnoreCase(name)) {
-                    getGui().display("This happened!", "Black");
-                    return figure;
-                }
-            }
-        }
-        return null;
-
-    }
-
     private Container box;
     public Room recoveryRoom, kitchen, mainRoom,
             dorms, bathroom, hallway, stairs, basement,
@@ -705,7 +709,7 @@ public class GameHandler {
             treeHouse, storyBookVillage, pillowPile,
             snackArea, greenHall, blueHall, redHall,
             peddleToys, lemonaidStand, toolShed, TRSRoom,
-            janitorialRoom, foyer, pantry, roof, demoRoom, cogLabs;
+            janitorialRoom, foyer, pantry, roof, demoRoom, cogLabs,classRoom;
 
     private Equipment trainingPants, diaper, thickDiapers, backPack, underPants, uniformTop, uniformBottom, uniformHat, uniformShoes, uniBackPack;
 
@@ -739,7 +743,7 @@ public class GameHandler {
         fuzzy.setFollower(true);
         msSagely = new NPC("Ms_Sagely", "A wisen old woman whos presence is as comforting as it is dignified.", foyer, "adult");
         npcs.put("Ms_Sagely", msSagely);
-        dawn = new NPC("Dawn", "An ERE Teacher and assistant to Ms Sagely, she is dressed in fun and colorful clothing.", foyer, "child");
+        dawn = new NPC("Dawn", "An ERE TeAchr and assistant to Ms Sagely, she is dressed in fun and colorful clothing.", foyer, "child");
         npcs.put("Dawn", dawn);
         taliber = new NPC("Taliber", "A rejuve and prefect of about seven, he seems to be someone who the others want to follow.", foyer, "child");
         npcs.put("Taliber", taliber);
@@ -780,6 +784,10 @@ public class GameHandler {
         kitchen = new Room("Kitchen", "A room where you can cook food.");
         rooms.put("Kitchen", kitchen);
         kitchen.setType("Kitchen");
+
+        classRoom = new Room("Class_Room", "A room where you can learn.");
+        rooms.put("Class_Room", classRoom);
+        classRoom.setType("Blue Room");
 
         mainRoom = new Room("Main_Room", "The main room of the daycare.");
         rooms.put("Main_Room", mainRoom);
@@ -1485,6 +1493,24 @@ public class GameHandler {
     public Room getBackYard() {
         return backYard;
     }
+    public static void updateAchievementsForRoomVisit(Room room) {
+        // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
+        for (Achievements Achievement : GameHandler.getAchievements()) {
+            // Check if the achievement involves visiting rooms
+            if (Achievement.getRequiredPlaces().containsKey(room)) {
+                Achievement.markRoomVisited(room); // Mark the room as visited for the achievement
+            }
+        }
+    }
+    public static void updateAchievementsForEquip(Equipment equipment) {
+        // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
+        for (Achievements Achievement : GameHandler.getAchievements()) {
+            // Check if the achievement involves equipping items
+            if (Achievement.getRequiredEquipment().containsKey(equipment)) {
+                Achievement.markEquipmentEquipped(equipment); // Mark the equipment as equipped for the achievement
+            }
+        }
+    }
 
     public void setBackYard(Room backYard) {
         this.backYard = backYard;
@@ -1784,6 +1810,71 @@ public class GameHandler {
 
     }
 
+    public void giveItems() {
+        drWhite.addItem(box);
+        foyer.addItem(box);
+        foyer.addItem(trash);
+        box.addItem(trash);
+        box.addItem(toy);
+        snackShop.addItem(thickDiapers);
+        snackShop.addItem(toy);
+        toy.setPrice(5);
+        diaper.setPrice(5);
+        diaper.setPockets(1);
+        thickDiapers.setPrice(5);
+        thickDiapers.setPockets(2);
+        uniBackPack.setPockets(5);
+        backPack.setPockets(10);
+        box.setPrice(6);
+        box.setContraband(true);
+        pickapaw.addItem(pawFigure);
+        pickapaw.addItem(limitedEditionPaw);
+        limitedEditionPaw.setPrice(50);
+        pawFigure.setPrice(10);
+        Player.addItem(pawFigure);
+    }
+
+    void populateRooms() {
+        //basement.addNPC();
+        //attic.addNPC();
+        garage.addNPC(jim);
+        //garden.addNPC();
+        //driveway.addNPC();
+        //frontYard.addNPC();
+        //backYard.addNPC();
+        cogLabs.addNPC(researchStudent1);
+        //pool.addNPC();
+        //patio.addNPC();
+        //deck.addNPC();
+        //porch.addNPC();
+        //balcony.addNPC();
+        //roof.addNPC();
+        //cubbies.addNPC();
+        //dramaArea.addNPC();
+        //changingRoom.addNPC();
+        //floorPlay.addNPC();
+        //quietArea.addNPC();
+        //homeWorkArea.addNPC();
+        //playHouse.addNPC();
+        treeHouse.addNPC(taliber);
+        storyBookVillage.addNPC(joy);
+        //pillowPile.addNPC();
+        //snackArea.addNPC();
+        //greenHall.addNPC();
+        //blueHall.addNPC();
+        //redHall.addNPC();
+        //peddleToys.addNPC();
+        //lemonaidStand.addNPC();
+        //toolShed.addNPC();
+        //TRSRoom.addNPC();
+        //janitorialRoom.addNPC();
+        kitchen.addNPC(susy);
+        foyer.addNPC(drWhite);
+        //pantry.addNPC();
+        recoveryRoom.addNPC(fuzzy);
+        //demoRoom.addNPC();
+    }
+
     private void dialogWithFuzzy() {
         getGui().display("Fuzzy: What is your name?", "Black");
         getGui().waitForInput();
@@ -1883,68 +1974,28 @@ public class GameHandler {
         readFile("outro");
 
     }
+    public void createAchievements() {
+    Achievements explorer = new Achievements("Exsplore", "Exsplore all the rooms in the house", 10);
+    explorer.addRequiredPlace(foyer);
+    explorer.addRequiredPlace(dorms);
+    Achievements snappyDresser = new Achievements("Snappy Dresser", "Wear a uniform", 10);
+    snappyDresser.addRequiredEquipment(uniformTop);
+    snappyDresser.addRequiredEquipment(uniformBottom);
+    snappyDresser.addRequiredEquipment(uniformHat);
+    snappyDresser.addRequiredEquipment(uniformShoes);
+    snappyDresser.addRequiredEquipment(uniBackPack);
+    Achievements collector = new Achievements("Collector", "Collect all the toys", 10);
+    collector.addRequiredItem(toy);
+    Achievements socialite = new Achievements("Socialite", "Make a friend", 10);
+    socialite.addRequiredNPC(fuzzy);
+    Achievements bookWorm = new Achievements("Book Worm", "Read all the books", 10);
+    bookWorm.addRequiredItem(book);
+        // Add all the achievements to the list
+        achievements.add(explorer);
+        achievements.add(snappyDresser);
+        achievements.add(collector);
+        achievements.add(socialite);
+        achievements.add(bookWorm);
+}
 
-    void populateRooms() {
-        //basement.addNPC();
-        //attic.addNPC();
-        garage.addNPC(jim);
-        //garden.addNPC();
-        //driveway.addNPC();
-        //frontYard.addNPC();
-        //backYard.addNPC();
-        cogLabs.addNPC(researchStudent1);
-        //pool.addNPC();
-        //patio.addNPC();
-        //deck.addNPC();
-        //porch.addNPC();
-        //balcony.addNPC();
-        //roof.addNPC();
-        //cubbies.addNPC();
-        //dramaArea.addNPC();
-        //changingRoom.addNPC();
-        //floorPlay.addNPC();
-        //quietArea.addNPC();
-        //homeWorkArea.addNPC();
-        //playHouse.addNPC();
-        treeHouse.addNPC(taliber);
-        storyBookVillage.addNPC(joy);
-        //pillowPile.addNPC();
-        //snackArea.addNPC();
-        //greenHall.addNPC();
-        //blueHall.addNPC();
-        //redHall.addNPC();
-        //peddleToys.addNPC();
-        //lemonaidStand.addNPC();
-        //toolShed.addNPC();
-        //TRSRoom.addNPC();
-        //janitorialRoom.addNPC();
-        kitchen.addNPC(susy);
-        foyer.addNPC(drWhite);
-        //pantry.addNPC();
-        recoveryRoom.addNPC(fuzzy);
-        //demoRoom.addNPC();
-    }
-
-    public void giveItems() {
-        drWhite.addItem(box);
-        foyer.addItem(box);
-        box.addItem(trash);
-        box.addItem(toy);
-        snackShop.addItem(thickDiapers);
-        snackShop.addItem(toy);
-        toy.setPrice(5);
-        diaper.setPrice(5);
-        diaper.setPockets(1);
-        thickDiapers.setPrice(5);
-        thickDiapers.setPockets(2);
-        uniBackPack.setPockets(5);
-        backPack.setPockets(10);
-        box.setPrice(6);
-        box.setContraband(true);
-        pickapaw.addItem(pawFigure);
-        pickapaw.addItem(limitedEditionPaw);
-        limitedEditionPaw.setPrice(50);
-        pawFigure.setPrice(10);
-        Player.addItem(pawFigure);
-    }
 }

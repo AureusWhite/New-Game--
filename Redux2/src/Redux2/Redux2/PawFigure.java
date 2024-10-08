@@ -24,10 +24,10 @@ public class PawFigure extends Item {
         this.ability = PawsAbility.values()[random.nextInt(PawsAbility.values().length)];
 
         // Base stats for the Paw (you can adjust these numbers)
-        int baseAttack = random.nextInt(5) + 5;
-        int baseDefense = random.nextInt(5) + 5;
-        int baseHP = 20;
-        int speed = random.nextInt(5) + 5;
+        int baseAttack = random.nextInt(5) + 7;
+        int baseDefense = random.nextInt(5) + 7;
+        int baseHP = 25;
+        int speed = random.nextInt(5) + 7;
         int totalStats = baseAttack + baseDefense + speed;
         switch(totalStats){
             case 16,17,18:

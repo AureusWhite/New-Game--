@@ -35,6 +35,5 @@ public class PawAbility {
 
     public void setAbilityEffect(BiConsumer<Paw, Paw> abilityEffect) {
         this.abilityEffect = abilityEffect;
-    }
-    
+    }    
 }
