@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PawsAndProwess extends JFrame {
 
@@ -20,7 +22,6 @@ public class PawsAndProwess extends JFrame {
     private JButton attackButton, defendButton, playCardButton, drawCardButton, priorityButton;
     private static final ArrayList<Paw> paws = new ArrayList<>();
     private static final ArrayList<Card> cards = new ArrayList<>();
-    private static final ArrayList<PawAbility> pawAbilities = new ArrayList<>();
     private static final HashMap<Integer, Card> pawDeck = new HashMap<>();
     private static Paw playerPaw;
     private static Paw oppnentPaw;
@@ -52,16 +53,17 @@ public class PawsAndProwess extends JFrame {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                Logger.getLogger(PawsAndProwess.class.getName()).log(Level.SEVERE, null, e);
             }
         }
         try (FileOutputStream fileOut = new FileOutputStream(file); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(paws);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(PawsAndProwess.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void loadPaws() {
         File file = new File("pawData.ser");
         if (file.exists()) {
@@ -71,7 +73,7 @@ public class PawsAndProwess extends JFrame {
                     paws.addAll((ArrayList<Paw>) in.readObject());
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                Logger.getLogger(PawsAndProwess.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }
@@ -490,11 +492,6 @@ public class PawsAndProwess extends JFrame {
     protected void performAttack(Paw playerPaw, Paw opponentPaw) {
         playerPaw.attack(opponentPaw);
     }
-
-    public static ArrayList<PawAbility> getPawAbilities() {
-        return pawAbilities;
-    }
-
     public static ArrayList<Card> getCards() {
         return cards;
     }

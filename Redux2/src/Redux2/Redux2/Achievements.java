@@ -13,7 +13,7 @@ public class Achievements {
     private final HashMap<String, Boolean> requiredStatus = new HashMap<>();
     private final HashSet<Achievements> requiredAchievements = new HashSet<>();
     private final HashMap<NPC, Boolean> requiredNPC = new HashMap<>();
-    private HashMap<Equipment, Boolean> requiredEquipment = new HashMap<>();
+    private final HashMap<Equipment, Boolean> requiredEquipment = new HashMap<>();
 
     // Constructor for setting achievement details
     public Achievements(String name, String description, int points) {
@@ -140,5 +140,9 @@ public class Achievements {
 
     public HashMap<Equipment,Boolean> getRequiredEquipment() {
         return requiredEquipment;
+    }
+
+    public HashSet<Achievements> getRequiredAchievements() {
+        return requiredAchievements;
     }
 }

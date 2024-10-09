@@ -2,7 +2,7 @@ package Redux2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -40,6 +40,8 @@ public class Player {
     private static ArrayList<Card> pawDeck = new ArrayList<>();
     private static ArrayList<Card> hand = new ArrayList<>();
     private static final ArrayList<Paw> paws = new ArrayList<>();
+    private static boolean sleeping;
+    private static final ArrayList<PlayerStatus> Status = new ArrayList<>();
 
     public static ArrayList<Item> getHands() {
         return hands;
@@ -54,9 +56,34 @@ public class Player {
         return b;
     }
 
-    static ArrayList<Paw> getPaws() {
+   public static ArrayList<Paw> getPaws() {
         return paws;
 
+    }
+
+    public static int getBlatter() {
+        return blatter;
+    }
+
+    private static void setSleeping(boolean b) {
+        sleeping = b;
+    }
+
+    private static boolean isSleeping() {
+        return sleeping;
+    }
+
+    public static void setStatus(PlayerStatus status) {
+        GameHandler.getGui().display("You are " + status, "Black");
+        Status.add(status);
+    }
+    public static ArrayList<PlayerStatus> getStatus() {
+        return Status;
+    }
+
+    static void removeStatus(PlayerStatus playerStatus) {
+        GameHandler.getGui().display("You are no longer " + playerStatus, "Black");
+        Status.remove(playerStatus);
     }
     public ArrayList<Item> gatHands() {
         return hands;
@@ -65,8 +92,8 @@ public class Player {
     private Ability ability;
     private static boolean leader = true;
     private static boolean playerIsHidden;
-    private static boolean pottyTrained = false;
-    private static int blatter;
+    private static boolean pottyTrained = true;
+    private static int blatter=25;
     private static int maturity = 0;
 
     public static void setEnergy(int energy) {
@@ -103,7 +130,7 @@ public class Player {
             }
         }));
         socialAbilities.put(Ability.POINT, new Effect("Points", (argument) -> {
-            List<Item> items = getRoom().getInventory();
+           /* List<Item> items = getRoom().getInventory();
             Iterator<Item> iterator = items.iterator();
             while (iterator.hasNext()) {
                 Item item = iterator.next();
@@ -119,6 +146,7 @@ public class Player {
                     }
                 }
             }
+            */
         }));
         socialAbilities.put(Ability.NAME, new Effect("Names", (argument) -> {
             if (GameHandler.getNPCByName(argument) != null) {
@@ -500,54 +528,55 @@ public class Player {
             int minTime = 30;
             int maxTime = 90;
             int time = minTime + (int) (Math.random() * (maxTime - minTime));
-            GameHandler.getClock().moveTime(time);
-            GameHandler.getGui().display("You took a nap for " + GameHandler.getClock().formatByHourMinute(time), "Black");
+            setSleeping(true);
+            FatherTime.getClock().moveTime(time);
+            GameHandler.getGui().display("You took a nap for " + FatherTime.getClock().formatByHourMinute(time), "Black");
+            setSleeping(false);
         } else {
             GameHandler.getGui().display("You are not tired.", "Black");
         }
     }
 
     public static void potty() {
+
         if (getRoom().getType().equals("Bathroom")) {
-            if (Player.getPottyTrained()) {
+            if (Player.isPottyTrained()) {
                 GameHandler.getGui().display("You used the potty.", "Black");
-                setBlatter(0);
+                blatter = 0;
                 addMaturity(1);
                 addXP(getMaturity());
             } else {
                 GameHandler.getGui().display("You are not potty trained.", "Black");
             }
         } else {
-            setBlatter(101);
-            checkBlatter();
+            GameHandler.getGui().display("You are not in the bathroom.", "Black");
         }
     }
 
-    private static void setBlatter(int i) {
+    public static void setBlatter(int i) {
         blatter = i;
+        checkBlatter();
     }
 
     public static void checkBlatter() {
+        GameHandler.getGui().display("Blatter: " + blatter, "Black");   
         if (blatter > 100) {
             accident();
-            setBlatter(0);
-        }
-        if (pottyTrained) {
+        } else if (pottyTrained) {
             switch (blatter) {
-                case 100 ->
-                    GameHandler.getGui().display("You need to use the potty now.", "Black");
-                case 75 ->
+                case 96, 97, 98, 99, 100 -> 
+                    GameHandler.getGui().display("You need to use the potty right now!", "Black");
+                case 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95 ->
                     GameHandler.getGui().display("You need to potty soon.", "Black");
-                case 50 ->
+                case 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74 ->
                     GameHandler.getGui().display("You should use the potty.", "Black");
-                case 25 ->
+                case 25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49 ->
                     GameHandler.getGui().display("You might need to potty.", "Black");
-                case 0 ->
+                case 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 -> 
                     GameHandler.getGui().display("You do not need to potty.", "Black");
+                
             }
-        } else {
-
-        }
+        } 
     }
 
     public static void tantrum() {
@@ -807,7 +836,7 @@ public class Player {
         Player.pronouns = pronouns;
     }
 
-    static void setName(String input) {
+    public static void setName(String input) {
         GameHandler.getGui().display("Please enter your name.", "Black");
         GameHandler.getGui().waitForInput();
         input = GameHandler.getGui().getInput();
@@ -884,7 +913,7 @@ public class Player {
         leader = b;
     }
 
-    static void addQuest(Quest quest1) {
+    public  static void addQuest(Quest quest1) {
         Player.quests.add(quest1);
     }
 
@@ -905,7 +934,7 @@ public class Player {
         quests.remove(aThis);
     }
 
-    static void setPronouns() {
+    public  static void setPronouns() {
         GameHandler.getGui().display("Please enter your subjective pronoun choose any you like (he/she/they/other)", "Black");
         GameHandler.getGui().waitForInput();
         String subjective = GameHandler.getGui().getInput();
@@ -1064,7 +1093,7 @@ public class Player {
         return -1;
     }
 
-    private static int getEnergy() {
+    static int getEnergy() {
         return energy;
     }
 
@@ -1072,7 +1101,7 @@ public class Player {
         return alignmentSet;
     }
 
-    private static int getHunger() {
+    static int getHunger() {
         return hunger;
     }
 
@@ -1145,7 +1174,7 @@ public class Player {
         }
     }
 
-    static int getPocketSize() {
+    public  static int getPocketSize() {
         return pocketSize;
     }
 
@@ -1162,7 +1191,7 @@ public class Player {
         return null;
     }
 
-    static String[] getEquipmentChoices() {
+    public  static String[] getEquipmentChoices() {
         int i = 0;
         String[] items = new String[equipment.size()];
         for (Equipment item : equipment.values()) {
@@ -1175,10 +1204,6 @@ public class Player {
 
         }
         return items;
-    }
-
-    private static boolean getPottyTrained() {
-        return pottyTrained;
     }
 
     private static int getMaturity() {
@@ -1226,7 +1251,7 @@ public class Player {
         Player.hand = hand;
     }
 
-    static ArrayList<Card> getPawDeck() {
+    public  static ArrayList<Card> getPawDeck() {
         return pawDeck;
     }
 
@@ -1290,15 +1315,35 @@ public class Player {
 
     private static void accident() {
         GameHandler.getGui().display("You had an accident.", "Black");
-        setBlatter(0);
+        blatter = 0;
         addMaturity(-5);
-
+        if(isSleeping()){
+            GameHandler.getGui().display("You wet the bed.", "Black");
+        }
         Equipment underpants = equipment.get("Underpants");
+        if (underpants==null){
+            GameHandler.getGui().display("You are not wearing underpants.", "Black");
+            setStatus(PlayerStatus.WET_CLOTHING);
+            return;
+        }
+        Equipment bottoms = equipment.get("Bottom");
         GameHandler.getGui().display(underpants.getName(), "Black");
         switch (underpants.getName()) {
             case "Diaper" -> {
                 underpants.setCondition("Soaked");
-                GameHandler.getGui().display("Your " + underpants.getName() + " is leaking.", "Black");
+                GameHandler.getGui().display("Your " + underpants.getName() + " is wet.", "Black");
+                setStatus(PlayerStatus.WET_DIAPER);
+            }
+            case "Training Pants" -> {
+                underpants.setCondition("Soaked");
+                GameHandler.getGui().display("Your " + underpants.getName() + " are wet.", "Black");
+                setStatus(PlayerStatus.WET_DIAPER);
+            }
+            case "Underpants" -> {
+                underpants.setCondition("Soaked");
+                GameHandler.getGui().display("Your " + underpants.getName() +" and "+bottoms.getName()+ " are wet.", "Black");
+                Player.getRoom().attractAttention("wetSelf");
+                setStatus(PlayerStatus.WET_CLOTHING);
             }
             default ->
                 throw new AssertionError();
@@ -1308,7 +1353,27 @@ public class Player {
     public Ability getAbility() {
         return ability;
     }
-
+    public static void beMoved(NPC npc, Events event) {
+String options[] = {"Upsies!","Hold Hands","Refuse"};
+        String choice = (String) JOptionPane.showInputDialog(null, "How would you like to be moved?", "Choose an option", JOptionPane.DEFAULT_OPTION, null, options, options[0]);
+        switch (choice) {
+            case "Upsies!" -> {
+                GameHandler.getGui().display("You are picked up by " + npc.getName() + " and carried to " + event.getRoom().getName()+" for "+event.getName(), "Black");
+                npc.movePlayer(choice, event);
+                setRoom(room);
+            }
+            case "Hold Hand" -> {
+                GameHandler.getGui().display("You hold hands with " + npc.getName() + " and walk to " + event.getRoom().getName()+ " together  for "+event.getName(), "Black");
+                npc.movePlayer(choice, event);
+                setRoom(room);
+            }
+            case "Refuse" -> {
+                GameHandler.getGui().display("You refuse to move.", "Black");
+                npc.movePlayer(choice,event);
+            }
+        }
+            
+    }
     public void setAbility(Ability ability) {
         this.ability = ability;
     }

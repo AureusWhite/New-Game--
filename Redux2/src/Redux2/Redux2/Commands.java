@@ -48,10 +48,20 @@ class Commands {
                     GameHandler.getGui().display("You checked your quests", "Black");
                     Player.displayQuests();
                 }
+                case "time" -> {
+                    FatherTime.getClock().moveTime(25);
+                }
                 case "phase" -> {
                     FatherTime.nextPhase();
                     GameHandler.getGui().display("You checked the phase", "Black");
                     GameHandler.getGui().display(FatherTime.getCurrentPhase().toString(), "Black");
+                }
+                case "routine"->{ 
+                    RoutineManager.checkRoutine();
+                    GameHandler.getGui().display("You checked the routine", "Black");
+                }
+                case "story" -> {
+                    Player.getRoom().getFirstNPC().guidePlayer(Events.STORY_TIME);
                 }
                 default ->
                     GameHandler.getGui().display("Invalid command", "Black");

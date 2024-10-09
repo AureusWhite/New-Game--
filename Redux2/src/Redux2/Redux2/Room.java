@@ -502,4 +502,10 @@ public class Room {
         }
         return false;
     }
+
+    void attractAttention(String reason) {
+        for (NPC npc : this.getNpcs()) {
+            npc.noticePlayer(reason);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package Redux2;
 
+import java.io.ObjectInputFilter;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class NPC extends Character {
         GameHandler.fileSection3 = "Good afternoon, I am " + this.getName().replace("_", " ");
         GameHandler.fileSection4 = "Good evening, I am " + this.getName().replace("_", " ");
         GameHandler.readFile(this.getName());
-        switch (GameHandler.getClock().getTimeOfDay()) {
+        switch (FatherTime.getClock().getTimeOfDay()) {
             case "Morning" -> {
                 return GameHandler.fileSection2;
             }
@@ -441,15 +442,15 @@ public class NPC extends Character {
 
     }
 
-    void askForItem(Item item) {
+    /*void askForItem(Item item) {
         if (pRep.get(0) > 0) {
             GameHandler.getGui().display(this.getName() + " is willing to give you " + item.getName(), "black");
         }
         this.takeItem(item);
         giveItemToPlayer(item);
     }
-
-    private void takeItem(Item item) {
+*/
+    public void takeItem(Item item) {
         this.addItem(item);
         GameHandler.removeItemFromRoom(item);
 
@@ -464,14 +465,14 @@ public class NPC extends Character {
         }
     }
 
-    void playedWith(Item toy) {
+    public void playedWith(Item toy) {
         if (!this.getType().equals("child")) {
             GameHandler.getGui().display(this.getName() + " is playing with " + toy.getName() + " with you.", "black");
         } else {
             GameHandler.getGui().display(this.getName() + " is not interested in playing with you", "black");
         }
     }
-    void trade(Item givenItem, String takenItem) {
+    public void trade(Item givenItem, String takenItem) {
         for (Item item : this.getInventory()) {
             if (item.getName().equals(takenItem) && Math.abs(item.getPrice() - givenItem.getPrice()) <= 1) {
                 this.removeItem(item);
@@ -486,7 +487,7 @@ public class NPC extends Character {
             }
         }
     }
-    String[] getItemChoices() {
+    public String[] getItemChoices() {
         String[] items = new String[this.getInventory().size()];
         for (int i = 0; i < this.getInventory().size(); i++) {
                 items[i] = this.getInventory().get(i).getName();
@@ -494,7 +495,7 @@ public class NPC extends Character {
         return items;
     }
 
-    void barter() {
+    public void barter() {
         Random random = new Random();
         int num = random.nextInt(2);
         switch (num) {
@@ -507,6 +508,51 @@ public class NPC extends Character {
             }
         }
     }
+    
+    public void guidePlayer(Events event) {
+        GameHandler.getGui().display(this.getName() + ": " + Player.getName() + "You need to go to the " + event.getRoom().getName() + " for " + event.getName(), "black");
+        Player.beMoved(this, event);
+    }
+    
+    public void movePlayer(String action, Events event) {
+        switch (action) {
 
+            case "Upsies!" -> {
+                GameHandler.getGui().display(this.getName() + " picks you up", "black");
+                Player.setStatus(PlayerStatus.CARRIED);
+            }
+            case "Downsies!" -> {
+                GameHandler.getGui().display(this.getName() + " puts you down", "black");
+                Player.removeStatus(PlayerStatus.CARRIED);
+            }
+            case "Hold Hand" -> {
+                GameHandler.getGui().display(this.getName() + " takes your hand", "black");
+                Player.setStatus(PlayerStatus.HOLDING_HANDS);
+            }
+            case "Refuse" -> {
+                GameHandler.getGui().display(this.getName() + " takes a moment to react to your refusal", "black");
+                if(event.getImportance() < 3) {
+                    GameHandler.getGui().display(this.getName() + " is not happy with your refusal, but leaves you to miss out on "+event.getName(), "black");
+                }
+            }
+        }
+    }
+    
+    public void noticePlayer(String reason) {
+        switch (reason) {
+            case "wetSelf" -> {
+                GameHandler.getGui().display(this.getName() + " notices you are wet", "black");
+            }
+            case "smell" -> {
+                GameHandler.getGui().display(this.getName() + " notices you smell bad", "black");
+            }
+            case "dirty" -> {
+                GameHandler.getGui().display(this.getName() + " notices you are dirty", "black");
+            }
+            case "tired" -> {
+                GameHandler.getGui().display(this.getName() + " notices you are tired", "black");
+            }
+        }
+    }
 
 }

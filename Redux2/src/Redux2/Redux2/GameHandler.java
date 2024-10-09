@@ -17,7 +17,6 @@ public class GameHandler {
     static final Map<String, NPC> npcs = new HashMap<>();
     static final Map<String, Item> items = new HashMap<>();
     private static final ArrayList<Quest> quests = new ArrayList<>();
-    private static Clock clock;
     public static Room room;
     private static GUI gui;
     private static Game game;
@@ -43,7 +42,7 @@ public class GameHandler {
     }
 
     public static void updateStatus() {
-        getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + GameHandler.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
+        getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + FatherTime.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
     }
 
     public static void storyTime() {
@@ -261,10 +260,6 @@ public class GameHandler {
         return quests;
     }
 
-    public static void setClock(Clock clock) {
-        GameHandler.clock = clock;
-    }
-
     public static void setRoom(Room room) {
         GameHandler.room = room;
     }
@@ -411,13 +406,6 @@ public class GameHandler {
             }
         }
         return null;
-    }
-
-    static Clock getClock() {
-        if (clock == null) {
-            clock = new Clock(game);
-        }
-        return clock;
     }
 
     static void createQuests() {
@@ -726,6 +714,7 @@ public class GameHandler {
 
     private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
     private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
+    private RoutineManager routineManager;
 
     public GameHandler(GUI gui1, Game game1) {
         game = game1;
@@ -1222,6 +1211,7 @@ public class GameHandler {
 
         //ChangingRoom
         changingRoom.addExit(bathroom);
+        changingRoom.addExit(foyer);
 
         //Cubbies
         cubbies.addExit(dramaArea);
@@ -1271,6 +1261,7 @@ public class GameHandler {
         foyer.addExit(recoveryRoom);
         foyer.addExit(cogLabs);
         foyer.addExit(demoRoom);
+        foyer.addExit(changingRoom);
 
         //FrontYard
         frontYard.addExit(foyer);
@@ -1280,6 +1271,10 @@ public class GameHandler {
         //GreenHall
         greenHall.addExit(dorms);
         greenHall.addExit(foyer);
+        greenHall.addExit(classRoom);
+
+        //ClassRoom
+        classRoom.addExit(greenHall);
 
         //HomeWorkArea
         homeWorkArea.addExit(cubbies);
@@ -1997,5 +1992,16 @@ public class GameHandler {
         achievements.add(socialite);
         achievements.add(bookWorm);
 }
+
+    public void createRoutine() {
+        final RoutineManager routineManager1 = new RoutineManager();
+        this.routineManager = routineManager1;
+    }
+
+    public RoutineManager getRoutineManager() {
+        return this.routineManager;
+    }
+    
+
 
 }

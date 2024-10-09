@@ -41,6 +41,8 @@ public class Game {
     }
 
     public void beginGame(GameHandler gamehandler) {
+        FatherTime.setPhase(FatherTime.DayPhase.MORNING);
+        gamehandler.createRoutine();
         gamehandler.buildRooms();
         gamehandler.populateRooms();
         gamehandler.buildExits();
