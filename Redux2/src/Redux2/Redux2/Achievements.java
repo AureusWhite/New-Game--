@@ -145,4 +145,16 @@ public class Achievements {
     public HashSet<Achievements> getRequiredAchievements() {
         return requiredAchievements;
     }
+
+    public HashMap<String, Boolean> getRequiredStatus() {
+        return requiredStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Achievements [name=" + name + ", description=" + description + ", unlocked=" + unlocked + ", points="
+                + points + ", requiredItems=" + requiredItems + ", requiredPlaces=" + requiredPlaces
+                + ", requiredStatus=" + requiredStatus + ", requiredAchievements=" + requiredAchievements
+                + ", requiredNPC=" + requiredNPC + ", requiredEquipment=" + requiredEquipment + "]";
+    }
 }

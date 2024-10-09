@@ -387,7 +387,7 @@ public class Room {
         return updated;
     }
 
-    void initializeRoomFiles() { //initializes the room files and creates them if they don't exist already.
+    public void initializeRoomFiles() { //initializes the room files and creates them if they don't exist already.
         File mainFile = new File(this.getName().concat(".txt"));
         File descFile = new File(this.getName().concat("-desc.txt"));
 
@@ -408,7 +408,7 @@ public class Room {
         this.setDescription(GameHandler.readFile(this.getName().concat("-desc")));
     }
 
-    String[] getContraband() {
+    public String[] getContraband() {
         ArrayList<Item> contraband = new ArrayList<>();
         for (Item item : this.getArrayInventory()) {
             if (item.isContraband()) {
@@ -436,7 +436,7 @@ public class Room {
         item.setDescription("This item is painted in the colors of "+Player.alignment+"<br> The logo scribbled onto it supports "+Player.alignment+"<br>"+item.getDescription());
     }
 
-    boolean hasItem(Item item) {
+    public boolean hasItem(Item item) {
         for (Item item1 : this.getArrayInventory()) {
             if (item1.equals(item)) {
                 return true;
@@ -445,7 +445,7 @@ public class Room {
         return false;
     }
 
-    String[] getParkourables() {
+    public String[] getParkourables() {
         List<String> filteredItems = new ArrayList<>();
         for (Item item : this.getArrayInventory()) {
             String itemType = item.getType();
@@ -456,7 +456,7 @@ public class Room {
         return filteredItems.toArray(String[]::new);
     }
 
-    void parkour(String selectedParkourable) {
+    public void parkour(String selectedParkourable) {
         Item parkourable = this.getItemByName(selectedParkourable);
         if (parkourable == null) {
             GameHandler.getGui().display("That item does not exist", "Black");
@@ -470,7 +470,7 @@ public class Room {
         }
     }
 
-    String[] getInteractables() {
+    public String[] getInteractables() {
         List<String> filteredItems = new ArrayList<>();
         for (Item item : this.getArrayInventory()) {
             String itemType = item.getType();
@@ -490,7 +490,7 @@ public class Room {
         }
     }
 
-    void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 

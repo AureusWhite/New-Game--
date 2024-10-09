@@ -1,39 +1,26 @@
 package Redux2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Item {
 
     protected String name;
     private String description;
     private String type;
-     boolean takable;
-    private boolean locked;
-    private boolean broken;
-    private ArrayList<Item> items;
-    private boolean droppable;
-    private String slot;
-    private boolean contraband;
-    private boolean updated = false;
-    private boolean equipped;
-    private boolean vandalized;
     private int price;
+    private final HashMap<ItemCondition, Boolean> conditions = new HashMap<>();
+    private final ArrayList<Item> inventory = new ArrayList<>();
 
-    public boolean isVandalized() {
-        return vandalized;
+    public HashMap<ItemCondition, Boolean> getConditions() {
+        return this.conditions;
     }
+
 
     public Item(String name, String description, String type, boolean takable) {
         this.name = name;
         this.description = description;
         this.type = type;
-        this.takable = takable;
-        this.contraband = false;
-        this.droppable = true;
-        this.type = type;
-        this.locked = false;
-        this.broken = false;
-        this.items = new ArrayList<>();
         this.price = 0;
     }
 
@@ -43,35 +30,38 @@ public class Item {
     }
 
     public boolean isBroken() {
-        return broken;
+        if (this.conditions.containsKey(ItemCondition.BROKEN)) {
+            return this.conditions.get(ItemCondition.BROKEN);
+        }
+        return false;
     }
-
-    public void setBroken(boolean broken) {
-        this.broken = broken;
+    public void removeItem(Item item) {
+        this.inventory.remove(item);
+    }
+    public void setBroken(boolean b) {
+        this.conditions.put(ItemCondition.BROKEN, b);
     }
 
     public boolean isLocked() {
-        return locked;
+        if (this.conditions.containsKey(ItemCondition.LOCKED)) {
+            return this.conditions.get(ItemCondition.LOCKED);
+        }
+        return false;
     }
 
     public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public ArrayList<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(ArrayList<Item> items) {
-        this.items = items;
+        this.conditions.put(ItemCondition.LOCKED, locked);
     }
 
     public boolean isTakable() {
-        return takable;
+        if(this.conditions.containsKey(ItemCondition.TAKEABLE)){
+            return this.conditions.get(ItemCondition.TAKEABLE);
+        }
+        return false;
     }
 
     public void setTakable(boolean takable) {
-        this.takable = takable;
+        this.conditions.put(ItemCondition.TAKEABLE, takable);
     }
 
     public String getType() {
@@ -86,74 +76,10 @@ public class Item {
         GameHandler.getGui().display("You used the " + this.name, "black");
     }
 
-    public void removeItemByName(String itemName) {
-        for (Item item : this.items) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
-                this.items.remove(item);
-                break;
-            }
-        }
-    }
-
-    public void addItem(Item item) {
-    }
-
-    public void removeItem(Item item) {
-        this.items.remove(item);
-    }
-
-    public void removeItemByIndex(int index) {
-        this.items.remove(index);
-    }
-
-    public Item getItemByName(String itemName) {
-        for (Item item : this.items) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    public Item getItemByIndex(int index) {
-        return this.items.get(index);
-    }
-
     public void setContraband(boolean b) {
-        this.contraband = b;
+        this.conditions.put(ItemCondition.CONTRABAND, b);
     }
 
-    public void displayAllItems() {
-        for (Item item : this.items) {
-            System.out.println(item.getName());
-        }
-    }
-
-    public void displayItemsByType(String type) {
-        for (Item item : this.items) {
-            if (item.getType().equalsIgnoreCase(type)) {
-                System.out.println(item.getName());
-            }
-        }
-    }
-
-    public void displayTakableItemsByType(String type, boolean takable) {
-        for (Item item : this.items) {
-            if (item.getType().equalsIgnoreCase(type) && item.isTakable() == takable) {
-                System.out.println(item.getName());
-            }
-        }
-    }
-
-    public void displayTakableItems(boolean takable) {
-        for (Item item : this.items) {
-            if (item.isTakable() == takable) {
-                System.out.println(item.getName());
-            }
-        }
-    }
-    public void interact() {
-    }
     public String getName() {
         return this.name;
     }
@@ -176,88 +102,46 @@ public class Item {
     }
 
     public boolean isDroppable() {
-        return droppable;
+        if (this.conditions.containsKey(ItemCondition.DROPPABLE)) {
+            return this.conditions.get(ItemCondition.DROPPABLE);
+        }
+        return true;
     }
 
     public void setDroppable(boolean b) {
-        this.droppable = b;
+        this.conditions.put(ItemCondition.DROPPABLE, b);
     }
 
     public boolean isContraband() {
-        return this.contraband;
-    }
-
-    public void craft() {
-        if (this.type.equals("Crafts")) {
-            GameHandler.getGui().display("You crafted the " + this.name, "black");
-        } else {
-            GameHandler.getGui().display("You can't craft that item.", "red");
+        if (this.conditions.containsKey(ItemCondition.CONTRABAND)) {
+            return this.conditions.get(ItemCondition.CONTRABAND);
         }
+        return false;
     }
 
-    public void play() {
-        if (this.type.equals("Toy")) {
-            GameHandler.getGui().display("You played with the " + this.name, "black");
-        } else {
-            GameHandler.getGui().display("You can't play with that item.", "red");
-        }
+    public void setVandalized(boolean b) {
+        this.conditions.put(ItemCondition.VANDELIZED, b);
     }
 
-    public void study() {
-        if (this.type.equals("Workbook")) {
-            GameHandler.getGui().display("You studied the " + this.name, "black");
-        } else {
-            GameHandler.getGui().display("You can't study that item.", "red");
-        }
-    }
-
-    public void solve() {
-        if (this.type.equals("Puzzle")) {
-            GameHandler.getGui().display("You solved the " + this.name, "black");
-        } else {
-            GameHandler.getGui().display("You can't solve that item.", "red");
-        }
-    }
-
-    public void update() {
-        if (!updated) {
-            GameHandler.getGui().display("You updated the " + this.name, "black");
-            updated = true;
-        } else {
-            GameHandler.getGui().display("Already Updated", "red");
-            updated = false;
-        }
-    }
-
-    public String getSlot() {
-        return slot;
-    }
-
-    public void setSlot(String slot) {
-        this.slot = slot;
-    }
-
-    public boolean isUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(boolean updated) {
-        this.updated = updated;
-    }
-    public boolean isEquipped() {
-        return equipped;
-    }
-
-    void setVandalized(boolean b) {
-       this.vandalized=b;
-    }
-
-    int getPrice() {
+    public int getPrice() {
         return this.price;
     }
 
-    void setPrice(int i) {
+    public void setPrice(int i) {
         this.price = i;
     }
 
+    void addItem(Item item) {
+        this.inventory.add(item);
+    }
+
+    public void interact() {
+    if(this.conditions.containsKey(ItemCondition.INTERACTABLE)){
+        GameHandler.getGui().display("You interacted with the " + this.name, "black");
+    }
+    }
+
+    public ArrayList<Item> getInventory() {
+        return this.inventory;
+    }
 }

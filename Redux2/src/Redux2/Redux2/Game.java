@@ -14,7 +14,7 @@ public class Game {
     }
 
     public static void setRunning(boolean b) {
-        
+
         Game.running = b;
     }
 
@@ -33,22 +33,21 @@ public class Game {
 
     public void start(GameHandler gameHandler2) {
         gameHandler = gameHandler2;
-        gameHandler.createItems();
-        gameHandler.setUpNPCs();
         beginGame(gameHandler);
-        gameHandler.createAchievements();
-
     }
 
     public void beginGame(GameHandler gamehandler) {
+        gameHandler.createItems();
+        gameHandler.setUpNPCs();
+        gameHandler.createAchievements();
         FatherTime.setPhase(FatherTime.DayPhase.MORNING);
         gamehandler.createRoutine();
         gamehandler.buildRooms();
         gamehandler.populateRooms();
         gamehandler.buildExits();
-        GameHandler.createQuests();
+        //GameHandler.createQuests();
         gamehandler.playIntro();
-        Player.initializeSkills();
+        //Player.initializeSkills();
         gamehandler.setupPlayer();
         GameHandler.getGui().unlockButtons();
         gamehandler.giveItems();

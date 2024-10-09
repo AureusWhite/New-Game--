@@ -1,69 +1,79 @@
 package Redux2;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
 public class Equipment extends Item {
 
     private String slot;
-    private boolean equiped;
-    private int pockets;
-    private String condition;
+    private int pockets = 1;
+
+    private final ArrayList<Item> items = new ArrayList<>();
+    private final HashMap<ItemCondition, Boolean> conditions = new HashMap<>();
 
     public Equipment(String name, String discription, String slot) {
         super(name, discription);
+        this.slot = slot;
     }
 
-    @Override
+    public ArrayList<Item> getItems() {
+        return items;
+    }
     public String getSlot() {
         return slot;
     }
-
-    @Override
     public void setSlot(String slot) {
         this.slot = slot;
     }
 
     public void setEquipped(boolean par) {
-        this.equiped = par;
+        this.conditions.put(ItemCondition.EQUIPPED, par);
     }
 
-    @Override
     public boolean isEquipped() {
-        return equiped;
+        if (this.conditions.containsKey(ItemCondition.EQUIPPED)) {
+            return this.conditions.get(ItemCondition.EQUIPPED);
+        }
+        return false;
     }
 
     public int getPockets() {
         return pockets;
     }
-    
+
     public void setPockets(int pockets) {
         this.pockets = pockets;
     }
 
     public String getCondition() {
-        return condition;
+        for(ItemCondition condition1 : ItemCondition.values()){
+            if(this.conditions.containsKey(condition1)){
+                if(this.conditions.get(condition1)){
+                    return condition1.toString();
+                }
+            }
+        }
+        return "----";
     }
 
-    public void setCondition(String condition1) {
-        switch (condition1) {
-            case "wet":
-                if (this.condition.contains("wet")) {
-                    this.condition = "soaked";
-                    break;
-                }
-            case "dirty":
-                if (this.condition.contains("dirty")) {
-                    this.condition = "filthy";
-                    break;
-                }
-            case "broken":
-                if (this.condition.contains("broken")) {
-                    this.condition = "destroyed";
-                    break;
-                }
-            case "torn":
-                if (this.condition.contains("torn")) {
-                    this.condition = "shredded";
-                    break;
-                }
+    public void emptyPockets(NPC aThis) {
+        Iterator<Item> it = this.getItems().iterator();
+        while (it.hasNext()) {
+            Item item = it.next();
+            if (item.isContraband()) {
+                GameHandler.getGui().display(item.getName() + " was confiscated", "Black");
+                aThis.getInventory().add(item);
+                it.remove();
+            }
         }
+    }
+    @Override
+    public HashMap<ItemCondition, Boolean> getConditions() {
+        return conditions;
+    }
+
+    void setCondition(ItemCondition condition, boolean b) {
+        this.conditions.put(condition, b);
     }
 }

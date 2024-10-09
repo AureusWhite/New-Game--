@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 public class FatherTime {
 
-    private static Set<String> notifiedEvents = new HashSet<>();
+    private static final Set<String> notifiedEvents = new HashSet<>();
     static Clock clock = new Clock();
 
     public static Clock getClock() {

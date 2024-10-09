@@ -24,4 +24,13 @@ public class Card {
     public void play(Paw playerPaw, Paw opponentPaw) {
         action.accept(playerPaw, opponentPaw);  // Execute the action
     }
+
+    public BiConsumer<Paw, Paw> getAction() {
+        return action;
+    }
+
+    @Override
+    public String toString() {
+        return "Card [name=" + name + ", type=" + type + "]";
+    }
 }

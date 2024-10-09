@@ -1,6 +1,5 @@
 package Redux2;
 
-import java.io.ObjectInputFilter;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -157,10 +156,6 @@ public class NPC extends Character {
         this.confederate = confederate;
     }
 
-    public void setSuspicion(int suspicion) {
-        this.suspicion = suspicion;
-    }
-
     public void setPlayerRep(String playerRep) {
         this.playerRep = playerRep;
     }
@@ -307,14 +302,14 @@ public class NPC extends Character {
         this.follower = follower;
     }
 
-    int getAge() {
+    public int getAge() {
         if (this.npcAge == 0) {
             this.npcAge = 0;
         }
         return this.npcAge;
     }
 
-    void setQuest(Quest quest1) {
+    public void setQuest(Quest quest1) {
         this.quest = quest1;
     }
 
@@ -391,65 +386,6 @@ public class NPC extends Character {
         GameHandler.getGui().display("Leanient/Strict: " + df.format(this.pRep.get(3)), "black");
     }
 
-    void persuade(Ability ability) {
-        switch (ability) {
-            case CRY -> {
-                if (this.pRep.get(1) > 0) {
-                    GameHandler.getGui().display(this.getName() + ": Has heard your cries and is comming to help you.", "black");
-                } else {
-                    GameHandler.getGui().display(this.getName() + ": is not moved by your tears", "black");
-                }
-            }
-            case POINT -> {
-                if (this.pRep.get(0) > 0) {
-                    GameHandler.getGui().display(this.getName() + ": is willing to give you the object you pointed at.", "black");
-                } else {
-                    GameHandler.getGui().display(this.getName() + ": is not willing to give you the object you pointed at.", "black");
-                }
-            }
-            case NAME -> {
-                if (this.pRep.get(0) > 0) {
-                    GameHandler.getGui().display(this.getName() + ": is willing to give you the object you named.", "black");
-                } else {
-                    GameHandler.getGui().display(this.getName() + ": is not willing to give you the object you named.", "black");
-                }
-            }
-            case ASK -> {
-                if (this.pRep.get(0) > 0) {
-                    GameHandler.getGui().display("You ask nicely and " + this.getName() + " is willing to do as you ask", "black");
-                } else {
-                    GameHandler.getGui().display("You ask nicely and " + this.getName() + " is not willing to do as you ask", "black");
-                }
-            }
-            case NEGOTIATE -> {
-                if (this.pRep.get(2) > 0) {
-                    GameHandler.getGui().display("You try to negotiate with " + this.getName() + " and they are willing to do as you ask", "black");
-                } else {
-                    GameHandler.getGui().display("You try to negotiate with " + this.getName() + " and they are not willing to do as you ask", "black");
-                }
-            }
-            case MEDIATE -> {
-                if (this.pRep.get(2) > 0) {
-                    GameHandler.getGui().display("You attempt to mediate the situation and " + this.getName() + " is willing to do as you ask", "black");
-                } else {
-                    GameHandler.getGui().display("You attempt to mediate the situation and " + this.getName() + " is not willing to do as you ask", "black");
-                }
-            }
-
-            default -> {
-            }
-        }
-
-    }
-
-    /*void askForItem(Item item) {
-        if (pRep.get(0) > 0) {
-            GameHandler.getGui().display(this.getName() + " is willing to give you " + item.getName(), "black");
-        }
-        this.takeItem(item);
-        giveItemToPlayer(item);
-    }
-*/
     public void takeItem(Item item) {
         this.addItem(item);
         GameHandler.removeItemFromRoom(item);
@@ -555,4 +491,53 @@ public class NPC extends Character {
         }
     }
 
+    public void dressPlayer() {
+        GameHandler.getGui().display(this.getName() + " helps you get dressed", "black");
+        GameHandler.getGui().display("removing all clothing related status effects", "black");
+        if(Player.getStatus().contains(PlayerStatus.WET_CLOTHING)) Player.removeStatus(PlayerStatus.WET_CLOTHING);
+        if(Player.getStatus().contains(PlayerStatus.WET_DIAPER)) Player.removeStatus(PlayerStatus.WET_DIAPER);
+        if(Player.getStatus().contains(PlayerStatus.DIRTY_CLOTHING)) Player.removeStatus(PlayerStatus.DIRTY_CLOTHING);
+        if(Player.getStatus().contains(PlayerStatus.DIRTY_DIAPER)) Player.removeStatus(PlayerStatus.DIRTY_DIAPER);
+        GameHandler.getGui().display("emptying pockets", "black");
+        for (Equipment equipment : Player.getEquipment().values()) {
+            equipment.emptyPockets(this);
+            GameHandler.getGui().display("removing " + equipment.getName(), "black");
+            if (equipment.getSlot().equals("underpants")) {
+                Player.unequip(equipment);
+            }
+            if (equipment.getSlot().equals("top")) {
+                Player.unequip(equipment);
+            }
+            if (equipment.getSlot().equals("bottom")) {
+                Player.unequip(equipment);
+            }
+            if (equipment.getSlot().equals("socks")) {
+                Player.unequip(equipment);
+            }
+            if (equipment.getSlot().equals("shoes")) {
+                Player.unequip(equipment);
+            }
+        }
+        GameHandler.getGui().display("dressing you in clean clothes", "black");
+        Player.equip(new Equipment("UnderPants", "Clean Underpants", "underpants"), "Underpants");
+        GameHandler.getGui().display("You are now wearing clean underpants", "black");
+        Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "shirt"), "Top");
+        GameHandler.getGui().display("You are now wearing a clean shirt", "black");
+        Player.equip(new Equipment("Uniform Pants", "Clean Pants", "pants"), "Bottom");
+        GameHandler.getGui().display("You are now wearing clean pants", "black");
+        Player.equip(new Equipment("Uniform Socks", "Clean Socks", "socks"), "Socks");
+        GameHandler.getGui().display("You are now wearing clean socks", "black");
+        Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "shoes"), "Shoes");
+        GameHandler.getGui().display("You are now wearing clean shoes", "black");
+        for (Equipment equipment : Player.getEquipment().values()) {
+            GameHandler.getGui().display(equipment.getName(),"black");
+        }
+        this.displayInventory();
+    }
+
+    private void displayInventory() {
+        for (Item item : this.getInventory()) {
+            GameHandler.getGui().display(item.getName(), "black");
+        }
+    }
 }

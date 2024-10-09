@@ -9,39 +9,32 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Player {
-
-    public static String alignment = "Newbie";
-    public static int age;
-    public static ArrayList<Item> backpack = new ArrayList<>();
-    public static ArrayList<Item> pockets = new ArrayList<>();
-    public static ArrayList<Item> hands = new ArrayList<>();
-    public static ArrayList<Consumable> consumables = new ArrayList<>();
-    public static HashMap<String, Equipment> equipment = new HashMap<>();
-    public static ArrayList<Quest> quests = new ArrayList<>();
-    public static HashMap<String, Integer> stats = new HashMap<>();
-    public static HashMap<String, Boolean> perks = new HashMap<>();
-    private static boolean abilitiesSet;
-    private static boolean ageSet;
-    private static boolean alignmentSet;
-    private static int experience;
-    private static int money;
-    private static int resilience;
-    static Room room;
-    private static String name;
-    private static int thirst = 100;
-    private static int hunger = 100;
-    private static int pocketSize = 0;
-    private static int backpackSize = 0;
-    private static int energy;
+    //primitives
     static String[] pronouns;
+    public static String alignment = "Newbie";
+    public static int age, maturity, energy, blatter, pocketSize, backpackSize, experience, money, resilience, hunger, thirst;
+    private static boolean abilitiesSet, ageSet, alignmentSet, pottyTrained, leader, playerIsHidden;
+    //arrays
+    public final static ArrayList<Item> backpack = new ArrayList<>();
+    public final static ArrayList<Item> pockets = new ArrayList<>();
+    public final static ArrayList<Item> hands = new ArrayList<>();
+    public final static ArrayList<Consumable> consumables = new ArrayList<>();
+    public final static HashMap<String, Equipment> equipment = new HashMap<>();
+    public final static ArrayList<Quest> quests = new ArrayList<>();
+    public final static HashMap<String, Integer> stats = new HashMap<>();
+    public final static HashMap<String, Boolean> perks = new HashMap<>();
+    //objects
+    private static Room room;
+    private static String name;
+    
     private static String[] favorites;
     private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
     static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
     private static ArrayList<Card> pawDeck = new ArrayList<>();
     private static ArrayList<Card> hand = new ArrayList<>();
     private static final ArrayList<Paw> paws = new ArrayList<>();
-    private static boolean sleeping;
     private static final ArrayList<PlayerStatus> Status = new ArrayList<>();
+    private static final ArrayList<Proficiencies> proficiencies = new ArrayList<>();
 
     public static ArrayList<Item> getHands() {
         return hands;
@@ -66,11 +59,15 @@ public class Player {
     }
 
     private static void setSleeping(boolean b) {
-        sleeping = b;
+        if (b) {
+            setStatus(PlayerStatus.SLEEPING);
+        } else {
+            removeStatus(PlayerStatus.SLEEPING);
+        }
     }
 
     private static boolean isSleeping() {
-        return sleeping;
+        return Status.contains(PlayerStatus.SLEEPING);
     }
 
     public static void setStatus(PlayerStatus status) {
@@ -85,16 +82,37 @@ public class Player {
         GameHandler.getGui().display("You are no longer " + playerStatus, "Black");
         Status.remove(playerStatus);
     }
+
+    static ArrayList<Proficiencies> getProficiencies() {
+        return proficiencies;
+    }
+
+    public static boolean hasItemByName(String itemName) {
+        for (Item item : hands) {
+            if (item.getName().equals(itemName)) {
+                return true;
+            }
+        }
+        for (Item item : pockets) {
+            if (item.getName().equals(itemName)) {
+                return true;
+            }
+        }
+        for (Item item : backpack) {
+            if (item.getName().equals(itemName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<Item> gatHands() {
         return hands;
     }
 
     private Ability ability;
-    private static boolean leader = true;
-    private static boolean playerIsHidden;
-    private static boolean pottyTrained = true;
-    private static int blatter=25;
-    private static int maturity = 0;
+
+
 
     public static void setEnergy(int energy) {
         Player.energy = energy;
@@ -111,7 +129,7 @@ public class Player {
         }
     }
 
-    public static void initializeSkills() {
+    /*public static void initializeSkills() {
         Map<Ability, Effect> socialAbilities = new HashMap<>();
         Map<Ability, Effect> motorAbilities = new HashMap<>();
         Map<Ability, Effect> imaginationAbilities = new HashMap<>();
@@ -146,7 +164,7 @@ public class Player {
                     }
                 }
             }
-            */
+            
         }));
         socialAbilities.put(Ability.NAME, new Effect("Names", (argument) -> {
             if (GameHandler.getNPCByName(argument) != null) {
@@ -266,7 +284,7 @@ public class Player {
         abilities.put(Skill.EMOTIONAL, emotionalAbilities);
 
     }
-
+*/
     public static void performAction(Skill skill, Ability ability, String argument) {
         if (canPerform(skill, ability)) {
             // Retrieve and apply the effect associated with the ability
@@ -378,7 +396,6 @@ public class Player {
             Equipment currentEquipment = equipment.get(slot);
             currentEquipment.setEquipped(false);
             Player.equipment.remove(currentEquipment.getSlot());
-            dropItem(equipment1);
         } else {
             // Equip the item
             equipment.put(slot, equipment1);
@@ -391,7 +408,6 @@ public class Player {
     public static void unequip(Equipment equipment1) {
         equipment1.setEquipped(false);
         equipment.remove(equipment1.getSlot());
-        dropItem(equipment1);
         calculatePockets();
     }
 
@@ -399,7 +415,10 @@ public class Player {
         pocketSize = 0;
         backpackSize = 0;
         for (Equipment equip : equipment.values()) {
-            if (equip.getSlot().equalsIgnoreCase("back")) {
+            if(equip.getPockets() == 0) {
+            GameHandler.getGui().display(equip.getName()+" has no pockets", "Black");
+            }
+            else if (equip.getSlot().equalsIgnoreCase("back")) {
                 backpackSize += equip.getPockets();
             } else {
                 pocketSize += equip.getPockets();
@@ -421,14 +440,6 @@ public class Player {
 
     public static void setResilience(int resilience1) {
         resilience = resilience1;
-    }
-
-    public static void setConsumables(ArrayList<Consumable> consumables1) {
-        consumables = consumables1;
-    }
-
-    public static void setEquipment(HashMap<String, Equipment> equipment1) {
-        equipment = equipment1;
     }
 
     public static void setHunger(int hunger1) {
@@ -778,27 +789,9 @@ public class Player {
             GameHandler.getGui().display("You can't sneak.", "Black");
         }
     }
-
-    public static void doCraft(String craft) {
-        getRoom().getItemByName(craft).craft();
-    }
-
-    public static void playGame(String game) {
-        getRoom().getItemByName(game).play();
-    }
-
-    public static void learn(String choice) {
-        getRoom().getItemByName(choice).study();
-    }
-
-    public static void doPuzzle(String puzzle) {
-        getRoom().getItemByName(puzzle).solve();
-    }
-
     public static boolean isLeader() {
         return leader;
     }
-
     public static void setFavorites(String color, String food, String toy, String game, String book, String subject, String activity) {
         favorites = new String[]{color, food, toy, game, book, subject, activity};
 
@@ -808,24 +801,12 @@ public class Player {
         return consumables;
     }
 
-    public static void setQuests(ArrayList<Quest> quests) {
-        Player.quests = quests;
-    }
-
     public static HashMap<String, Integer> getStats() {
         return stats;
     }
 
-    public static void setStats(HashMap<String, Integer> stats) {
-        Player.stats = stats;
-    }
-
     public static HashMap<String, Boolean> getPerks() {
         return perks;
-    }
-
-    public static void setPerks(HashMap<String, Boolean> perks) {
-        Player.perks = perks;
     }
 
     public static boolean isAgeSet() {
@@ -867,7 +848,25 @@ public class Player {
             case 0 -> {
                 if (pockets.size() < pocketSize) {
                     GameHandler.getGui().display("You put the " + item.getName() + " in your pockets", "Black");
-                    pockets.add(item);
+                    List<String> pocketedClothing = new ArrayList<>();
+                    for (Equipment equip : getEquipment().values()) {
+                        if (equip.getPockets() > 0) {
+                            pocketedClothing.add(equip.getName());
+                        }
+                    }
+                    if (!pocketedClothing.isEmpty()) {
+                        String[] pocketedClothingArray = pocketedClothing.toArray(String[]::new);
+                        int equipChoice = JOptionPane.showOptionDialog(null, "Select the equipment to put the " + item.getName() + " in:", "Choose a location", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pocketedClothingArray, pocketedClothingArray[0]);
+                        if (equipChoice >= 0) {
+                            Equipment selectedEquip = getEquipment().values().stream().filter(e -> e.getName().equals(pocketedClothingArray[equipChoice])).findFirst().orElse(null);
+                            if (selectedEquip != null) {
+                                selectedEquip.addItem(item);
+                            }
+                        }
+                    } else {
+                        GameHandler.getGui().display("You don't have any equipment with pockets", "Black");
+                        getRoom().addItem(item);
+                    }
                 } else {
                     GameHandler.getGui().display("Your pockets are full or you don't have any", "Black");
                     getRoom().addItem(item);
@@ -1279,7 +1278,7 @@ public class Player {
         Player.abilities = abilities;
     }
 
-    public Map<Skill, Map<Ability, Effect>> getAbilities() {
+    public static Map<Skill, Map<Ability, Effect>> getAbilities() {
         return abilities;
     }
 
@@ -1304,7 +1303,7 @@ public class Player {
     }
 
     public static void dropItem(Item item) {
-        if (item.isEquipped()) {
+        if (((Equipment) item).isEquipped()) {
             GameHandler.getGui().display("You may not drop an equipped item.", "Black");
         } else {
             GameHandler.getGui().display("You drop the " + item.getName() + ".", "Black");
@@ -1330,17 +1329,17 @@ public class Player {
         GameHandler.getGui().display(underpants.getName(), "Black");
         switch (underpants.getName()) {
             case "Diaper" -> {
-                underpants.setCondition("Soaked");
+                underpants.setCondition(ItemCondition.WET,true);
                 GameHandler.getGui().display("Your " + underpants.getName() + " is wet.", "Black");
                 setStatus(PlayerStatus.WET_DIAPER);
             }
             case "Training Pants" -> {
-                underpants.setCondition("Soaked");
+                underpants.setCondition(ItemCondition.WET,true);
                 GameHandler.getGui().display("Your " + underpants.getName() + " are wet.", "Black");
                 setStatus(PlayerStatus.WET_DIAPER);
             }
             case "Underpants" -> {
-                underpants.setCondition("Soaked");
+                underpants.setCondition(ItemCondition.WET,true);
                 GameHandler.getGui().display("Your " + underpants.getName() +" and "+bottoms.getName()+ " are wet.", "Black");
                 Player.getRoom().attractAttention("wetSelf");
                 setStatus(PlayerStatus.WET_CLOTHING);
@@ -1353,6 +1352,7 @@ public class Player {
     public Ability getAbility() {
         return ability;
     }
+    
     public static void beMoved(NPC npc, Events event) {
 String options[] = {"Upsies!","Hold Hands","Refuse"};
         String choice = (String) JOptionPane.showInputDialog(null, "How would you like to be moved?", "Choose an option", JOptionPane.DEFAULT_OPTION, null, options, options[0]);
@@ -1374,6 +1374,7 @@ String options[] = {"Upsies!","Hold Hands","Refuse"};
         }
             
     }
+    
     public void setAbility(Ability ability) {
         this.ability = ability;
     }

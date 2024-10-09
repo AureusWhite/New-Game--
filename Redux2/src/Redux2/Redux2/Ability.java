@@ -4,7 +4,7 @@ public enum Ability {
     // Social abilities
     CRY, POINT, NAME, ASK, NEGOTIATE, MEDIATE,
     // Motor abilities
-    CRAWL, WALK, RUN, CLIMB, SNEAK, KICK, SKIP,
+    CRAWL, WALK, RUN, CLIMB, SNEAK, KICK, SKIP, DRESS, POTTY, BATHE, BRUSH,
     // Imagination abilities
     IMITATE, DOLLS, PRODUCE, DIRECT, PLAY_ALONG,
     // Learning abilities

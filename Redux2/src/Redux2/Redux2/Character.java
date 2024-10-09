@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 public class Character {
 
-    private String name;
-    private String description;
-    Room room;
-    ArrayList<Item> inventory;
-    private int hunger;
-    private int thirst;
+    private final String name;
+    private final String description;
+    public Room room;
+    private final ArrayList<Item> inventory;
 
     public Character(String name, String description, Room room) {
         this.name = name;
@@ -17,7 +15,6 @@ public class Character {
         this.inventory = new ArrayList<>();
         this.room = room;
     }
-
     public Room getRoom() {
         return this.room;
     }
@@ -41,43 +38,6 @@ public class Character {
     public String getDescription() {
         return this.description;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setInventory(ArrayList<Item> inventory1) {
-        this.inventory = inventory1;
-    }
-
-    public void reciveItem(Character character, Item item) {
-        this.addItem(item);
-        character.removeItem(item);
-    }
-
-    public void useItem(Consumable consumable) {
-        consumable.use(this);
-    }
-    public int getHunger() {
-        return this.hunger;
-    }
-
-    public void setHunger(int i) {
-        this.hunger = i;
-    }
-
-    public int getThirst() {
-        return this.thirst;
-    }
-
-    public void setThirst(int i) {
-        this.thirst = i;
-    }
-
     public void setRoom(Room room) {
         this.room = room;
     }

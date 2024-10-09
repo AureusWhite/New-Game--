@@ -7,7 +7,6 @@ public class Main {
         GUI gui = new GUI();
         gui.lockButtons();
         GameHandler gameHandler = new GameHandler(gui, game);
-        gameHandler.setUpgame();
         game.start(gameHandler);
 
     }

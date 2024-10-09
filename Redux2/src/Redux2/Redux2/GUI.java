@@ -12,33 +12,18 @@ import javax.swing.text.html.HTMLEditorKit;
 public class GUI extends JFrame {
 
     private static JTextField jTextField;
-
-    public static JTextField getJTextField() {
-        return jTextField;
-    }
-
-    public static JTextField getjTextField() {
-        return jTextField;
-    }
-
-    public static void setjTextField(JTextField jTextField) {
-        GUI.jTextField = jTextField;
-    }
     private final JTextPane jTextPane;
     private JPanel statsPanel;
     private final JPanel inputPanel;
     private final JPanel btnPanel;
     private final JLabel statsLabel;
     private final Color periwinkle = new Color(204, 204, 255);
-
     private Color lightBlue;
-
     private Color lightPink;
-
     private final JButton takeButton,
-     moveButton, dialogButton, learnButton,
-      inventoryButton, carebutton, socializeButton,
-       mischiefButton,interactButton,parkourButton,extraButton,equipmentButton;
+            moveButton, dialogButton, learnButton,
+            inventoryButton, carebutton, socializeButton,
+            mischiefButton, interactButton, parkourButton, extraButton, equipmentButton;
     private boolean locked;
     private JPanel npcPanel, itemPanel, extraPanel;
     private JPanel panelContainer;
@@ -182,7 +167,6 @@ public class GUI extends JFrame {
         parkourButton.setPreferredSize(buttonSize);
         interactButton.setPreferredSize(buttonSize);
 
-
         // Add buttons to panel
         btnPanel.add(extraButton);
         btnPanel.add(mischiefButton);
@@ -216,8 +200,6 @@ public class GUI extends JFrame {
         extraButton.setBorder(new LineBorder(Color.BLACK, 2));
         equipmentButton.setBorder(new LineBorder(Color.BLACK, 2));
 
-
-
         // Add action listeners to buttons
         moveButton.addActionListener(e -> {
             if (!locked) {
@@ -230,7 +212,7 @@ public class GUI extends JFrame {
                         System.out.println("Player is nude, blocking movement."); // Debug statement
                         return;
                     } else {
-                        String[] exits = Player.room.getExits();
+                        String[] exits = Player.getRoom().getExits();
                         for (int i = 0; i < exits.length; i++) {
                             exits[i] = exits[i].replace("_", " ");
                         }
@@ -239,7 +221,7 @@ public class GUI extends JFrame {
                                 "Exits",
                                 JOptionPane.QUESTION_MESSAGE,
                                 null, exits, exits[0]);
-        
+
                         if (selectedExit != null) {
                             Room tempRoom = Player.getRoom();
                             Room room = GameHandler.getRoomByName(selectedExit.replace(" ", "_"));
@@ -247,7 +229,7 @@ public class GUI extends JFrame {
                             Player.setRoom(room);
                             room.initializeRoomFiles();
                             for (NPC npc : tempRoom.getNPCs()) {
-                                npc.setSuspicion(0);
+                                npc.setSuspicion(0,"none");
                                 if (npc.isFollower()) {
                                     npc.setRoom(Player.getRoom());
                                 }
@@ -302,7 +284,7 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] parkourables = Player.room.getParkourables();
+                    String[] parkourables = Player.getRoom().getParkourables();
                     if (parkourables.length == 0) {
                         GameHandler.getGui().display("There is nothing to parkour on", "Black");
                         return;
@@ -320,7 +302,7 @@ public class GUI extends JFrame {
                             parkourables[0]);
                     if (selectedParkourable != null) {
                         GameHandler.getGui().display("You parkour with the " + selectedParkourable + ".", "Black");
-                        Player.room.parkour(selectedParkourable);
+                        Player.getRoom().parkour(selectedParkourable);
                     } else {
                         notify();
                     }
@@ -332,7 +314,7 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] interactables = Player.room.getInteractables();
+                    String[] interactables = Player.getRoom().getInteractables();
                     if (interactables.length == 0) {
                         GameHandler.getGui().display("There is nothing to interact with", "Black");
                         return;
@@ -363,11 +345,11 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    if (Player.room.getNPCs().isEmpty()) {
+                    if (Player.getRoom().getNPCs().isEmpty()) {
                         GameHandler.getGui().display("There is no one to talk to.", "Black");
                         return;
                     }
-                    String[] npcs = Player.room.getNPCChoises();
+                    String[] npcs = Player.getRoom().getNPCChoises();
                     for (int i = 0; i < npcs.length; i++) {
                         npcs[i] = npcs[i].replace("_", " ");
                     }
@@ -384,7 +366,7 @@ public class GUI extends JFrame {
                         GameHandler.getGui().display("You talk to the " + selectedNPC + ".", "Black");
                         NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
                         GameHandler.getGui().display(npc.getDialog(), "Black");
-                        String[] options = {"Persuade", "Ask a question.", "Make a statement", "Greetings","Barter/Trade"};
+                        String[] options = {"Persuade", "Ask a question.", "Make a statement", "Greetings", "Barter/Trade"};
                         int selectedOption = JOptionPane.showOptionDialog(null,
                                 "What do you want to say?",
                                 "Dialog",
@@ -417,7 +399,7 @@ public class GUI extends JFrame {
                                     case "Mediate" -> {
                                         GameHandler.getGui().display(npc.getResponse("persuasion", "Mediate"), "Black");
                                     }
-                                    
+
                                 }
 
                             }
@@ -527,7 +509,7 @@ public class GUI extends JFrame {
                                                 null,
                                                 takenItems,
                                                 takenItems[0]);
-                                        npc.trade(givenItem,takenItem);
+                                        npc.trade(givenItem, takenItem);
                                     }
                                     case "Barter" -> {
                                         npc.barter();
@@ -547,7 +529,7 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] topics = {"Story Time", "Arts & Crafts", "Educational Games", "Language", "Puzzles"};
+                    /*String[] topics = {"Story Time", "Arts & Crafts", "Educational Games", "Language", "Puzzles"};
                     String selectedTopic = (String) JOptionPane.showInputDialog(
                             null,
                             "What do you want to study?",
@@ -581,17 +563,19 @@ public class GUI extends JFrame {
                     } else {
                         notify();
                     }
+                     */
                 }
             }
             updateSidePanels();
         });
+
         inventoryButton.addActionListener(e -> {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] options = {"Use", "Drop", "Throw Away", "Put up", "Give","Put in Pockets"};
+                    String[] options = {"Use", "Drop", "Throw Away", "Put up", "Give", "Put in Pockets"};
                     String[] inventory = Player.getItemChoises();
-                    if (inventory==null) {
+                    if (inventory == null) {
                         GameHandler.getGui().display("You have nothing", "Black");
                         return;
                     }
@@ -664,7 +648,7 @@ public class GUI extends JFrame {
                             }
                             case 4 -> {
                                 notify();
-                                String[] npcs = Player.room.getNPCChoises();
+                                String[] npcs = Player.getRoom().getNPCChoises();
                                 for (int i = 0; i < npcs.length; i++) {
                                     npcs[i] = npcs[i].replace("_", " ");
                                 }
@@ -684,8 +668,8 @@ public class GUI extends JFrame {
                                     notify();
                                 }
                             }
-                            case 5 ->{
-                                if(Player.getPockets().size() >= Player.getPocketSize()){
+                            case 5 -> {
+                                if (Player.getPockets().size() >= Player.getPocketSize()) {
                                     GameHandler.getGui().display("You have no more room in your pockets", "Black");
                                     return;
                                 } else {
@@ -766,7 +750,7 @@ public class GUI extends JFrame {
                     if (selectedSocialize != null) {
                         switch (selectedSocialize) {
                             case "Play" -> {
-                                String[] npcChoises = Player.room.getNPCChoises();
+                                String[] npcChoises = Player.getRoom().getNPCChoises();
                                 if (npcChoises.length == 0) {
                                     GameHandler.getGui().display("There is no one to play with", "Black");
                                     return;
@@ -783,7 +767,7 @@ public class GUI extends JFrame {
                                         npcChoises,
                                         npcChoises[0]);
                                 if (selectedNPC != null) {
-                                    String[] toyChoises = Player.room.getToyChoices();
+                                    String[] toyChoises = Player.getRoom().getToyChoices();
                                     if (toyChoises.length == 0) {
                                         GameHandler.getGui().display("There are no toys to play with", "Black");
                                         Player.getRoom().play(selectedNPC, null);
@@ -810,7 +794,7 @@ public class GUI extends JFrame {
                                 }
                             }
                             case "Help" -> {
-                                for (NPC npc : Player.room.getNPCs()) {
+                                for (NPC npc : Player.getRoom().getNPCs()) {
                                     if (npc.getQuest() != null) {
                                         GameHandler.getGui().display("You help " + npc.getName() + " with their quest", "Black");
                                         npc.getQuest().getDescription();
@@ -820,7 +804,7 @@ public class GUI extends JFrame {
                                 }
                             }
                             case "Lead" -> {
-                                String[] choises = Player.room.getNPCChoises();
+                                String[] choises = Player.getRoom().getNPCChoises();
                                 if (choises.length == 0) {
                                     GameHandler.getGui().display("There is no one to lead", "Black");
                                     return;
@@ -917,11 +901,11 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    if (Player.room.getArrayInventory().isEmpty()) {
+                    if (Player.getRoom().getArrayInventory().isEmpty()) {
                         GameHandler.getGui().display("There is nothing to take", "Black");
                         return;
                     }
-                    String[] items = Player.room.getItemChoices();
+                    String[] items = Player.getRoom().getItemChoices();
                     if (items.length == 0) {
                         GameHandler.getGui().display("There is nothing to take", "Black");
                         return;
@@ -968,7 +952,7 @@ public class GUI extends JFrame {
                                 Player.sneak();
                             }
                             case "Prank" -> {
-                                String[] choises = Player.room.getNPCChoises();
+                                String[] choises = Player.getRoom().getNPCChoises();
                                 if (choises.length == 0) {
                                     GameHandler.getGui().display("There is no one to prank", "Black");
                                     return;
@@ -993,7 +977,7 @@ public class GUI extends JFrame {
                                 }
                             }
                             case "Steal" -> {
-                                String[] choises = Player.room.getContraband();
+                                String[] choises = Player.getRoom().getContraband();
                                 if (choises.length == 0) {
                                     GameHandler.getGui().display("There is nothing to steal", "Black");
                                     return;
@@ -1014,7 +998,7 @@ public class GUI extends JFrame {
                                 }
                             }
                             case "Sabotage" -> {
-                                String[] choises = Player.room.getFurniture();
+                                String[] choises = Player.getRoom().getFurniture();
                                 if (choises.length == 0) {
                                     GameHandler.getGui().display("There is nothing to sabotage", "Black");
                                     return;
@@ -1036,7 +1020,7 @@ public class GUI extends JFrame {
                                 }
                             }
                             case "Vandalize" -> {
-                                String[] choises = Player.room.getFurniture();
+                                String[] choises = Player.getRoom().getFurniture();
                                 if (choises.length == 0) {
                                     GameHandler.getGui().display("There is nothing to vandalize", "Black");
                                     return;
@@ -1080,6 +1064,10 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
+    public static void setjTextField(JTextField jTextField) {
+        GUI.jTextField = jTextField;
+    }
+
     public void display(String message, String color) {
         HTMLEditorKit editorKit = (HTMLEditorKit) jTextPane.getEditorKit();
         HTMLDocument doc = (HTMLDocument) jTextPane.getDocument();
@@ -1094,7 +1082,6 @@ public class GUI extends JFrame {
 
     public String getInput() {
         return jTextField.getText();
-
     }
 
     public void waitForInput() { //waits for the user to input something
@@ -1120,68 +1107,12 @@ public class GUI extends JFrame {
         return statsPanel;
     }
 
-    public void setStatsPanel(JPanel statsPanel) {
-        this.statsPanel = statsPanel;
-    }
-
     public JPanel getInputPanel() {
         return inputPanel;
     }
 
     public JPanel getBtnPanel() {
         return btnPanel;
-    }
-
-    public Color getPeriwinkle() {
-        return periwinkle;
-    }
-
-    public Color getLightBlue() {
-        return lightBlue;
-    }
-
-    public void setLightBlue(Color lightBlue) {
-        this.lightBlue = lightBlue;
-    }
-
-    public Color getLightPink() {
-        return lightPink;
-    }
-
-    public void setLightPink(Color lightPink) {
-        this.lightPink = lightPink;
-    }
-
-    public JButton getTakeButton() {
-        return takeButton;
-    }
-
-    public JButton getMoveButton() {
-        return moveButton;
-    }
-
-    public JButton getDialogButton() {
-        return dialogButton;
-    }
-
-    public JButton getLearnButton() {
-        return learnButton;
-    }
-
-    public JButton getInventoryButton() {
-        return inventoryButton;
-    }
-
-    public JButton getCarebutton() {
-        return carebutton;
-    }
-
-    public JButton getSocializeButton() {
-        return socializeButton;
-    }
-
-    public JButton getMischiefButton() {
-        return mischiefButton;
     }
 
     public void unlockButtons() {
@@ -1222,7 +1153,7 @@ public class GUI extends JFrame {
         itemPanel.add(itemsLabel, gbc);
 
         // Add Items to itemPanel
-        for (Item item : Player.room.getArrayInventory()) {
+        for (Item item : Player.getRoom().getArrayInventory()) {
             if (item != null) {
                 JLabel itemLabel = new JLabel(item.getName(), JLabel.CENTER);
                 itemLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -1250,7 +1181,7 @@ public class GUI extends JFrame {
         npcPanel.add(npcsLabel, gbc);
 
         // Add NPCs to npcPanel
-        for (NPC npc : Player.room.getNPCs()) {
+        for (NPC npc : Player.getRoom().getNPCs()) {
             JLabel npcLabel = new JLabel(npc.getName(), JLabel.CENTER);
             npcLabel.setFont(new Font("Arial", Font.BOLD, 16));
             npcLabel.setOpaque(true);
@@ -1281,38 +1212,6 @@ public class GUI extends JFrame {
         this.locked = locked;
     }
 
-    public JPanel getNpcPanel() {
-        return npcPanel;
-    }
-
-    public void setNpcPanel(JPanel npcPanel) {
-        this.npcPanel = npcPanel;
-    }
-
-    public JPanel getItemPanel() {
-        return itemPanel;
-    }
-
-    public void setItemPanel(JPanel itemPanel) {
-        this.itemPanel = itemPanel;
-    }
-
-    public JPanel getExtraPanel() {
-        return extraPanel;
-    }
-
-    public void setExtraPanel(JPanel extraPanel) {
-        this.extraPanel = extraPanel;
-    }
-
-    public JPanel getPanelContainer() {
-        return panelContainer;
-    }
-
-    public void setPanelContainer(JPanel panelContainer) {
-        this.panelContainer = panelContainer;
-    }
-
     private void showPopupWithContent(String content) {
         JTextPane textPane = new JTextPane();
         textPane.setContentType("text/html");
@@ -1328,6 +1227,10 @@ public class GUI extends JFrame {
         dialog.pack();
         dialog.setLocationRelativeTo(null); // Center the dialog
         dialog.setVisible(true);
+    }
+
+    public static JTextField getJTextField() {
+        return jTextField;
     }
 
 }

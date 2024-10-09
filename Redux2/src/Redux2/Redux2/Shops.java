@@ -1,15 +1,17 @@
 package Redux2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 
 public class Shops extends Item {
 
-    ArrayList<Item> inventory;
+    private final ArrayList<Item> inventory;
+    private final HashMap<ItemCondition, Boolean> conditions = new HashMap<>();
 
     public Shops(String name, String description) {
         super(name, description, "Shop/Container/Furniture", false);
-        this.takable = false;
+        this.conditions.put(ItemCondition.TAKEABLE, false);
         this.inventory = new ArrayList<>();
     }
 
@@ -48,11 +50,7 @@ public class Shops extends Item {
             GameHandler.getGui().display("You didn't buy anything", "Black");
         }
     }
-    
 
-    private ArrayList<Item> getInventory() {
-        return this.inventory;
-    }
 
     public String[] getForSale() {
         String[] items = new String[this.getInventory().size()];
@@ -60,9 +58,9 @@ public class Shops extends Item {
             items[this.inventory.indexOf(item)] = item.getName()+" - "+item.getPrice();
         }
         return items;
-    }
-    @Override
-    public void addItem(Item item) {
-        this.inventory.add(item);
+    }    
+@Override
+    public HashMap<ItemCondition, Boolean> getConditions() {
+        return conditions;
     }
 }

@@ -1,6 +1,7 @@
 package Redux2;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 class Commands {
 
@@ -40,8 +41,31 @@ class Commands {
                 }
                 case "inventory" ->
                     GameHandler.getGui().display("You checked your inventory", "Black");
-                case "help" ->
-                    GameHandler.getGui().display("You asked for help", "Black");
+                    case "help" -> {
+                        NPC helpingNPC = Player.getRoom().getFirstNPC();
+                        String[] helpWith = {"Dressing", "Taking a bath", "A hug"};
+                        String choice = (String) JOptionPane.showInputDialog(null, "What do you need help with?", "Help", JOptionPane.QUESTION_MESSAGE, null, helpWith, helpWith[0]);
+                        switch (choice) {
+                            case "Dressing" -> {
+                                GameHandler.getGui().display("You asked for help with dressing", "Black");
+                                if (Player.getProficiencies().contains(Proficiencies.DRESS)) {
+                                    GameHandler.getGui().display(helpingNPC.getName() + ": You can dress yourself...", "Black");
+                                } else {
+                                    GameHandler.getGui().display(helpingNPC.getName() + ": I can help you dress", "Black");
+                                    helpingNPC.dressPlayer();
+                                }
+                            }
+                            case "Taking a bath" -> {
+                                GameHandler.getGui().display("You asked for help with taking a bath", "Black");
+                                // Add logic for taking a bath if needed
+                            }
+                            case "A hug" -> {
+                                GameHandler.getGui().display("You asked for a hug", "Black");
+                                // Add logic for a hug if needed
+                            }
+                        }
+                    }
+                    
                 case "quit" ->
                     GameHandler.getGui().display("You quit the game", "Black");
                 case "quests" -> {
