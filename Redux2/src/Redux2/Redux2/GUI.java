@@ -205,42 +205,32 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    if (Player.isNude()) {
-                        display("Fuzzy blocks your path with his large fuzzy frame", "Black");
-                        display("Fuzzy: You can't go out like that, you need to put your uniform on", "Black");
-                        display("use the 'Take' button and select 'Equip' to put on your uniform", "Black");
-                        System.out.println("Player is nude, blocking movement."); // Debug statement
-                        return;
-                    } else {
-                        String[] exits = Player.getRoom().getExits();
-                        for (int i = 0; i < exits.length; i++) {
-                            exits[i] = exits[i].replace("_", " ");
-                        }
-                        String selectedExit = (String) JOptionPane.showInputDialog(null,
-                                "Choose an exit",
-                                "Exits",
-                                JOptionPane.QUESTION_MESSAGE,
-                                null, exits, exits[0]);
+                    String[] exits = Player.getRoom().getExits();
+                    for (int i = 0; i < exits.length; i++) {
+                        exits[i] = exits[i].replace("_", " ");
+                    }
+                    String selectedExit = (String) JOptionPane.showInputDialog(null,
+                            "Choose an exit",
+                            "Exits",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null, exits, exits[0]);
 
-                        if (selectedExit != null) {
-                            Room tempRoom = Player.getRoom();
-                            Room room = GameHandler.getRoomByName(selectedExit.replace(" ", "_"));
-                            GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
-                            Player.setRoom(room);
-                            room.initializeRoomFiles();
-                            for (NPC npc : tempRoom.getNPCs()) {
-                                npc.setSuspicion(0,"none");
-                                if (npc.isFollower()) {
-                                    npc.setRoom(Player.getRoom());
-                                }
-                            }
-                        } else {
-                            notify();
-                        }
+                    if (selectedExit != null) {
+                        Room tempRoom = Player.getRoom();
+                        Room room = GameHandler.getRoomByName(selectedExit.replace(" ", "_"));
+                        GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
+                        Player.setRoom(room);
+                        room.initializeRoomFiles();
+                        Player.getRoom().randomNPC().noticePlayer();
+                            
+                        
+                    } else {
+                        notify();
                     }
                 }
-                updateSidePanels();
             }
+            updateSidePanels();
+
         });
         equipmentButton.addActionListener(e -> {
             if (!locked) {
@@ -377,7 +367,7 @@ public class GUI extends JFrame {
                                 options[0]);
                         switch (selectedOption) {
                             case 0 -> {
-                                String persuasions[] = {"Cry", "Pout", "Silly", "Mediate"};
+                                String persuasions[] = {"I Hate you! (make enemy)", "Wanna be Friends? (make friend)", "Silly", "Mediate"};
                                 String selectedPersuasion = (String) JOptionPane.showInputDialog(
                                         null,
                                         "How do you persuasde ? " + npc.getName(),
@@ -387,11 +377,15 @@ public class GUI extends JFrame {
                                         persuasions,
                                         persuasions[0]);
                                 switch (selectedPersuasion) {
-                                    case "Cry" -> {
-                                        GameHandler.getGui().display(npc.getResponse("persuasion", "Cry"), "Black");
+                                    case "I Hate you! (make enemy)" -> {
+                                        GameHandler.getGui().display("Attempting to make enemy..", "Black");
+                                        GameHandler.getAchievementByName("Nemisis").markNPCEnemy(npc);
+                                        break;
                                     }
-                                    case "Pout" -> {
-                                        GameHandler.getGui().display(npc.getResponse("persuasion", "Pout"), "Black");
+                                    case "Wanna be Friends? (make friend)" -> {
+                                        GameHandler.getGui().display("Attempting to make friend..", "Black");
+                                        GameHandler.getAchievementByName("Socialite").markNPCBefriended(npc);
+                                        break;
                                     }
                                     case "Silly" -> {
                                         GameHandler.getGui().display(npc.getResponse("persuasion", "Silly"), "Black");
@@ -438,18 +432,22 @@ public class GUI extends JFrame {
                                         null,
                                         statements,
                                         statements[0]);
-                                switch (selectedStatement) {
-                                    case "I like you" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement", "like"), "Black");
-                                    }
-                                    case "I don't like you" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement", "dislike"), "Black");
-                                    }
-                                    case "You are nice" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement", "nice"), "Black");
-                                    }
-                                    case "You are mean" -> {
-                                        GameHandler.getGui().display(npc.getResponse("statement", "mean"), "Black");
+                                if (selectedStatement == null) {
+                                    notify();
+                                } else {
+                                    switch (selectedStatement) {
+                                        case "I like you" -> {
+                                            GameHandler.getGui().display(npc.getResponse("statement", "like"), "Black");
+                                        }
+                                        case "I don't like you" -> {
+                                            GameHandler.getGui().display(npc.getResponse("statement", "dislike"), "Black");
+                                        }
+                                        case "You are nice" -> {
+                                            GameHandler.getGui().display(npc.getResponse("statement", "nice"), "Black");
+                                        }
+                                        case "You are mean" -> {
+                                            GameHandler.getGui().display(npc.getResponse("statement", "mean"), "Black");
+                                        }
                                     }
                                 }
                             }
@@ -717,10 +715,6 @@ public class GUI extends JFrame {
                                 GameHandler.getGui().display("You calm the beaver down", "Black");
                                 Player.tantrum();
                             }
-                            case "Eat/Drink" -> {
-                                GameHandler.getGui().display("You feed the beaver", "Black");
-                                Player.eatDrink();
-                            }
                             case "Reflect" -> {
                                 GameHandler.getGui().display("You reflect on the beaver's behavior", "Black");
                                 Player.reflect();
@@ -794,14 +788,6 @@ public class GUI extends JFrame {
                                 }
                             }
                             case "Help" -> {
-                                for (NPC npc : Player.getRoom().getNPCs()) {
-                                    if (npc.getQuest() != null) {
-                                        GameHandler.getGui().display("You help " + npc.getName() + " with their quest", "Black");
-                                        npc.getQuest().getDescription();
-                                    } else {
-                                        GameHandler.getGui().display("There is no one to help", "Black");
-                                    }
-                                }
                             }
                             case "Lead" -> {
                                 String[] choises = Player.getRoom().getNPCChoises();
@@ -923,6 +909,10 @@ public class GUI extends JFrame {
                             items[0]);
                     if (selectedItem != null) {
                         Item item = GameHandler.getItemByName(selectedItem);
+                        if (item.getConditions().get(ItemCondition.TAKEABLE) == false) {
+                            GameHandler.getGui().display("You can't pick that up item.", "Black");
+                            return;
+                        }
                         Player.addItem(item);
                         Player.getRoom().removeItem(item);
                     } else {

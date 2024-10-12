@@ -1,5 +1,7 @@
 package Redux2;
 
+import Redux2.Achievements.NPCStatus;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,8 +10,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
+
 
 public class GameHandler {
 
@@ -25,7 +29,14 @@ public class GameHandler {
     public static String fileSection4 = "";
     private final static ArrayList<Achievements> achievements = new ArrayList<>();
 
-    private Container box;
+    private static String toSentenceCase(String name) {
+        name = name.toLowerCase();
+        name = name.replace("_", " ");
+        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        return name;
+    }
+
+    private Container box,foodTray;
     
     public Room recoveryRoom, kitchen, mainRoom,
             dorms, bathroom, hallway, stairs, basement,
@@ -47,12 +58,20 @@ public class GameHandler {
             computer, tablet, phone, speaker, headphones, microphone, keyboard,
             mouse, monitor, printer, scanner, projector, whiteboard, chalkboard,
             smartboard, globe, map, calendar, compass, protractor, canvas, snackShop,pickapaw,pawFigure,limitedEditionPaw;
+    private static Item foodTrayDispenser;
 
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
             jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
 
 
     public void createItems() {
+        foodTray = new Container("Food Tray", "A tray for you to eat food on.", "Food Tray", true);
+        items.put("Food Tray", foodTray);
+        foodTrayDispenser = new Item("Food Tray Dispenser", "A machine that dispenses food trays.", "Machine/Interactable", false);
+        items.put("Food Tray Dispenser", foodTrayDispenser);
+        foodTrayDispenser.getConditions().put(ItemCondition.TAKEABLE, false);
+        foodTrayDispenser.getConditions().put(ItemCondition.INTERACTABLE, true);
+        foodTrayDispenser.getConditions().put(ItemCondition.DISPENCER, true);
         pickapaw = new Shops("Pick a Paw", "A shop where you can buy Paws and Paw and Prowess cards.");
         items.put("Pick a Paw", pickapaw);
         pickapaw.setType("Shop/Trading/Interactable");
@@ -259,7 +278,6 @@ public class GameHandler {
     public void setUpNPCs() {
         fuzzy = new NPC("Fuzzy", "A large stuffed bear, he is always around and always seems to be watching.", foyer, "companion");
         npcs.put("Fuzzy", fuzzy);
-        fuzzy.setFollower(true);
         msSagely = new NPC("Ms_Sagely", "A wisen old woman whos presence is as comforting as it is dignified.", foyer, "adult");
         npcs.put("Ms_Sagely", msSagely);
         dawn = new NPC("Dawn", "An ERE TeAchr and assistant to Ms Sagely, she is dressed in fun and colorful clothing.", foyer, "child");
@@ -293,24 +311,50 @@ public class GameHandler {
         Achievements explorer = new Achievements("Exsplore", "Exsplore all the rooms in the house", 10);
         explorer.addRequiredPlace(foyer);
         explorer.addRequiredPlace(dorms);
+
         Achievements snappyDresser = new Achievements("Snappy Dresser", "Wear a uniform", 10);
         snappyDresser.addRequiredEquipment(uniformTop);
         snappyDresser.addRequiredEquipment(uniformBottom);
         snappyDresser.addRequiredEquipment(uniformHat);
         snappyDresser.addRequiredEquipment(uniformShoes);
         snappyDresser.addRequiredEquipment(uniBackPack);
+
         Achievements collector = new Achievements("Collector", "Collect all the toys", 10);
         collector.addRequiredItem(toy);
+
         Achievements socialite = new Achievements("Socialite", "Make a friend", 10);
-        socialite.addRequiredNPC(fuzzy);
+        socialite.addRequiredNPC(fuzzy, NPCStatus.FRIEND);
+
+        Achievements nemisis = new Achievements("Nemisis", "Make an enemy", 10);
+        nemisis.addRequiredNPC(fuzzy, NPCStatus.ENEMY);
+
         Achievements bookWorm = new Achievements("Book Worm", "Read all the books", 10);
         bookWorm.addRequiredItem(book);
+
+        Achievements meetEveryone = new Achievements("Meet Everyone", "Speak to all NPCs", 20);
+        meetEveryone.addRequiredNPC(fuzzy, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(msSagely, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(dawn, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(taliber, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(susy, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(farah, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(drWhite, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(msWhite, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(aureus, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(jessiem, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(researchStudent1, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(researchStudent2, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(jimthejanitor, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(joy, NPCStatus.SPOKEN_TO);
+        meetEveryone.addRequiredNPC(jessief, NPCStatus.SPOKEN_TO);
             // Add all the achievements to the list
             achievements.add(explorer);
             achievements.add(snappyDresser);
             achievements.add(collector);
             achievements.add(socialite);
             achievements.add(bookWorm);
+            achievements.add(meetEveryone);
+            achievements.add(nemisis);
     }
     public void createRoutine() {
         final RoutineManager routineManager1 = new RoutineManager();
@@ -320,183 +364,150 @@ public class GameHandler {
     public RoutineManager getRoutineManager() {
         return this.routineManager;
     } 
+    public static void updateAchievementsForNPC(NPC npc, NPCStatus status) {
+        for (Achievements achievement : achievements) {
+            if (achievement.getRequiredNPC().containsKey(npc)) {
+                achievement.getRequiredNPC().put(npc, status);
+                achievement.updateAchievement();
+            }
+        }
+
+    }
     public void buildRooms() {
-        kitchen = new Room("Kitchen", "A room where you can cook food.");
+        kitchen = new Room("Kitchen", "A room where you can cook food.", Room.ROOMTYPE.KITCHEN);
         rooms.put("Kitchen", kitchen);
-        kitchen.setType("Kitchen");
 
-        classRoom = new Room("Class_Room", "A room where you can learn.");
+        classRoom = new Room("Class_Room", "A room where you can learn.", Room.ROOMTYPE.SCHOOL);
         rooms.put("Class_Room", classRoom);
-        classRoom.setType("Blue Room");
-
-        mainRoom = new Room("Main_Room", "The main room of the daycare.");
+        
+        mainRoom = new Room("Main_Room", "The main room of the daycare.", Room.ROOMTYPE.GREEN);
         rooms.put("Main_Room", mainRoom);
-        mainRoom.setType("Green Room");
-
-        dorms = new Room("Dorms", "A room where you can sleep.");
+        
+        dorms = new Room("Dorms", "A room where you can sleep.", Room.ROOMTYPE.GREEN);
         rooms.put("Dorms", dorms);
-        dorms.setType("Green Room");
-
-        bathroom = new Room("Bathroom", "A room where you can clean yourself.");
+        
+        bathroom = new Room("Bathroom", "A room where you can clean yourself.", Room.ROOMTYPE.BATHROOM);
         rooms.put("Bathroom", bathroom);
-        bathroom.setType("Bathroom");
-
-        hallway = new Room("Hallway", "A hallway that connects the rooms.");
+        
+        hallway = new Room("Hallway", "A hallway that connects the rooms.", Room.ROOMTYPE.INDOOR);
         rooms.put("Hallway", hallway);
-        hallway.setType("Red Room");
-
-        stairs = new Room("Stairs", "A staircase that leads to the basement and attic.");
+        
+        stairs = new Room("Stairs", "A staircase that leads to the basement and attic.", Room.ROOMTYPE.INDOOR);
         rooms.put("Stairs", stairs);
-        stairs.setType("Red Room");
-
-        basement = new Room("Basement", "A room where you can store things.");
+        
+        basement = new Room("Basement", "A room where you can store things.", Room.ROOMTYPE.INDOOR);
         rooms.put("Basement", basement);
-        basement.setType("Red Room");
-
-        attic = new Room("Attic", "A room where you can store things.");
+        
+        attic = new Room("Attic", "A room where you can store things.", Room.ROOMTYPE.INDOOR);
         rooms.put("Attic", attic);
-        attic.setType("Red Room");
-
-        garage = new Room("Garage", "A room where you can store vehicles.");
+        
+        garage = new Room("Garage", "A room where you can store vehicles.", Room.ROOMTYPE.INDOOR);
         rooms.put("Garage", garage);
-        garage.setType("Red Room");
-
-        garden = new Room("Garden", "A room where you can grow plants.");
+        
+        garden = new Room("Garden", "A room where you can grow plants.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Garden", garden);
-        garden.setType("Blue Room");
-
-        driveway = new Room("Driveway", "A driveway that leads to the street.");
+        
+        driveway = new Room("Driveway", "A driveway that leads to the street.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Driveway", driveway);
-        driveway.setType("Red Room");
-
-        frontYard = new Room("Front_Yard", "The front yard of the daycare.");
+        
+        frontYard = new Room("Front_Yard", "The front yard of the daycare.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Front_Yard", frontYard);
-        frontYard.setType("Blue Room");
-
-        backYard = new Room("Back_Yard", "The back yard of the daycare.");
+        
+        backYard = new Room("Back_Yard", "The back yard of the daycare.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Back_Yard", backYard);
-        backYard.setType("Blue Room");
-
-        cogLabs = new Room("cogLabs", "A room with a sign that says \"Please do not take the box\"");
+        
+        cogLabs = new Room("cogLabs", "A room with a sign that says \"Please do not take the box\"", Room.ROOMTYPE.LABORATORY);
         rooms.put("cogLabs", cogLabs);
-        cogLabs.setType("Blue Room");
-
-        pool = new Room("Pool", "A pool where you can swim.");
+        
+        pool = new Room("Pool", "A pool where you can swim.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Pool", pool);
-        pool.setType("Red Room");
-
-        patio = new Room("Patio", "A patio where you can relax.");
+        
+        patio = new Room("Patio", "A patio where you can relax.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Patio", patio);
-        patio.setType("Blue Room");
-
-        deck = new Room("Deck", "A deck where you can relax.");
+        
+        deck = new Room("Deck", "A deck where you can relax.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Deck", deck);
-        deck.setType("Blue Room");
-
-        porch = new Room("Porch", "A porch where you can relax.");
+        
+        porch = new Room("Porch", "A porch where you can relax.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Porch", porch);
-        porch.setType("Blue Room");
-
-        balcony = new Room("Balcony", "A balcony where you can relax.");
+        
+        balcony = new Room("Balcony", "A balcony where you can relax.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Balcony", balcony);
-        balcony.setType("Blue Room");
-
-        roof = new Room("Roof", "A roof where you can relax.");
+        
+        roof = new Room("Roof", "A roof where you can relax.", Room.ROOMTYPE.OUTDOOR);
         rooms.put("Roof", roof);
-        roof.setType("Red Room");
-
-        cubbies = new Room("Cubbies", "A room where you can store your things.");
+        
+        cubbies = new Room("Cubbies", "A room where you can store your things.", Room.ROOMTYPE.GREEN);
         rooms.put("Cubbies", cubbies);
-        cubbies.setType("Green Room");
-
-        dramaArea = new Room("Drama_Area", "A room where you can act out plays.");
+        
+        dramaArea = new Room("Drama_Area", "A room where you can act out plays.", Room.ROOMTYPE.GREEN);
         rooms.put("Drama_Area", dramaArea);
-        dramaArea.setType("Green Room");
-
-        changingRoom = new Room("Changing_Room", "A room where you can change your clothes.");
+        
+        changingRoom = new Room("Changing_Room", "A room where you can change your clothes.", Room.ROOMTYPE.GREEN);
         rooms.put("Changing_Room", changingRoom);
-        changingRoom.setType("Green Room");
-
-        floorPlay = new Room("Floor_Play", "A room where you can play on the floor.");
+        
+        floorPlay = new Room("Floor_Play", "A room where you can play on the floor.", Room.ROOMTYPE.GREEN);
         rooms.put("Floor_Play", floorPlay);
-        floorPlay.setType("Green Room");
-
-        quietArea = new Room("Quiet_Area", "A room where you can relax.");
+        
+        quietArea = new Room("Quiet_Area", "A room where you can relax.", Room.ROOMTYPE.GREEN);
         rooms.put("Quiet_Area", quietArea);
-        quietArea.setType("Green Room");
-
-        homeWorkArea = new Room("Homework_Area", "A room where you can do your homework.");
+        
+        homeWorkArea = new Room("Homework_Area", "A room where you can do your homework.", Room.ROOMTYPE.GREEN);
         rooms.put("Homework_Area", homeWorkArea);
-        homeWorkArea.setType("Green Room");
-
-        playHouse = new Room("Play_House", "A room where you can play house.");
+        
+        playHouse = new Room("Play_House", "A room where you can play house.", Room.ROOMTYPE.GREEN);
         rooms.put("Play_House", playHouse);
-        playHouse.setType("Blue Room");
-
-        treeHouse = new Room("Tree_House", "A room where you can play in a tree house.");
+        
+        treeHouse = new Room("Tree_House", "A room where you can play in a tree house.", Room.ROOMTYPE.GREEN);
         rooms.put("Tree_House", treeHouse);
-        treeHouse.setType("Blue Room");
-
-        storyBookVillage = new Room("Storybook_Village", "A room where you can read books.");
+        
+        storyBookVillage = new Room("Storybook_Village", "A room where you can read books.",    Room.ROOMTYPE.GREEN);
         rooms.put("Storybook_Village", storyBookVillage);
-        storyBookVillage.setType("Green Room");
-        pillowPile = new Room("Pillow_Pile", "A room where you can relax on a pile of pillows.");
+        
+        pillowPile = new Room("Pillow_Pile", "A room where you can relax on a pile of pillows.", Room.ROOMTYPE.GREEN);
         rooms.put("Pillow_Pile", pillowPile);
-        pillowPile.setType("Green Room");
-
-        snackArea = new Room("Snack_Area", "A room where you can eat snacks.");
+        
+        snackArea = new Room("Snack_Area", "A room where you can eat snacks.", Room.ROOMTYPE.GREEN);
         rooms.put("Snack_Area", snackArea);
-        snackArea.setType("Green Room");
-
-        greenHall = new Room("Green_Hall", "A hallway that connects the rooms.");
+        
+        greenHall = new Room("Green_Hall", "A hallway that connects the rooms.", Room.ROOMTYPE.GREEN);
         rooms.put("Green_Hall", greenHall);
-        greenHall.setType("Green Room");
-
-        blueHall = new Room("Blue_Hall", "A hallway that connects the rooms.");
+        
+        blueHall = new Room("Blue_Hall", "A hallway that connects the rooms.", Room.ROOMTYPE.GREEN);
         rooms.put("Blue_Hall", blueHall);
-        blueHall.setType("Blue Room");
-
-        redHall = new Room("Red_Hall", "A hallway that connects the rooms.");
+        
+        redHall = new Room("Red_Hall", "A hallway that connects the rooms.", Room.ROOMTYPE.GREEN);
         rooms.put("Red_Hall", redHall);
-        redHall.setType("Red Room");
-
-        peddleToys = new Room("Peddle_Toys", "A room where you can play with peddle toys.");
+        
+        peddleToys = new Room("Peddle_Toys", "A room where you can play with peddle toys.", Room.ROOMTYPE.GREEN);
         rooms.put("Peddle_Toys", peddleToys);
-        peddleToys.setType("Blue Room");
-
-        lemonaidStand = new Room("Lemonaid_Stand", "A room where you can sell lemonaid.");
+        
+        lemonaidStand = new Room("Lemonaid_Stand", "A room where you can sell lemonaid.", Room.ROOMTYPE.GREEN);
         rooms.put("Lemonaid_Stand", lemonaidStand);
-        lemonaidStand.setType("Blue Room");
-
-        toolShed = new Room("Tool_Shed", "A shed where you can store tools.");
+        
+        toolShed = new Room("Tool_Shed", "A shed where you can store tools.", Room.ROOMTYPE.GREEN);
         rooms.put("Tool_Shed", toolShed);
-        toolShed.setType("Red Room");
-
-        TRSRoom = new Room("TRSRoom", "A room where you can relax.");
+        
+        TRSRoom = new Room("TRSRoom", "A room where you can relax.", Room.ROOMTYPE.GREEN);
         rooms.put("TRSRoom", TRSRoom);
-        TRSRoom.setType("Red Room");
-
-        janitorialRoom = new Room("Janitorial_Room", "A room where you can clean.");
+        
+        janitorialRoom = new Room("Janitorial_Room", "A room where you can clean.", Room.ROOMTYPE.GREEN);
         rooms.put("Janitorial_Room", janitorialRoom);
-        janitorialRoom.setType("Red Room");
-
-        foyer = new Room("Foyer", "The foyer of the daycare.");
+        
+        foyer = new Room("Foyer", "The foyer of the daycare.", Room.ROOMTYPE.BLUE);
         rooms.put("Foyer", foyer);
-        foyer.setType("Green Room");
-
-        pantry = new Room("Pantry", "A room where you can store food.");
+        
+        pantry = new Room("Pantry", "A room where you can store food.", Room.ROOMTYPE.KITCHEN);
         rooms.put("Pantry", pantry);
-        pantry.setType("Kitchen");
-
-        recoveryRoom = new Room("Recovery_Room", "A room where you can recover.");
+        
+        recoveryRoom = new Room("Recovery_Room", "A room where you can recover.", Room.ROOMTYPE.GREEN);
         rooms.put("Recovery_Room", recoveryRoom);
-        recoveryRoom.setType("Red Room");
-
-        demoRoom = new Room("Demo_Room", "A room where you can play with toys.");
+        
+        demoRoom = new Room("Demo_Room", "A room where you can play with toys.", Room.ROOMTYPE.BLUE);
         rooms.put("Demo_Room", demoRoom);
-        demoRoom.setType("Blue Room");
-
+        
         demoRoom.addItem(snackShop);
+        snackArea.addItem(foodTrayDispenser);
         demoRoom.addItem(toy);
         demoRoom.addItem(book);
         foyer.addItem(snackShop);
@@ -510,8 +521,9 @@ public class GameHandler {
         recoveryRoom.addItem(uniformShoes);
         recoveryRoom.addItem(uniBackPack);
         mainRoom.addItem(pickapaw);
-
         Player.setRoom(recoveryRoom);
+        fuzzy.setRoom(recoveryRoom);
+        NPC.followPlayer(fuzzy);
     }
     public void populateRooms() {
         //basement.addNPC();
@@ -550,7 +562,6 @@ public class GameHandler {
         kitchen.addNPC(susy);
         foyer.addNPC(drWhite);
         //pantry.addNPC();
-        recoveryRoom.addNPC(fuzzy);
         //demoRoom.addNPC();
     }
     public void buildExits() {
@@ -663,6 +674,7 @@ public class GameHandler {
         mainRoom.addExit(snackArea);
         mainRoom.addExit(storyBookVillage);
         mainRoom.addExit(foyer);
+        mainRoom.addExit(demoRoom);
 
         //Pantry
         pantry.addExit(kitchen);
@@ -762,6 +774,7 @@ public class GameHandler {
         limitedEditionPaw.setPrice(50);
         pawFigure.setPrice(10);
         Player.addItem(pawFigure);
+        Player.addItem(diaper);
     }
     public void playGame() {
         playTutorial();
@@ -953,7 +966,52 @@ public class GameHandler {
         }
 
     }
-
+    public void buildRoomTypes(){
+        Room.roomType.put(kitchen,Room.ROOMTYPE.KITCHEN);
+        Room.roomType.put(classRoom,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(mainRoom,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(dorms,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(bathroom,Room.ROOMTYPE.BATHROOM);
+        Room.roomType.put(hallway,Room.ROOMTYPE.RED);
+        Room.roomType.put(stairs,Room.ROOMTYPE.RED);
+        Room.roomType.put(basement,Room.ROOMTYPE.RED);
+        Room.roomType.put(attic,Room.ROOMTYPE.RED);
+        Room.roomType.put(garage,Room.ROOMTYPE.RED);
+        Room.roomType.put(garden,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(driveway,Room.ROOMTYPE.RED);
+        Room.roomType.put(frontYard,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(backYard,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(cogLabs,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(pool,Room.ROOMTYPE.RED);
+        Room.roomType.put(patio,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(deck,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(porch,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(balcony,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(roof,Room.ROOMTYPE.RED);
+        Room.roomType.put(cubbies,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(dramaArea,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(changingRoom,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(floorPlay,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(quietArea,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(homeWorkArea,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(playHouse,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(treeHouse,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(storyBookVillage,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(pillowPile,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(snackArea,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(greenHall,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(blueHall,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(redHall,Room.ROOMTYPE.RED);
+        Room.roomType.put(peddleToys,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(lemonaidStand,Room.ROOMTYPE.BLUE);
+        Room.roomType.put(toolShed,Room.ROOMTYPE.RED);
+        Room.roomType.put(TRSRoom,Room.ROOMTYPE.RED);
+        Room.roomType.put(janitorialRoom,Room.ROOMTYPE.RED);
+        Room.roomType.put(foyer,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(pantry,Room.ROOMTYPE.KITCHEN);
+        Room.roomType.put(recoveryRoom,Room.ROOMTYPE.GREEN);
+        Room.roomType.put(demoRoom,Room.ROOMTYPE.BLUE);
+    }
     static void playerTimeOut(int i, String act, NPC npc) {
         boolean apology = false;
         getGui().lockButtons();
@@ -1179,57 +1237,14 @@ public class GameHandler {
     private static ArrayList<Achievements> getAchievements() {
         return achievements;
     }
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-    
-
-
-
-
-
-    
-
-
-
-
-
-
-
-   
+    public static Achievements getAchievementByName(String name) {
+        for (Achievements achievement : achievements) {
+            if (achievement.getName().equalsIgnoreCase(name)) {
+                return achievement;
+            }
+        }
+        return null;
+    }
     private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
     private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
     private RoutineManager routineManager;
@@ -1289,101 +1304,67 @@ public class GameHandler {
 
     public void setCharacterBio() {
         explainCharacterBio();
-        dialogWithFuzzy();
-
-    }
-   private void dialogWithFuzzy() {
-        getGui().display("Fuzzy: What is your name?", "Black");
-        getGui().waitForInput();
-        Player.setName(getGui().getInput());
-        getGui().display("Fuzzy: How old are you?", "Black");
-        getGui().waitForInput();
-        Player.setAge(getGui().getInput());
-
-        getGui().display("Fuzzy: What is your favorite color?", "Black");
-        getGui().waitForInput();
-        String color = getGui().getInput();
-        getGui().display("Fuzzy: What is your favorite toy?", "Black");
-        getGui().waitForInput();
-        String toy1 = getGui().getInput();
-        Item playersToy = new Item(color + " " + toy1, "A " + color + " " + toy1 + " ", "Toy", false);
-        items.put(color + " " + toy1, playersToy);
-        playersToy.setType("Toy");
-        Player.addItem(playersToy);
-        getGui().display("Fuzzy: What does your " + color + " " + toy1 + " help you practice?", "Black");
-        String toyFuction = (String) JOptionPane.showInputDialog(null,
-                "Choose an exit",
-                "Exits",
-                JOptionPane.QUESTION_MESSAGE,
-                null, toyBuffs, toyBuffs[0]);
-        switch (toyFuction) {
-            case "Motor" ->
-                Player.levelUpSkill(Skill.MOTOR);
-            case "Social" ->
-                Player.levelUpSkill(Skill.SOCIAL);
-            case "Imagination" ->
-                Player.levelUpSkill(Skill.IMAGINATION);
-            case "Learning" ->
-                Player.levelUpSkill(Skill.LEARNING);
-            case "Emotional" ->
-                Player.levelUpSkill(Skill.EMOTIONAL);
-        }
-        getGui().display(playersToy.getName() + " " + playersToy.getDescription(), "Black");
-
-        getGui().display("What is your favorite animal?", "Black");
-        getGui().waitForInput();
-        String animal = getGui().getInput();
-        getGui().display(animal, color);
-        Item stuffy = new Item(animal, "A " + color + " " + animal + " stuffy", "Toy", true);
-        items.put(animal, stuffy);
-        stuffy.setType("Toy");
-        Player.addItem(stuffy);
-        getGui().display("Fuzzy: What does your " + color + " " + animal + " do? ", "Black");
-        String stuffyFuction = (String) JOptionPane.showInputDialog(null,
-                "Choose an exit",
-                "Exits",
-                JOptionPane.QUESTION_MESSAGE,
-                null, stuffyBuffs, stuffyBuffs[0]);
-        switch (stuffyFuction) {
-            case "Calms me down" ->
-                Player.perks.put("Soothing", true);
-            case "Helps me play pretend" ->
-                Player.perks.put("Imagenary Friend", true);
-            case "Helps me make friends" ->
-                Player.perks.put("Tea Party Guest", true);
-            case "Keeps me focused" ->
-                Player.perks.put("Study Buddy", true);
-            case "I dress it" ->
-                Player.perks.put("Dress Up", true);
-        }
-        getGui().display(stuffy.getName() + " " + stuffy.getDescription(), "Black");
-        getGui().display("Fuzzy: What is your favorite food?", "Black");
-        getGui().waitForInput();
-        String food = getGui().getInput();
-        getGui().display("Fuzzy: What is your favorite game?", "Black");
-        getGui().waitForInput();
-        String game1 = getGui().getInput();
-        getGui().display("Fuzzy: What is your favorite book?", "Black");
-        getGui().waitForInput();
-        String book1 = getGui().getInput();
-        getGui().display("Fuzzy: What is your favorite subject?", "Black");
-        getGui().waitForInput();
-        String subject = getGui().getInput();
-        getGui().display("Fuzzy: What is your favorite activity?", "Black");
-        getGui().waitForInput();
-        String activity = getGui().getInput();
-        getGui().display(color + " " + food + " " + toy1 + " " + game1 + " " + book + " " + subject + " " + activity, "Black");
-        Player.setFavorites(color, food, toy1, game1, book1, subject, activity);
-        getGui().display("Fuzzy: Do you have perfered pronouns?", "Black");
-        Player.setPronouns();
-
     }
 
+    public static void makeFoodTray() {
+        Container foodTray1 = (Container) GameHandler.getItems().get("Food Tray");
+                if (foodTray1 == null) {
+                    foodTray1 = new Container("Food Tray", "A plastic food tray", "Container", false);
+                    GameHandler.getItems().put("Food Tray", foodTray1); // Add it to game items
+                }
+    
+                Random rand = new Random();
+                int fruitIndex = rand.nextInt(EatingAndFood.fruitChoices.values().length);
+                int vegetableIndex = rand.nextInt(EatingAndFood.vegetableChoices.values().length);
+                int junkIndex = rand.nextInt(EatingAndFood.junkChoices.values().length);
+                int proteinIndex = rand.nextInt(EatingAndFood.proteinChoices.values().length);
+                int drinkIndex = rand.nextInt(EatingAndFood.drinkChoices.values().length);
+                // Create food items
+                Item drink = new EatingAndFood(EatingAndFood.drinkChoices.values()[drinkIndex].toString(), "A delicious " + EatingAndFood.drinkChoices.values()[drinkIndex].toString(), EatingAndFood.FoodType.DRINK, 5);
+                Item fruit = new EatingAndFood(EatingAndFood.fruitChoices.values()[fruitIndex].toString(), "A delicious " + EatingAndFood.fruitChoices.values()[fruitIndex].toString(), EatingAndFood.FoodType.FRUIT, 5);
+                Item veg = new EatingAndFood(EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), "A delicious " + EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), EatingAndFood.FoodType.VEGETABLE, 5);
+                Item junk = new EatingAndFood(EatingAndFood.junkChoices.values()[junkIndex].toString(), "A delicious " + EatingAndFood.junkChoices.values()[junkIndex].toString(), EatingAndFood.FoodType.JUNK, 5);
+                Item protein = new EatingAndFood(EatingAndFood.proteinChoices.values()[proteinIndex].toString(), "A delicious " + EatingAndFood.proteinChoices.values()[proteinIndex].toString(), EatingAndFood.FoodType.MEAL, 5);
+                drink.getConditions().put(ItemCondition.DRINK, true);
+                drink.setName(toSentenceCase(drink.getName()));
+
+                fruit.getConditions().put(ItemCondition.FOOD, true);
+                fruit.setName(toSentenceCase(fruit.getName()));
+                
+                veg.getConditions().put(ItemCondition.FOOD, true);
+                veg.setName(toSentenceCase(veg.getName()));
+                
+                junk.getConditions().put(ItemCondition.FOOD, true);
+                junk.setName(toSentenceCase(junk.getName()));
+                
+                protein.getConditions().put(ItemCondition.FOOD, true);
+                protein.setName(toSentenceCase(protein.getName()));
+                
+                fruit.setSaturation(7);
+                veg.setSaturation(10);
+                junk.setSaturation(3);
+                protein.setSaturation(15);
+                drink.setSaturation(5);
+
+                foodTray1.getInventory().clear(); // Clear the food tray
+                foodTray1.addItem(fruit);
+                foodTray1.addItem(veg);
+                foodTray1.addItem(junk);
+                foodTray1.addItem(protein);
+                foodTray1.addItem(drink);
+
+                items.put(fruit.getName(), fruit);
+                items.put(veg.getName(), veg);
+                items.put(junk.getName(), junk);
+                items.put(protein.getName(), protein);
+                items.put(drink.getName(), drink);
 
     
-
-   //-------------------------------------------------------------------------------------------------------------
-
-
+                // Display success message
+                GameHandler.getGui().display("You filled the food tray with delicious items!", "Red");
+                foodTrayDispenser.addItem(foodTray1);
+                foodTray1.displayInventory();
+                foodTrayDispenser.displayInventory();
+    }
 
 }

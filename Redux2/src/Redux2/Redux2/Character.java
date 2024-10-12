@@ -39,7 +39,9 @@ public class Character {
         return this.description;
     }
     public void setRoom(Room room) {
+        if(room == null) {
+            room = GameHandler.getRoomByName("Recovery_Room");
+        }
         this.room = room;
     }
-
 }

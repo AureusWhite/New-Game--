@@ -92,42 +92,20 @@ public class RoutineManager {
                     GameHandler.getGui().display("Right Place", "Black");
                 }
                 break;
-        }
-    }
-
-    /*public static boolean checkRoutine() {
-        GameHandler.getGui().display("Checking Routine", "Black");
-        
-        Map<FatherTime.DayPhase, String> requirements = new HashMap<>();
-        requirements.put(FatherTime.DayPhase.MORNING, "be out of bed by 8am");
-        requirements.put(FatherTime.DayPhase.BATHS_BRUSHES, "have a bath and brush your teeth between 8:30pm-9pm");
-        requirements.put(FatherTime.DayPhase.BREAKFAST, "eat breakfast between 8am-9:30am");
-        requirements.put(FatherTime.DayPhase.LUNCH, "eat lunch between 12pm-1pm");
-        requirements.put(FatherTime.DayPhase.DINNER, "eat dinner between 5pm-6pm");
-        requirements.put(FatherTime.DayPhase.GREEN, "spend time in the main room between 6pm-7pm");
-        requirements.put(FatherTime.DayPhase.BLUE, "spend time in the classroom between 10am-3pm");
-        requirements.put(FatherTime.DayPhase.SCHOOL_STRUCTUREDPLAY, "participate in structured play between 10am-3pm");
-        requirements.put(FatherTime.DayPhase.TIDYUP, "tidy up the main room between 7pm-8pm");
-        requirements.put(FatherTime.DayPhase.DORMS, "be in bed by 9pm");
-        requirements.put(FatherTime.DayPhase.FREETIME, "play in the main room during green time 3pm-7pm");
-    
-        // Debug: Print the current state of the routine map
-        for (Map.Entry<FatherTime.DayPhase, Boolean> entry : routine.entrySet()) {
-            GameHandler.getGui().display(entry.getKey() + ": " + entry.getValue(), "Black");
-        }
-    
-        // Check for incomplete phases
-        for (Map.Entry<FatherTime.DayPhase, Boolean> entry : routine.entrySet()) {
-            if (!entry.getValue()) {
-                String requirement = requirements.get(entry.getKey());
-                if (requirement != null) {
-                    GameHandler.getGui().display("You need to " + requirement + " to complete your routine", "Black");
+            case NAP:
+                if (Player.getRoom().equals(GameHandler.getRoomByName("Dorms"))) {
+                    routine.put(FatherTime.DayPhase.NAP, true);
+                    GameHandler.getGui().display("Right Place", "Black");
                 }
-            }
+                break;
+                case NIGHT:
+                    if (Player.getRoom().equals(GameHandler.getRoomByName("Dorms"))) {
+                        routine.put(FatherTime.DayPhase.NIGHT, true);
+                        GameHandler.getGui().display("Right Place", "Black");
+                    }
+                    break;
         }
-        return true;
     }
-        */
         public static boolean checkRoutine() {
             GameHandler.getGui().display("Checking Routine", "Black");
             

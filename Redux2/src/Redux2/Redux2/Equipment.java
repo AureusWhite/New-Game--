@@ -13,8 +13,9 @@ public class Equipment extends Item {
     private final HashMap<ItemCondition, Boolean> conditions = new HashMap<>();
 
     public Equipment(String name, String discription, String slot) {
-        super(name, discription);
+        super(name, discription, slot, true);
         this.slot = slot;
+        this.conditions.put(ItemCondition.EQUIPPED, false);
     }
 
     public ArrayList<Item> getItems() {
@@ -75,5 +76,9 @@ public class Equipment extends Item {
 
     void setCondition(ItemCondition condition, boolean b) {
         this.conditions.put(condition, b);
+    }
+
+    boolean needsChanged() {
+        return this.conditions.containsKey(ItemCondition.DIRTY)||this.conditions.containsKey(ItemCondition.DAMAGED)||this.conditions.containsKey(ItemCondition.BROKEN)||this.conditions.containsKey(ItemCondition.WET)||this.conditions.containsKey(ItemCondition.CONTRABAND);
     }
 }

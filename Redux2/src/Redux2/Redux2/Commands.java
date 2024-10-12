@@ -1,25 +1,34 @@
 package Redux2;
 
+import Redux2.Room.ROOMTYPE;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 class Commands {
-
+    private static String argument="";
+    private static String command="";
+    public static String getCommand() {
+        return command;
+    }
+    public static void setCommand(String command) {
+        Commands.command = command;
+    }
+    public static String getArgument() {
+        return argument;
+    }
+    public static void setArgument(String argument) {
+        Commands.argument = argument;
+    }
     private static PawsAndProwess pawsAndProwess;
     public static PawsAndProwess getPawsAndProwess() {
         return pawsAndProwess;
     }
     public static void execute(String text) {
-        String command;
-        String argument;
-
         if (text.contains(" ")) {
-            command = text.substring(0, text.indexOf(" "));
-            argument = text.substring(text.indexOf(" ") + 1);
+            setCommand(text.substring(0, text.indexOf(" ")));
+            setArgument(text.substring(text.indexOf(" ") + 1));
         } else {
-            command = text;
-            argument = "";
-
+            setCommand(text);
         }
         if (text.matches("[1-9]+")) {
         } else {
@@ -31,18 +40,23 @@ class Commands {
                     }
                 }
                 case "cry" -> {
-                    Player.performAction(Skill.SOCIAL, Ability.CRY, argument);
+                    
                 }
                 case "point" -> {
-                    Player.performAction(Skill.SOCIAL, Ability.POINT, argument);
+                   
                 }
                 case "play" -> {
                     pawsAndProwess = new PawsAndProwess();
                 }
                 case "inventory" ->
                     GameHandler.getGui().display("You checked your inventory", "Black");
-                    case "help" -> {
+                
+                case "help" -> {
                         NPC helpingNPC = Player.getRoom().getFirstNPC();
+                        if (helpingNPC == null) {
+                            GameHandler.getGui().display("There is no one to help you", "Black");
+                            return;
+                        }
                         String[] helpWith = {"Dressing", "Taking a bath", "A hug"};
                         String choice = (String) JOptionPane.showInputDialog(null, "What do you need help with?", "Help", JOptionPane.QUESTION_MESSAGE, null, helpWith, helpWith[0]);
                         switch (choice) {
@@ -85,7 +99,14 @@ class Commands {
                     GameHandler.getGui().display("You checked the routine", "Black");
                 }
                 case "story" -> {
+                    if (Player.getRoom().getFirstNPC() == null) {
+                        GameHandler.getGui().display("There is no one here to guide you.", "Black");
+                        return;
+                    }
                     Player.getRoom().getFirstNPC().guidePlayer(Events.STORY_TIME);
+                }
+                case "wander" -> {
+                    GameHandler.getNPCByName("Fuzzy").wander(ROOMTYPE.GREEN);
                 }
                 default ->
                     GameHandler.getGui().display("Invalid command", "Black");

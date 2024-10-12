@@ -1,14 +1,16 @@
 package Redux2;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 public class NPC extends Character {
 
     public static void followPlayer(NPC npc) {
-        Player.setAge(11);
         if (Player.getAge() > npc.getAge() + 3) {
             Player.setLeader(true);
             npc.follower = true;
@@ -27,7 +29,6 @@ public class NPC extends Character {
     private String playerRep = "Good";
     private String alignment;
     boolean follower;
-    private Quest quest;
 
     public NPC(String name, String description, Room room, String type) {
         super(name, description, room);
@@ -42,6 +43,107 @@ public class NPC extends Character {
         return npcAge;
     }
 
+    public void wander(Room.ROOMTYPE roomType) {
+        // Get the current room of the NPC
+        Room currentRoom = this.getRoom();
+        GameHandler.getGui().display(this.getRoom().getName(), "black");
+
+        // Create a list to store valid rooms of the specified type (GREEN in this case)
+        List<Room> validRooms = new ArrayList<>();
+        GameHandler.getGui().display("Array Created", "black");
+
+        // Iterate through all exits (which are room names) and resolve the actual Room objects
+        for (String exitName : currentRoom.getExits()) {
+            GameHandler.getGui().display(exitName, "black");
+            Room adjacentRoom = GameHandler.getRoomByName(exitName);  // Resolve the Room object from the name
+            GameHandler.getGui().display(adjacentRoom.getName(), "black");
+            if (adjacentRoom.getType() == roomType) {
+                validRooms.add(adjacentRoom);  // Add to the valid rooms list if it matches the roomType
+                GameHandler.getGui().display(adjacentRoom.getName() + "Room Added", "black");
+            }
+        }
+
+        // If there are valid rooms of the specified type
+        if (!validRooms.isEmpty()) {
+            // Pick a random room from the valid rooms
+            Random random = new Random();
+            int roomNumber = random.nextInt(validRooms.size());
+            Room destination = validRooms.get(roomNumber);
+            GameHandler.getGui().display("picked room number #" + roomNumber + " " + destination.getName(), "black");
+
+            // Move the NPC to the chosen room
+            this.setRoom(destination);
+            System.out.println("Wandering to: " + destination.getName());  // Optional: log for debugging
+            currentRoom.removeNPC(this);
+        } else {
+            // No valid rooms found
+            System.out.println("No adjacent rooms of the specified type.");
+        }
+    }
+
+    public void routine() {
+        if (this.getType().equals("child")) {
+            FatherTime.DayPhase phase = FatherTime.getCurrentPhase();
+            switch (phase) {
+                case MORNING -> {
+                    wander(Room.ROOMTYPE.GREEN);
+                }
+                case BREAKFAST -> {
+                    setRoom(GameHandler.getRoomByName("Snack Area"));
+                }
+                case SCHOOL_STRUCTUREDPLAY -> {
+                    setRoom(GameHandler.getRoomByName("Classroom"));
+
+                }
+                case LUNCH -> {
+                    setRoom(GameHandler.getRoomByName("Snack Area"));
+
+                }
+                case NAP -> {
+                    setRoom(GameHandler.getRoomByName("Dorms"));
+
+                }
+                case FREETIME -> {
+                    wander(Room.ROOMTYPE.GREEN);
+
+                }
+                case DINNER -> {
+                    setRoom(GameHandler.getRoomByName("Snack Area"));
+
+                }
+                case DORMS -> {
+                    setRoom(GameHandler.getRoomByName("Dorms"));
+
+                }
+                case BATHS_BRUSHES -> {
+                    setRoom(GameHandler.getRoomByName("Bathrooms"));
+
+                }
+                case TIDYUP -> {
+                    setRoom(GameHandler.getRoomByName("Classroom"));
+
+                }
+                case GREEN -> {
+                    wander(Room.ROOMTYPE.GREEN);
+
+                }
+                case RED -> {
+                    setRoom(GameHandler.getRoomByName("Dorms"));
+
+                }
+                case BLUE -> {
+                    setRoom(GameHandler.getRoomByName("Classroom"));
+
+                }
+                case NIGHT -> {
+                    setRoom(GameHandler.getRoomByName("Dorms"));
+
+                }
+
+            }
+        }
+    }
+
     public void setNpcAge(int npcAge) {
         this.npcAge = npcAge;
     }
@@ -49,12 +151,6 @@ public class NPC extends Character {
     public void reciveItem(Item item) {
         this.addItem(item);
         Player.removeItem(item);
-        if (item.equals(this.getQuest().getRequiredItem())) {
-            this.getQuest().setCompleted(true);
-            GameHandler.getGui().display("You have completed the quest", "black");
-            this.setQuest(null);
-            this.listQuests();
-        }
     }
 
     public void giveItemToPlayer(Item item) {
@@ -184,10 +280,6 @@ public class NPC extends Character {
         return follower;
     }
 
-    public Quest getQuest() {
-        return quest;
-    }
-
     public String getResponse(String type, String act) {
         switch (type) {
             case "persuasion" -> {
@@ -309,10 +401,6 @@ public class NPC extends Character {
         return this.npcAge;
     }
 
-    public void setQuest(Quest quest1) {
-        this.quest = quest1;
-    }
-
     private void tattle(String act) {
         for (NPC npc : this.getRoom().getNPCs()) {
             if (npc.getType().equals("adult")) {
@@ -344,7 +432,7 @@ public class NPC extends Character {
                 GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
                 GameHandler.playerTimeOut(i, act, npc);
             }
-            case"trespassing" -> {
+            case "trespassing" -> {
                 GameHandler.getGui().display(this.getName() + " takes the item from you and returns it to its owner", "black");
                 GameHandler.playerTimeOut(i, act, npc);
             }
@@ -392,15 +480,6 @@ public class NPC extends Character {
 
     }
 
-    private void listQuests() {
-        if (this.quest != null) {
-            GameHandler.getGui().display(this.getName() + " has a quest for you", "black");
-            GameHandler.getGui().display(this.quest.getName(), "black");
-        } else {
-            GameHandler.getGui().display(this.getName() + " has no quests for you", "black");
-        }
-    }
-
     public void playedWith(Item toy) {
         if (!this.getType().equals("child")) {
             GameHandler.getGui().display(this.getName() + " is playing with " + toy.getName() + " with you.", "black");
@@ -408,6 +487,7 @@ public class NPC extends Character {
             GameHandler.getGui().display(this.getName() + " is not interested in playing with you", "black");
         }
     }
+
     public void trade(Item givenItem, String takenItem) {
         for (Item item : this.getInventory()) {
             if (item.getName().equals(takenItem) && Math.abs(item.getPrice() - givenItem.getPrice()) <= 1) {
@@ -423,11 +503,12 @@ public class NPC extends Character {
             }
         }
     }
+
     public String[] getItemChoices() {
         String[] items = new String[this.getInventory().size()];
         for (int i = 0; i < this.getInventory().size(); i++) {
-                items[i] = this.getInventory().get(i).getName();
-            }
+            items[i] = this.getInventory().get(i).getName();
+        }
         return items;
     }
 
@@ -444,12 +525,12 @@ public class NPC extends Character {
             }
         }
     }
-    
+
     public void guidePlayer(Events event) {
         GameHandler.getGui().display(this.getName() + ": " + Player.getName() + "You need to go to the " + event.getRoom().getName() + " for " + event.getName(), "black");
         Player.beMoved(this, event);
     }
-    
+
     public void movePlayer(String action, Events event) {
         switch (action) {
 
@@ -467,72 +548,340 @@ public class NPC extends Character {
             }
             case "Refuse" -> {
                 GameHandler.getGui().display(this.getName() + " takes a moment to react to your refusal", "black");
-                if(event.getImportance() < 3) {
-                    GameHandler.getGui().display(this.getName() + " is not happy with your refusal, but leaves you to miss out on "+event.getName(), "black");
+                if (event.getImportance() < 3) {
+                    GameHandler.getGui().display(this.getName() + " is not happy with your refusal, but leaves you to miss out on " + event.getName(), "black");
                 }
             }
         }
     }
-    
+
+    public void noticePlayer() {
+        for (PlayerStatus status : Player.getStatus()) {
+            switch (status) {
+                case WET_CLOTHING -> {
+                    noticePlayer("wetSelf");
+                }
+                case SMELLY -> {
+                    noticePlayer("smell");
+                }
+                case DIRTY -> {
+                    noticePlayer("dirty");
+                }
+                case TIRED -> {
+                    noticePlayer("tired");
+                }
+                case UPSET -> {
+                    noticePlayer("upset");
+                }
+                case DIRTY_FACE -> {
+                    noticePlayer("dirty");
+                }
+                case DIRTY_HANDS -> {
+                    noticePlayer("dirty");
+                }
+                case DIRTY_DIAPER -> {
+                    noticePlayer("smell");
+                }
+                case CRYING -> {
+                    noticePlayer("upset");
+                }
+                case HURT -> {
+                    noticePlayer("hurt");
+                }
+                case DISOBEDIENT -> {
+                    noticePlayer("disobedient");
+                }
+                case TANTRUM -> {
+                    noticePlayer("tantrum");
+                }
+                case MELTDOWN -> {
+                    noticePlayer("meltdown");
+                }
+                case JUBILANT -> {
+                    noticePlayer("jubilant");
+                }
+                case CARRIED -> {
+                    noticePlayer("carried");
+                }
+                case HOLDING_HANDS -> {
+                    noticePlayer("holdingHands");
+                }
+                case DIRTY_CLOTHING -> {
+                    noticePlayer("dirty");
+                }
+                default -> {
+                }
+
+            }
+        }
+
+    }
+
     public void noticePlayer(String reason) {
+        String[] choices = {"Go With", "Ignore", "Ask Why", "Negotiate", "Refuse"};
+
         switch (reason) {
             case "wetSelf" -> {
                 GameHandler.getGui().display(this.getName() + " notices you are wet", "black");
+                GameHandler.getGui().display(this.getName() + ": Oh no, you're all wet! Let's get you nice and dry, okay? Come with me to the changing room.", "black");
+                String choice = JOptionPane.showInputDialog(null, "What would you like to do?", "Notice", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]).toString();
+                switch (choice) {
+                    case "Go With" -> {
+                        GameHandler.getGui().display(this.getName() + " smiles and takes your hand. You go to the changing room together.", "black");
+                        Player.removeStatus(PlayerStatus.WET_CLOTHING);
+                        Player.removeStatus(PlayerStatus.WET_DIAPER);
+                        Player.setRoom(GameHandler.getRoomByName("Changing_Room"));
+                        dressPlayer();
+                    }
+                    case "Ignore" -> {
+                        GameHandler.getGui().display(this.getName() + ": Silly, you're soaked! You can't just stay like that.", "black");
+                        noticePlayer("wetSelf");
+                    }
+                    case "Ask Why" -> {
+                        GameHandler.getGui().display(this.getName() + ": We don't want to stay in wet clothes, right? It's yucky and uncomfortable!", "black");
+                        noticePlayer("wetSelf");
+                    }
+                    case "Negotiate" -> {
+                        GameHandler.getGui().display(this.getName() + ": Hmm... how about this? I can help you, or you can try doing it yourself. What do you think?", "black");
+                        noticePlayer("wetSelf");
+                    }
+                    case "Refuse" -> {
+                        GameHandler.getGui().display(this.getName() + ": Oh dear... well, I can't leave you like this. Let's go, I’ll carry you.", "black");
+                        GameHandler.getGui().display(this.getName() + " gently picks you up and takes you to the changing room.", "black");
+                        Player.setStatus(PlayerStatus.CARRIED);
+                        Player.removeStatus(PlayerStatus.WET_CLOTHING);
+                        Player.removeStatus(PlayerStatus.WET_DIAPER);
+                        Player.setRoom(GameHandler.getRoomByName("Changing_Room"));
+                        dressPlayer();
+                    }
+                }
             }
             case "smell" -> {
-                GameHandler.getGui().display(this.getName() + " notices you smell bad", "black");
+                GameHandler.getGui().display(this.getName() + " sniffs the air and notices you smell bad.", "black");
+                GameHandler.getGui().display(this.getName() + ": Uh-oh, I think someone needs a bath! Do you want to come with me and get all clean?", "black");
+                String choice = JOptionPane.showInputDialog(null, "What would you like to do?", "Notice", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]).toString();
+                switch (choice) {
+                    case "Go With" -> {
+                        GameHandler.getGui().display(this.getName() + " smiles and leads you to the bathroom.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Bathroom"));
+                        // Bath interaction logic here
+                    }
+                    case "Ignore" -> {
+                        GameHandler.getGui().display(this.getName() + ": Hmm, you really should take a bath. It’ll be quick, I promise!", "black");
+                        noticePlayer("smell");
+                    }
+                    case "Ask Why" -> {
+                        GameHandler.getGui().display(this.getName() + ": Because we don't want to be all stinky, do we? Baths make us feel fresh!", "black");
+                        noticePlayer("smell");
+                    }
+                    case "Negotiate" -> {
+                        GameHandler.getGui().display(this.getName() + ": How about we make it fun? You can bring your favorite toy and splash around!", "black");
+                        noticePlayer("smell");
+                    }
+                    case "Refuse" -> {
+                        GameHandler.getGui().display(this.getName() + ": Well, I can't let you stay stinky. Let’s get you clean, okay?", "black");
+                        GameHandler.getGui().display(this.getName() + " gently takes your hand and leads you to the bathroom.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Bathroom"));
+                    }
+                }
             }
             case "dirty" -> {
-                GameHandler.getGui().display(this.getName() + " notices you are dirty", "black");
+                GameHandler.getGui().display(this.getName() + " notices you are dirty.", "black");
+                GameHandler.getGui().display(this.getName() + ": Oh my! You've got dirt all over! Let’s go wash up.", "black");
+                String choice = JOptionPane.showInputDialog(null, "What would you like to do?", "Notice", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]).toString();
+                switch (choice) {
+                    case "Go With" -> {
+                        GameHandler.getGui().display(this.getName() + " takes your hand and leads you to wash up.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Washroom"));
+                        // Washing interaction logic here
+                    }
+                    case "Ignore" -> {
+                        GameHandler.getGui().display(this.getName() + ": But you're all messy! We should clean up before continuing.", "black");
+                        noticePlayer("dirty");
+                    }
+                    case "Ask Why" -> {
+                        GameHandler.getGui().display(this.getName() + ": We don't want to get more dirt everywhere, right? Let's clean you up.", "black");
+                        noticePlayer("dirty");
+                    }
+                    case "Negotiate" -> {
+                        GameHandler.getGui().display(this.getName() + ": How about we wash just a little bit, and then you can go play?", "black");
+                        noticePlayer("dirty");
+                    }
+                    case "Refuse" -> {
+                        GameHandler.getGui().display(this.getName() + ": Well, I can't let you stay all messy. Let’s wash up, okay?", "black");
+                        GameHandler.getGui().display(this.getName() + " gently takes you to the washroom.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Washroom"));
+                    }
+                }
             }
             case "tired" -> {
-                GameHandler.getGui().display(this.getName() + " notices you are tired", "black");
+                GameHandler.getGui().display(this.getName() + " notices you rubbing your eyes, looking sleepy.", "black");
+                GameHandler.getGui().display(this.getName() + ": Oh no, someone looks very tired! How about a nice nap?", "black");
+                String choice = JOptionPane.showInputDialog(null, "What would you like to do?", "Notice", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]).toString();
+                switch (choice) {
+                    case "Go With" -> {
+                        GameHandler.getGui().display(this.getName() + " tucks you in gently, whispering, 'Sweet dreams!'", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Nap_Room"));
+                        // Nap interaction logic here
+                    }
+                    case "Ignore" -> {
+                        GameHandler.getGui().display(this.getName() + ": You’ll feel much better after a nap! Let's rest for a bit.", "black");
+                        noticePlayer("tired");
+                    }
+                    case "Ask Why" -> {
+                        GameHandler.getGui().display(this.getName() + ": Because rest is important, silly! We want to have lots of energy for playing later!", "black");
+                        noticePlayer("tired");
+                    }
+                    case "Negotiate" -> {
+                        GameHandler.getGui().display(this.getName() + ": How about a short nap? Just a little one, and then we can play some more!", "black");
+                        noticePlayer("tired");
+                    }
+                    case "Refuse" -> {
+                        GameHandler.getGui().display(this.getName() + ": Well, I can’t let you stay up all tired. Let’s rest for a while.", "black");
+                        GameHandler.getGui().display(this.getName() + " gently takes you to the nap room.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Nap_Room"));
+                    }
+                }
+            }
+            case "hungry" -> {
+                GameHandler.getGui().display(this.getName() + " hears your tummy rumbling.", "black");
+                GameHandler.getGui().display(this.getName() + ": Someone’s tummy is growling! Let's get a snack, okay?", "black");
+                String choice = JOptionPane.showInputDialog(null, "What would you like to do?", "Notice", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]).toString();
+                switch (choice) {
+                    case "Go With" -> {
+                        GameHandler.getGui().display(this.getName() + " leads you to the lunchroom for a snack.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Lunchroom"));
+                        // Snack interaction logic here
+                    }
+                    case "Ignore" -> {
+                        GameHandler.getGui().display(this.getName() + ": But you're hungry! Come on, let's get something yummy!", "black");
+                        noticePlayer("hungry");
+                    }
+                    case "Ask Why" -> {
+                        GameHandler.getGui().display(this.getName() + ": Because we don't want a grumbly tummy, right? Let's fill it up!", "black");
+                        noticePlayer("hungry");
+                    }
+                    case "Negotiate" -> {
+                        GameHandler.getGui().display(this.getName() + ": How about a snack now and a special treat later? Sounds good, huh?", "black");
+                        noticePlayer("hungry");
+                    }
+                    case "Refuse" -> {
+                        GameHandler.getGui().display(this.getName() + ": Well, I can’t let you stay hungry! Let’s grab a bite.", "black");
+                        GameHandler.getGui().display(this.getName() + " gently takes your hand and leads you to the lunchroom.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Lunchroom"));
+                    }
+                }
+            }
+            case "nude" -> {
+                GameHandler.getGui().display(this.getName() + " notices you are nude.", "black");
+                GameHandler.getGui().display(this.getName() + ": Oh dear, you need to get dressed! Let's go to the changing room.", "black");
+                String choice = JOptionPane.showInputDialog(null, "What would you like to do?", "Notice", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]).toString();
+                switch (choice) {
+                    case "Go With" -> {
+                        GameHandler.getGui().display(this.getName() + " takes your hand and leads you to the changing room.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Changing_Room"));
+                        dressPlayer();
+                    }
+                    case "Ignore" -> {
+                        GameHandler.getGui().display(this.getName() + ": You can't stay like that! Let's get you dressed, okay?", "black");
+                        noticePlayer("nude");
+                    }
+                    case "Ask Why" -> {
+                        GameHandler.getGui().display(this.getName() + ": Because we don't want to be naked in public, right? Let's get you dressed.", "black");
+                        noticePlayer("nude");
+                    }
+                    case "Negotiate" -> {
+                        GameHandler.getGui().display(this.getName() + ": How about you pick out your favorite outfit? Then we can go play!", "black");
+                        noticePlayer("nude");
+                    }
+                    case "Refuse" -> {
+                        GameHandler.getGui().display(this.getName() + ": Well, I can’t let you stay undressed. Let’s get you dressed, okay?", "black");
+                        GameHandler.getGui().display(this.getName() + " gently takes your hand and leads you to the changing room.", "black");
+                        Player.setRoom(GameHandler.getRoomByName("Changing_Room"));
+                        dressPlayer();
+                    }
+                }
             }
         }
     }
 
     public void dressPlayer() {
+        Player.isNude(this);
         GameHandler.getGui().display(this.getName() + " helps you get dressed", "black");
         GameHandler.getGui().display("removing all clothing related status effects", "black");
-        if(Player.getStatus().contains(PlayerStatus.WET_CLOTHING)) Player.removeStatus(PlayerStatus.WET_CLOTHING);
-        if(Player.getStatus().contains(PlayerStatus.WET_DIAPER)) Player.removeStatus(PlayerStatus.WET_DIAPER);
-        if(Player.getStatus().contains(PlayerStatus.DIRTY_CLOTHING)) Player.removeStatus(PlayerStatus.DIRTY_CLOTHING);
-        if(Player.getStatus().contains(PlayerStatus.DIRTY_DIAPER)) Player.removeStatus(PlayerStatus.DIRTY_DIAPER);
+        if (Player.getStatus().contains(PlayerStatus.WET_CLOTHING)) {
+            Player.removeStatus(PlayerStatus.WET_CLOTHING);
+        }
+        if (Player.getStatus().contains(PlayerStatus.WET_DIAPER)) {
+            Player.removeStatus(PlayerStatus.WET_DIAPER);
+        }
+        if (Player.getStatus().contains(PlayerStatus.DIRTY_CLOTHING)) {
+            Player.removeStatus(PlayerStatus.DIRTY_CLOTHING);
+        }
+        if (Player.getStatus().contains(PlayerStatus.DIRTY_DIAPER)) {
+            Player.removeStatus(PlayerStatus.DIRTY_DIAPER);
+        }
         GameHandler.getGui().display("emptying pockets", "black");
         for (Equipment equipment : Player.getEquipment().values()) {
+            if (!equipment.needsChanged()) {
+                continue;
+            }
+            String name = equipment.getName();
             equipment.emptyPockets(this);
-            GameHandler.getGui().display("removing " + equipment.getName(), "black");
+            GameHandler.getGui().display("removing " + name, "black");
             if (equipment.getSlot().equals("underpants")) {
-                Player.unequip(equipment);
+                switch (name) {
+                    case "Diaper" -> {
+                        Player.unequip(equipment);
+                        Player.equip(new Equipment("Diaper", "A diaper for you, a baby :).", "underpants"), "Underpants");
+                        GameHandler.getGui().display("You are now wearing a new diaper", "black");
+                    }
+                    case "Pull-Up" -> {
+                        Player.unequip(equipment);
+                        Player.equip(new Equipment("Diaper", "A diaper for you, a baby :).", "underpants"), "Underpants");
+                        GameHandler.getGui().display("You are now wearing a diaper instead of training pants", "black");
+                    }
+                    case "Training Pants" -> {
+                        Player.unequip(equipment);
+                        Player.equip(new Equipment("Pull-Up", "A pull-up for you, almost a kid :P.", "underpants"), "Underpants");
+                        GameHandler.getGui().display("Your training pants have been replaced with a pull-up", "black");
+                    }
+                    case "Underwear" -> {
+                        Player.unequip(equipment);
+                        Player.equip(new Equipment("Training Pants", "Training pants for you, a big kid.. kinda :P.", "underpants"), "Underpants");
+                        GameHandler.getGui().display("Your underwear has been replaced with training pants", "black");
+                    }
+                    default -> {
+                        Player.unequip(equipment);
+                        Player.equip(new Equipment("Training Pants", "Training pants for you, a big kid.. kinda :P.", "underpants"), "Underpants");
+                        GameHandler.getGui().display("Your " + name + " has been replaced with training pants", "black");
+
+                    }
+                }
+                if (equipment.getSlot().equals("top")) {
+                    Player.unequip(equipment);
+                    Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
+                    GameHandler.getGui().display("You are now wearing a clean shirt", "black");
+                }
+                if (equipment.getSlot().equals("bottom")) {
+                    Player.unequip(equipment);
+                    Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
+                    GameHandler.getGui().display("You are now wearing clean pants", "black");
+                }
+                if (equipment.getSlot().equals("socks")) {
+                    Player.unequip(equipment);
+                    Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
+                    GameHandler.getGui().display("You are now wearing clean socks", "black");
+
+                }
+                if (equipment.getSlot().equals("shoes")) {
+                    Player.unequip(equipment);
+                    Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
+                    GameHandler.getGui().display("You are now wearing clean shoes", "black");
+                }
             }
-            if (equipment.getSlot().equals("top")) {
-                Player.unequip(equipment);
-            }
-            if (equipment.getSlot().equals("bottom")) {
-                Player.unequip(equipment);
-            }
-            if (equipment.getSlot().equals("socks")) {
-                Player.unequip(equipment);
-            }
-            if (equipment.getSlot().equals("shoes")) {
-                Player.unequip(equipment);
-            }
+            this.displayInventory();
         }
-        GameHandler.getGui().display("dressing you in clean clothes", "black");
-        Player.equip(new Equipment("UnderPants", "Clean Underpants", "underpants"), "Underpants");
-        GameHandler.getGui().display("You are now wearing clean underpants", "black");
-        Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "shirt"), "Top");
-        GameHandler.getGui().display("You are now wearing a clean shirt", "black");
-        Player.equip(new Equipment("Uniform Pants", "Clean Pants", "pants"), "Bottom");
-        GameHandler.getGui().display("You are now wearing clean pants", "black");
-        Player.equip(new Equipment("Uniform Socks", "Clean Socks", "socks"), "Socks");
-        GameHandler.getGui().display("You are now wearing clean socks", "black");
-        Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "shoes"), "Shoes");
-        GameHandler.getGui().display("You are now wearing clean shoes", "black");
-        for (Equipment equipment : Player.getEquipment().values()) {
-            GameHandler.getGui().display(equipment.getName(),"black");
-        }
-        this.displayInventory();
     }
 
     private void displayInventory() {

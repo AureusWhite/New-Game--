@@ -10,27 +10,8 @@ public class Container extends Item {
     public Container(String name, String description, String type, boolean takable) {
         super(name, description, type, takable);
     }
-
-    public void open() { // open the container
-        boolean hasKey = Player.hasItemByName(name + "_key");
-        if(isLocked()||!hasKey){
-            GameHandler.getGui().display("The " + this.getName() + " is locked.", "Black");
-        } else {
-            GameHandler.getGui().display("You open the " + this.getName() + ".", "Black");
-            String[] itemChoices = new String[items.size() + 1];
-            for (int i = 0; i < items.size(); i++) {
-                itemChoices[i] = items.get(i).getName();
-            }
-            itemChoices[items.size()] = "Close";
-            int choice = JOptionPane.showOptionDialog(null, "Choose an item to take", "Container", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, itemChoices, itemChoices[0]);
-            if (choice == items.size()) {
-                close();
-            } else {
-                Player.addItem(items.get(choice));
-            }
-        }
-    }
-    private void close() {
+    
+    public void close() {
         boolean hasKey = Player.hasItemByName(name + "_key");
         GameHandler.getGui().display("You close the " + this.getName() + ".", "Black");
         String[] choices = {"Lock", "Leave"};

@@ -9,29 +9,30 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Player {
+
     //primitives
     static String[] pronouns;
     public static String alignment = "Newbie";
-    public static int age, maturity, energy, blatter, pocketSize, backpackSize, experience, money, resilience, hunger, thirst;
+    public static int age=0, maturity=0, energy=100, blatter=10, pocketSize=0, backpackSize=0, experience=0, money=0, resilience=0, hunger=10, thirst=10;
     private static boolean abilitiesSet, ageSet, alignmentSet, pottyTrained, leader, playerIsHidden;
     //arrays
     public final static ArrayList<Item> backpack = new ArrayList<>();
     public final static ArrayList<Item> pockets = new ArrayList<>();
     public final static ArrayList<Item> hands = new ArrayList<>();
-    public final static ArrayList<Consumable> consumables = new ArrayList<>();
     public final static HashMap<String, Equipment> equipment = new HashMap<>();
     public final static ArrayList<Quest> quests = new ArrayList<>();
     public final static HashMap<String, Integer> stats = new HashMap<>();
     public final static HashMap<String, Boolean> perks = new HashMap<>();
+    public final static HashMap<Activities, Proficiencies> activities = new HashMap<>();
+
     //objects
     private static Room room;
     private static String name;
-    
     private static String[] favorites;
     private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
-    static Map<Skill, Map<Ability, Effect>> abilities = new HashMap<>(); // Maps skills to abilities and effects
     private static ArrayList<Card> pawDeck = new ArrayList<>();
     private static ArrayList<Card> hand = new ArrayList<>();
+    private static int mood;
     private static final ArrayList<Paw> paws = new ArrayList<>();
     private static final ArrayList<PlayerStatus> Status = new ArrayList<>();
     private static final ArrayList<Proficiencies> proficiencies = new ArrayList<>();
@@ -49,7 +50,7 @@ public class Player {
         return b;
     }
 
-   public static ArrayList<Paw> getPaws() {
+    public static ArrayList<Paw> getPaws() {
         return paws;
 
     }
@@ -74,6 +75,7 @@ public class Player {
         GameHandler.getGui().display("You are " + status, "Black");
         Status.add(status);
     }
+
     public static ArrayList<PlayerStatus> getStatus() {
         return Status;
     }
@@ -106,13 +108,22 @@ public class Player {
         return false;
     }
 
+    private static void setMood(int i) {
+        mood+=i;
+        switch(mood){
+            case 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100 -> setStatus(PlayerStatus.JUBILANT);
+            case 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89 -> setStatus(PlayerStatus.HAPPY);
+            case 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 -> setStatus(PlayerStatus.CONTENT);
+            case 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49 -> setStatus(PlayerStatus.UPSET);
+            case 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 -> setStatus(PlayerStatus.TANTRUM);
+            case 1, 2, 3, 4, 5, 6, 7, 8, 9 -> setStatus(PlayerStatus.MELTDOWN);
+            case 0 -> tantrum();
+        }
+    }
+
     public ArrayList<Item> gatHands() {
         return hands;
     }
-
-    private Ability ability;
-
-
 
     public static void setEnergy(int energy) {
         Player.energy = energy;
@@ -126,176 +137,6 @@ public class Player {
         hand.clear();
         for (int i = 0; i < 5; i++) {
             hand.add(pawDeck.get(i));
-        }
-    }
-
-    /*public static void initializeSkills() {
-        Map<Ability, Effect> socialAbilities = new HashMap<>();
-        Map<Ability, Effect> motorAbilities = new HashMap<>();
-        Map<Ability, Effect> imaginationAbilities = new HashMap<>();
-        Map<Ability, Effect> learningAbilities = new HashMap<>();
-        Map<Ability, Effect> emotionalAbilities = new HashMap<>();
-        for (Skill skill : Skill.values()) {
-            skillLevels.put(skill, 1);
-        }
-
-        socialAbilities.put(Ability.CRY, new Effect("Cries", (argument) -> {
-            for (NPC npc : room.getNPCs()) {
-                if (npc.getName().equals(argument)) {
-                    npc.persuade(Ability.CRY);
-                }
-
-            }
-        }));
-        socialAbilities.put(Ability.POINT, new Effect("Points", (argument) -> {
-           /* List<Item> items = getRoom().getInventory();
-            Iterator<Item> iterator = items.iterator();
-            while (iterator.hasNext()) {
-                Item item = iterator.next();
-                if (item.getName().equals(argument)) {
-                    if (!item.isContraband() && item.isTakable()) {
-                        NPC npc = getRoom().getFirstNPC();
-                        GameHandler.getGui().display("You pointed at the " + item.getName(), "Black");
-                        GameHandler.getGui().display("You want the " + item.getName(), "Black");
-                        npc.askForItem(item);
-
-                    } else {
-                        GameHandler.getGui().display("You can't take that.", "Black");
-                    }
-                }
-            }
-            
-        }));
-        socialAbilities.put(Ability.NAME, new Effect("Names", (argument) -> {
-            if (GameHandler.getNPCByName(argument) != null) {
-                NPC npc1 = GameHandler.getNPCByName(argument);
-                GameHandler.getGui().display("You named the " + npc1.getName(), "Black");
-                NPC.followPlayer(npc1);
-            } else {
-                if (GameHandler.getItemByName(argument) != null) {
-                    Item item = GameHandler.getItemByName(argument);
-                    GameHandler.getGui().display("You named the " + item.getName(), "Black");
-                    NPC npc1 = getRoom().getFirstNPC();
-                    GameHandler.getGui().display(Player.getRoom().getFirstNPC() + ":" + "You want the " + item.getName() + "?", "Black");
-                    String answer = JOptionPane.showInputDialog("Yes or No");
-                    if (answer.equalsIgnoreCase("Yes")) {
-                        if (Player.getRoom().hasItem(item)) {
-                            GameHandler.getGui().display(npc1.getName() + ": You may have the " + item.getName(), "Black");
-                        }
-
-                    }
-
-                } else {
-                    if (GameHandler.getRoomByName(argument) != null) {
-                        Room room1 = GameHandler.getRoomByName(argument);
-                        GameHandler.getGui().display("You named the " + room1.getName(), "Black");
-                        room1.setName(argument);
-                    } else {
-                        GameHandler.getGui().display("You can't name that.", "Black");
-                    }
-                }
-            }
-        }));
-        socialAbilities.put(Ability.ASK, new Effect("Asks", (argument) -> {
-            System.out.println("Asking...");
-        }));
-        socialAbilities.put(Ability.NEGOTIATE, new Effect("Negotiates", (argument) -> {
-            System.out.println("Negotiating...");
-        }));
-        socialAbilities.put(Ability.MEDIATE, new Effect("Mediates", (argument) -> {
-            System.out.println("Mediating...");
-        }));
-        abilities.put(Skill.SOCIAL, socialAbilities);
-        motorAbilities.put(Ability.CRAWL, new Effect("Crawls", (argument) -> {
-            System.out.println("Crawling...");
-        }));
-        motorAbilities.put(Ability.WALK, new Effect("Walks", (argument) -> {
-            System.out.println("Walking...");
-        }));
-        motorAbilities.put(Ability.RUN, new Effect("Runs", (argument) -> {
-            System.out.println("Running...");
-        }));
-        motorAbilities.put(Ability.CLIMB, new Effect("Climbs", (argument) -> {
-            System.out.println("Climbing...");
-        }));
-        motorAbilities.put(Ability.SNEAK, new Effect("Sneaks", (argument) -> {
-            System.out.println("Sneaking...");
-        }));
-        motorAbilities.put(Ability.KICK, new Effect("Kicks", (argument) -> {
-            System.out.println("Kicking...");
-        }));
-        motorAbilities.put(Ability.SKIP, new Effect("Skips", (argument) -> {
-            System.out.println("Skipping...");
-        }));
-        abilities.put(Skill.MOTOR, motorAbilities);
-        imaginationAbilities.put(Ability.IMITATE, new Effect("Imitates", (argument) -> {
-            System.out.println("Imitating...");
-        }));
-        imaginationAbilities.put(Ability.DOLLS, new Effect("Plays with dolls", (argument) -> {
-            System.out.println("Playing with dolls...");
-        }));
-        imaginationAbilities.put(Ability.PRODUCE, new Effect("Produces", (argument) -> {
-            System.out.println("Producing...");
-        }));
-        imaginationAbilities.put(Ability.DIRECT, new Effect("Directs", (argument) -> {
-            System.out.println("Directing...");
-        }));
-        imaginationAbilities.put(Ability.PLAY_ALONG, new Effect("Plays along", (argument) -> {
-            System.out.println("Playing along...");
-        }));
-        abilities.put(Skill.IMAGINATION, imaginationAbilities);
-        learningAbilities.put(Ability.READ, new Effect("Reads", (argument) -> {
-            System.out.println("Reading...");
-        }));
-        learningAbilities.put(Ability.WRITE, new Effect("Writes", (argument) -> {
-            System.out.println("Writing...");
-        }));
-        learningAbilities.put(Ability.BASICS, new Effect("Learns the basics", (argument) -> {
-            System.out.println("Learning the basics...");
-        }));
-        learningAbilities.put(Ability.INTERMEDIATE, new Effect("Learns intermediate concepts", (argument) -> {
-            System.out.println("Learning intermediate concepts...");
-        }));
-        learningAbilities.put(Ability.ADVANCED, new Effect("Learns advanced concepts", (argument) -> {
-            System.out.println("Learning advanced concepts...");
-        }));
-        learningAbilities.put(Ability.REMEDIATED, new Effect("Revisits and relearns", (argument) -> {
-            System.out.println("Revisiting and relearning...");
-        }));
-        abilities.put(Skill.LEARNING, learningAbilities);
-        emotionalAbilities.put(Ability.EXPRESS, new Effect("Expresses emotions", (argument) -> {
-            System.out.println("Expressing emotions...");
-        }));
-        emotionalAbilities.put(Ability.INTERPRET, new Effect("Interprets emotions", (argument) -> {
-            System.out.println("Interpreting emotions...");
-        }));
-        emotionalAbilities.put(Ability.SELF_SOOTHE, new Effect("Soothes themselves", (argument) -> {
-            System.out.println("Soothing themselves...");
-        }));
-        emotionalAbilities.put(Ability.SOOTHE_OTHERS, new Effect("Soothes others", (argument) -> {
-            System.out.println("Soothing others...");
-        }));
-        emotionalAbilities.put(Ability.RESILIENCE, new Effect("Builds resilience", (argument) -> {
-            System.out.println("Building resilience...");
-        }));
-        emotionalAbilities.put(Ability.TEMPERANCE, new Effect("Practices temperance", (argument) -> {
-            System.out.println("Practicing temperance...");
-        }));
-        abilities.put(Skill.EMOTIONAL, emotionalAbilities);
-
-    }
-*/
-    public static void performAction(Skill skill, Ability ability, String argument) {
-        if (canPerform(skill, ability)) {
-            // Retrieve and apply the effect associated with the ability
-            Effect effect = abilities.get(skill).get(ability);
-            if (effect != null) {
-                effect.applyEffect(argument);
-            } else {
-                System.out.println("No effect available for this ability.");
-            }
-        } else {
-            System.out.println("Skill level too low to perform this action.");
         }
     }
 
@@ -343,30 +184,39 @@ public class Player {
             GameHandler.demo();
         }
     }
+
     public void reduceEnergy(int i) {
         energy -= i;
     }
+
     public void increaseEnergy(int i) {
         energy += i;
     }
+
     public void applyFlowBonus() {
         // Apply the flow bonus to the player's energy
     }
+
     public void dynamicEnergyConsumption(boolean isPhysical, boolean isMental) {
         // Adjust energy based on activity and time of day
     }
+
     public void applyXPBonus() {
         // Apply the XP bonus to the player's experience
     }
+
     public void dynamicXPGeneration(boolean isPhysical, boolean isMental) {
         // Adjust XP based on activity and time of day
     }
+
     public void applyResilienceBonus() {
         // Apply the resilience bonus to the player's resilience
     }
+
     public void progressiveFlowBonus() {
         // Increase the flow bonus over time
-    }    
+    }
+
     public static Room getRoom() {
         return Player.room;
     }
@@ -415,10 +265,9 @@ public class Player {
         pocketSize = 0;
         backpackSize = 0;
         for (Equipment equip : equipment.values()) {
-            if(equip.getPockets() == 0) {
-            GameHandler.getGui().display(equip.getName()+" has no pockets", "Black");
-            }
-            else if (equip.getSlot().equalsIgnoreCase("back")) {
+            if (equip.getPockets() == 0) {
+                GameHandler.getGui().display(equip.getName() + " has no pockets", "Black");
+            } else if (equip.getSlot().equalsIgnoreCase("back")) {
                 backpackSize += equip.getPockets();
             } else {
                 pocketSize += equip.getPockets();
@@ -443,10 +292,24 @@ public class Player {
     }
 
     public static void setHunger(int hunger1) {
-        hunger = hunger1;
+        if(hunger<60){
+            GameHandler.getGui().display("Your Stomach growls", "Black");
+        } else if(hunger<40){
+            GameHandler.getGui().display("You are getting a little hangry", "Black");
+            Player.setMood(-10);
+            getRoom().attractAttention("Hangry");
+        } else if(hunger<20){
+            GameHandler.getGui().display("You cry out in hunger", "Black");
+            Player.setMood(-25);
+            getRoom().attractAttention("Crying");
+        }
     }
 
     public static void setThirst(int thirst1) {
+        if(thirst<0){
+            thirst=0;
+            getRoom().attractAttention("Crying");
+        }
         thirst = thirst1;
     }
 
@@ -550,7 +413,7 @@ public class Player {
 
     public static void potty() {
 
-        if (getRoom().getType().equals("Bathroom")) {
+        if (getRoom().getType().equals(Room.ROOMTYPE.BATHROOM)) {
             if (Player.isPottyTrained()) {
                 GameHandler.getGui().display("You used the potty.", "Black");
                 blatter = 0;
@@ -570,24 +433,24 @@ public class Player {
     }
 
     public static void checkBlatter() {
-        GameHandler.getGui().display("Blatter: " + blatter, "Black");   
+        GameHandler.getGui().display("Blatter: " + blatter, "Black");
         if (blatter > 100) {
             accident();
         } else if (pottyTrained) {
             switch (blatter) {
-                case 96, 97, 98, 99, 100 -> 
+                case 96, 97, 98, 99, 100 ->
                     GameHandler.getGui().display("You need to use the potty right now!", "Black");
                 case 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95 ->
                     GameHandler.getGui().display("You need to potty soon.", "Black");
                 case 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74 ->
                     GameHandler.getGui().display("You should use the potty.", "Black");
-                case 25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49 ->
+                case 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49 ->
                     GameHandler.getGui().display("You might need to potty.", "Black");
-                case 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 -> 
+                case 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 ->
                     GameHandler.getGui().display("You do not need to potty.", "Black");
-                
+
             }
-        } 
+        }
     }
 
     public static void tantrum() {
@@ -596,17 +459,6 @@ public class Player {
             setResilience(resilience += 10);
         } else {
             GameHandler.getGui().display("You are too resilient for a tantrum.", "Black");
-        }
-    }
-
-    public static void eatDrink() {
-        for (Consumable consumable : consumables) {
-            if (consumable.getType().equals("Food")) {
-                consumable.use();
-            }
-            if (consumable.getType().equals("Drink")) {
-                consumable.use();
-            }
         }
     }
 
@@ -789,16 +641,14 @@ public class Player {
             GameHandler.getGui().display("You can't sneak.", "Black");
         }
     }
+
     public static boolean isLeader() {
         return leader;
     }
+
     public static void setFavorites(String color, String food, String toy, String game, String book, String subject, String activity) {
         favorites = new String[]{color, food, toy, game, book, subject, activity};
 
-    }
-
-    public static ArrayList<Consumable> getConsumables() {
-        return consumables;
     }
 
     public static HashMap<String, Integer> getStats() {
@@ -842,68 +692,83 @@ public class Player {
     }
 
     static void addItem(Item item) {
-        String[] options = {"Pockets", "Backpack", "Hands", "Equip"};
+        String[] options = {"Pockets", "Backpack", "Hands", "Equip", "Eat"};
         int choice = JOptionPane.showOptionDialog(null, "Where would you like to put the " + item.getName() + "?", "Choose a location", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
         switch (choice) {
             case 0 -> {
                 if (pockets.size() < pocketSize) {
                     GameHandler.getGui().display("You put the " + item.getName() + " in your pockets", "Black");
+
                     List<String> pocketedClothing = new ArrayList<>();
                     for (Equipment equip : getEquipment().values()) {
                         if (equip.getPockets() > 0) {
                             pocketedClothing.add(equip.getName());
                         }
                     }
+
                     if (!pocketedClothing.isEmpty()) {
                         String[] pocketedClothingArray = pocketedClothing.toArray(String[]::new);
                         int equipChoice = JOptionPane.showOptionDialog(null, "Select the equipment to put the " + item.getName() + " in:", "Choose a location", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, pocketedClothingArray, pocketedClothingArray[0]);
+
                         if (equipChoice >= 0) {
-                            Equipment selectedEquip = getEquipment().values().stream().filter(e -> e.getName().equals(pocketedClothingArray[equipChoice])).findFirst().orElse(null);
+                            Equipment selectedEquip = getEquipment().values().stream()
+                                    .filter(e -> e.getName().equals(pocketedClothingArray[equipChoice]))
+                                    .findFirst().orElse(null);
+
                             if (selectedEquip != null) {
                                 selectedEquip.addItem(item);
                             }
+                        } else {
+                            GameHandler.getGui().display("No equipment selected.", "Black");
+                            getRoom().addItem(item); // Item dropped if no pocketed equipment is selected
                         }
                     } else {
-                        GameHandler.getGui().display("You don't have any equipment with pockets", "Black");
-                        getRoom().addItem(item);
+                        GameHandler.getGui().display("You don't have any equipment with pockets.", "Black");
+                        getRoom().addItem(item); // Item dropped if no pocketed equipment exists
                     }
                 } else {
-                    GameHandler.getGui().display("Your pockets are full or you don't have any", "Black");
-                    getRoom().addItem(item);
+                    GameHandler.getGui().display("Your pockets are full or you don't have any.", "Black");
+                    getRoom().addItem(item); // Item dropped if pockets are full
                 }
-                break;
             }
             case 1 -> {
-                if (backpack.size() < backpackSize) {
-                    GameHandler.getGui().display("You put the " + item.getName() + "in your backpack", "Black");
+                if (backpack != null && backpack.size() < backpackSize) {
+                    GameHandler.getGui().display("You put the " + item.getName() + " in your backpack", "Black");
                     backpack.add(item);
-                    break;
                 } else {
                     GameHandler.getGui().display("Your backpack is full or you don't have one.", "Black");
-                    getRoom().addItem(item);
+                    getRoom().addItem(item); // Item dropped if no space in backpack
                 }
-                break;
             }
             case 2 -> {
                 if (hands.size() < 2) {
                     GameHandler.getGui().display("You hold the " + item.getName() + " in your hand", "Black");
                     hands.add(item);
-                    break;
                 } else {
-                    GameHandler.getGui().display("You can't hold that.", "Black");
-                    getRoom().addItem(item);
+                    GameHandler.getGui().display("Your hands are full.", "Black");
+                    getRoom().addItem(item); // Item dropped if hands are full
                 }
-                break;
             }
             case 3 -> {
                 if (item instanceof Equipment equipment1) {
                     equip(equipment1, equipment1.getSlot());
-                    break;
                 } else {
                     GameHandler.getGui().display("You can't equip that.", "Black");
-                    getRoom().addItem(item);
+                    getRoom().addItem(item); // Item dropped if not equippable
                 }
-                break;
+            }
+            case 4 -> {
+                // Check if the item has conditions and the FOOD condition is present
+                if (item.getConditions() != null && (item.getConditions().containsKey(ItemCondition.FOOD)|| item.getConditions().containsKey(ItemCondition.DRINK))) {
+                    item.use(); // Eating the item if it’s food
+                } else {
+                    GameHandler.getGui().display("You can't eat that.", "Black");
+                    Player.addItem(item); // Add the item back to the player's inventory if not food
+                }
+            }
+            default -> {
+                GameHandler.getGui().display("Action canceled.", "Black"); // Handle cancel or invalid option
             }
         }
     }
@@ -912,7 +777,7 @@ public class Player {
         leader = b;
     }
 
-    public  static void addQuest(Quest quest1) {
+    public static void addQuest(Quest quest1) {
         Player.quests.add(quest1);
     }
 
@@ -933,7 +798,7 @@ public class Player {
         quests.remove(aThis);
     }
 
-    public  static void setPronouns() {
+    public static void setPronouns() {
         GameHandler.getGui().display("Please enter your subjective pronoun choose any you like (he/she/they/other)", "Black");
         GameHandler.getGui().waitForInput();
         String subjective = GameHandler.getGui().getInput();
@@ -954,144 +819,6 @@ public class Player {
         GameHandler.getGui().display("Your pronouns are: " + subjective + ", " + objective + ", " + possessive + ", " + reference, "Black");
     }
 
-    private static boolean canPerform(Skill skill, Ability ability) {
-        // Check if the player has enough skill level to use the ability
-        // You can define thresholds based on skill and ability
-        int levelRequired = determineLevelRequired(skill, ability);
-        return getSkillLevel(skill) >= levelRequired;
-    }
-
-    private static int determineLevelRequired(Skill skill, Ability ability) {
-        switch (skill) {
-            case SOCIAL -> {
-                switch (ability) {
-                    case CRY -> {
-                        return 0;
-                    }
-                    case POINT -> {
-                        return 1;
-                    }
-                    case NAME -> {
-                        return 2;
-                    }
-                    case ASK -> {
-                        return 3;
-                    }
-                    case NEGOTIATE -> {
-                        return 4;
-                    }
-                    case MEDIATE -> {
-                        return 5;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case MOTOR -> {
-                switch (ability) {
-                    case CRAWL -> {
-                        return 0;
-                    }
-                    case WALK -> {
-                        return 1;
-                    }
-                    case RUN -> {
-                        return 2;
-                    }
-                    case CLIMB -> {
-                        return 3;
-                    }
-                    case SNEAK -> {
-                        return 4;
-                    }
-                    case KICK -> {
-                        return 5;
-                    }
-                    case SKIP -> {
-                        return 6;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case IMAGINATION -> {
-                switch (ability) {
-                    case IMITATE -> {
-                        return 0;
-                    }
-                    case DOLLS -> {
-                        return 1;
-                    }
-                    case PRODUCE -> {
-                        return 2;
-                    }
-                    case DIRECT -> {
-                        return 3;
-                    }
-                    case PLAY_ALONG -> {
-                        return 4;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case LEARNING -> {
-                switch (ability) {
-                    case READ -> {
-                        return 0;
-                    }
-                    case WRITE -> {
-                        return 1;
-                    }
-                    case BASICS -> {
-                        return 2;
-                    }
-                    case INTERMEDIATE -> {
-                        return 3;
-                    }
-                    case ADVANCED -> {
-                        return 4;
-                    }
-                    case REMEDIATED -> {
-                        return 5;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-            case EMOTIONAL -> {
-                switch (ability) {
-                    case EXPRESS -> {
-                        return 0;
-                    }
-                    case INTERPRET -> {
-                        return 1;
-                    }
-                    case SELF_SOOTHE -> {
-                        return 2;
-                    }
-                    case SOOTHE_OTHERS -> {
-                        return 3;
-                    }
-                    case RESILIENCE -> {
-                        return 4;
-                    }
-                    case TEMPERANCE -> {
-                        return 5;
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unexpected value: " + ability);
-                }
-            }
-
-        }
-        return -1;
-    }
-
     static int getEnergy() {
         return energy;
     }
@@ -1104,7 +831,7 @@ public class Player {
         return hunger;
     }
 
-    private static int getThirst() {
+    static int getThirst() {
         return thirst;
     }
 
@@ -1173,7 +900,7 @@ public class Player {
         }
     }
 
-    public  static int getPocketSize() {
+    public static int getPocketSize() {
         return pocketSize;
     }
 
@@ -1190,7 +917,7 @@ public class Player {
         return null;
     }
 
-    public  static String[] getEquipmentChoices() {
+    public static String[] getEquipmentChoices() {
         int i = 0;
         String[] items = new String[equipment.size()];
         for (Equipment item : equipment.values()) {
@@ -1221,23 +948,12 @@ public class Player {
         Player.pottyTrained = pottyTrained;
     }
 
-    public static boolean isNude() {
+    public static boolean isNude(NPC npc) {
         if (equipment.containsKey("Underpants") && equipment.containsKey("Top") && equipment.containsKey("Bottom") && equipment.containsKey("Shoes")) {
             return false;
         } else {
-            if (!equipment.containsKey("Underpants")) {
-                GameHandler.getGui().display("You are missing underpants.", "Black");
-                return true;
-            } else if (!equipment.containsKey("Bottom")) {
-                GameHandler.getGui().display("You are missing a bottom.", "Black");
-                return true;
-            } else if (!equipment.containsKey("Top")) {
-                GameHandler.getGui().display("You are missing a top.", "Black");
-                return true;
-            } else if (!equipment.containsKey("Shoes")) {
-                GameHandler.getGui().display("You are missing shoes.", "Black");
-                return true;
-            }
+            GameHandler.getGui().display("You are not wearing enough clothing.", "Black");
+            npc.noticePlayer("nude");
             return true;
         }
     }
@@ -1250,7 +966,7 @@ public class Player {
         Player.hand = hand;
     }
 
-    public  static ArrayList<Card> getPawDeck() {
+    public static ArrayList<Card> getPawDeck() {
         return pawDeck;
     }
 
@@ -1274,28 +990,8 @@ public class Player {
         return skillLevels;
     }
 
-    public void setAbilities(Map<Skill, Map<Ability, Effect>> abilities) {
-        Player.abilities = abilities;
-    }
-
-    public static Map<Skill, Map<Ability, Effect>> getAbilities() {
-        return abilities;
-    }
-
-    public void addAbility(Skill skill, Ability ability, Effect effect) {
-        abilities.get(skill).put(ability, effect);
-    }
-
     public static ArrayList<Item> getPockets() {
         return pockets;
-    }
-
-    public void removeAbility(Skill skill, Ability ability) {
-        abilities.get(skill).remove(ability);
-    }
-
-    public void setAbility(Skill skill, Ability ability, Effect effect) {
-        abilities.get(skill).put(ability, effect);
     }
 
     public void setPronouns(String subjective, String objective, String possessive, String reference) {
@@ -1316,11 +1012,11 @@ public class Player {
         GameHandler.getGui().display("You had an accident.", "Black");
         blatter = 0;
         addMaturity(-5);
-        if(isSleeping()){
+        if (isSleeping()) {
             GameHandler.getGui().display("You wet the bed.", "Black");
         }
         Equipment underpants = equipment.get("Underpants");
-        if (underpants==null){
+        if (underpants == null) {
             GameHandler.getGui().display("You are not wearing underpants.", "Black");
             setStatus(PlayerStatus.WET_CLOTHING);
             return;
@@ -1329,18 +1025,20 @@ public class Player {
         GameHandler.getGui().display(underpants.getName(), "Black");
         switch (underpants.getName()) {
             case "Diaper" -> {
-                underpants.setCondition(ItemCondition.WET,true);
+                underpants.setCondition(ItemCondition.WET, true);
                 GameHandler.getGui().display("Your " + underpants.getName() + " is wet.", "Black");
                 setStatus(PlayerStatus.WET_DIAPER);
+                Player.getRoom().attractAttention("wetSelf");
             }
             case "Training Pants" -> {
-                underpants.setCondition(ItemCondition.WET,true);
+                underpants.setCondition(ItemCondition.WET, true);
                 GameHandler.getGui().display("Your " + underpants.getName() + " are wet.", "Black");
                 setStatus(PlayerStatus.WET_DIAPER);
+                Player.getRoom().attractAttention("wetSelf");
             }
             case "Underpants" -> {
-                underpants.setCondition(ItemCondition.WET,true);
-                GameHandler.getGui().display("Your " + underpants.getName() +" and "+bottoms.getName()+ " are wet.", "Black");
+                underpants.setCondition(ItemCondition.WET, true);
+                GameHandler.getGui().display("Your " + underpants.getName() + " and " + bottoms.getName() + " are wet.", "Black");
                 Player.getRoom().attractAttention("wetSelf");
                 setStatus(PlayerStatus.WET_CLOTHING);
             }
@@ -1349,34 +1047,26 @@ public class Player {
         }
     }
 
-    public Ability getAbility() {
-        return ability;
-    }
-    
     public static void beMoved(NPC npc, Events event) {
-String options[] = {"Upsies!","Hold Hands","Refuse"};
+        String options[] = {"Upsies!", "Hold Hands", "Refuse"};
         String choice = (String) JOptionPane.showInputDialog(null, "How would you like to be moved?", "Choose an option", JOptionPane.DEFAULT_OPTION, null, options, options[0]);
         switch (choice) {
             case "Upsies!" -> {
-                GameHandler.getGui().display("You are picked up by " + npc.getName() + " and carried to " + event.getRoom().getName()+" for "+event.getName(), "Black");
+                GameHandler.getGui().display("You are picked up by " + npc.getName() + " and carried to " + event.getRoom().getName() + " for " + event.getName(), "Black");
                 npc.movePlayer(choice, event);
                 setRoom(room);
             }
             case "Hold Hand" -> {
-                GameHandler.getGui().display("You hold hands with " + npc.getName() + " and walk to " + event.getRoom().getName()+ " together  for "+event.getName(), "Black");
+                GameHandler.getGui().display("You hold hands with " + npc.getName() + " and walk to " + event.getRoom().getName() + " together  for " + event.getName(), "Black");
                 npc.movePlayer(choice, event);
                 setRoom(room);
             }
             case "Refuse" -> {
                 GameHandler.getGui().display("You refuse to move.", "Black");
-                npc.movePlayer(choice,event);
+                npc.movePlayer(choice, event);
             }
         }
-            
-    }
-    
-    public void setAbility(Ability ability) {
-        this.ability = ability;
+
     }
 
     public static PawFigure getPawFigure() {
@@ -1385,7 +1075,7 @@ String options[] = {"Upsies!","Hold Hands","Refuse"};
     }
 
     private static String getFigureChoices() {
-        String choice = null;   
+        String choice = null;
         int i = 0;
         String[] choices = new String[hands.size()];
         for (Item item : hands) {
@@ -1397,7 +1087,7 @@ String options[] = {"Upsies!","Hold Hands","Refuse"};
             }
             choice = (String) JOptionPane.showInputDialog(null, "Choose a figure", "Choose a figure", JOptionPane.DEFAULT_OPTION, null, choices, choices[0]);
         }
-        return choice; 
-        
+        return choice;
+
     }
 }

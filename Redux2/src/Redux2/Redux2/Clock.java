@@ -61,6 +61,9 @@ public class Clock {
                 FatherTime.triggerEvent();
             }
         }
+        Player.setBlatter((int) ((Player.getBlatter()*1.05))+minutes/2);
+        Player.setHunger((int) ((Player.getHunger()/1.05))-minutes/3);
+        Player.setThirst((int) ((Player.getThirst()/1.05))-minutes/3);
         return time;
     }
     public String getFormattedTime() {

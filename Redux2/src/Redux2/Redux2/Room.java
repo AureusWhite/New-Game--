@@ -2,11 +2,22 @@ package Redux2;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import javax.swing.JOptionPane;
 
 public class Room {
 
+    Object getKey() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public enum ROOMTYPE{
+        GREEN,BLUE,RED,SCHOOL,LABORATORY,OFFICE,OUTDOOR,INDOOR,BATHROOM,KITCHEN,
+    }
+    public static HashMap<Room,ROOMTYPE> roomType = new HashMap<>();
     public ArrayList<Item> inventory;
     private String name;
     private String description;
@@ -15,21 +26,23 @@ public class Room {
     private ArrayList<Room> rooms;
     private boolean locked;
     private boolean updated;
-    private String type;
+    private final ROOMTYPE type;
 
-    public Room(String name, String description) {
+    public Room(String name, String description,ROOMTYPE type) {
         this.name = name;
         this.description = description;
         this.npcs = new ArrayList<>();
         this.exits = new HashMap<>();
         this.inventory = new ArrayList<>();
         this.rooms = new ArrayList<>();
+        this.type = type;
     }
 
     public boolean isLocked() {
         return locked;
     }
 
+    
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
@@ -338,6 +351,18 @@ public class Room {
     }
 
     public NPC getFirstNPC() {
+        if (this.npcs.isEmpty()) {
+            int choice = JOptionPane.showConfirmDialog(null, "There are no NPCs in this room, do you want to call for Fuzzy?", "Fuzzy", JOptionPane.YES_NO_OPTION);
+            if (choice == 0) {
+                GameHandler.getGui().display("You called for Fuzzy", "Black");
+                GameHandler.getNPCByName("Fuzzy").noticePlayer("called");
+                this.addNPC(GameHandler.getNPCByName("Fuzzy"));
+            } else {
+                GameHandler.getGui().display("You decided not to call for Fuzzy", "Black");
+                return null;
+            }
+            return getFirstNPC();
+        }
         return this.npcs.get(0);
 
     }
@@ -421,7 +446,11 @@ public class Room {
         }
         return contraband1;
     }
-    public String getType() {
+    public Room(ROOMTYPE type) {
+        this.type = type;
+    }
+
+    public ROOMTYPE getType() {
         return this.type;
     }
 
@@ -473,8 +502,7 @@ public class Room {
     public String[] getInteractables() {
         List<String> filteredItems = new ArrayList<>();
         for (Item item : this.getArrayInventory()) {
-            String itemType = item.getType();
-            if (itemType.toLowerCase().contains("interactable")) {
+            if (item.getConditions().containsKey(ItemCondition.INTERACTABLE)) {
                 filteredItems.add(item.getName());
             }
         }
@@ -490,8 +518,8 @@ public class Room {
         }
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setType(ROOMTYPE type) {
+        roomType.put(this,type);
     }
 
     public boolean containsItem(String string) {
@@ -503,9 +531,35 @@ public class Room {
         return false;
     }
 
-    void attractAttention(String reason) {
-        for (NPC npc : this.getNpcs()) {
-            npc.noticePlayer(reason);
+    public void attractAttention(String reason) {
+        if (this.getNpcs().isEmpty()) {
+            return;
         }
+        randomNPC().noticePlayer(reason);
     }
+
+    public Room[] getAdjacentRooms() {
+        return Arrays.stream(this.getExits())  // Assuming getExits() returns String[] or Exit[].
+                     .map(this::getExitByName) // Assuming getExitByName() retrieves a Room.
+                     .toArray(Room[]::new);
+    }
+    public NPC randomNPC() {
+        if (this.getNpcs().isEmpty()) {
+            return null;
+        }
+        Random rand = new Random();
+        return this.getNpcs().get(rand.nextInt(this.getNpcs().size()));
+    }
+    public Room[] getExitsArray() {
+        Room[] exits1 = new Room[this.exits.size()];
+        int i = 0;
+        for (Room room : this.exits.values()) {
+            GameHandler.getGui().display(room.getName(), "Black");
+            GameHandler.getGui().display(room.getType().toString(), "Black");
+            exits1[i] = room;
+            i++;
+        }
+        return exits1;
+    }
+    
 }

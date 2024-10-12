@@ -43,7 +43,7 @@ public class Game {
         FatherTime.setPhase(FatherTime.DayPhase.MORNING);
         gamehandler.createRoutine();
         gamehandler.buildRooms();
-        gamehandler.populateRooms();
+        
         gamehandler.buildExits();
         //GameHandler.createQuests();
         gamehandler.playIntro();
@@ -51,6 +51,7 @@ public class Game {
         gamehandler.setupPlayer();
         GameHandler.getGui().unlockButtons();
         gamehandler.giveItems();
+        gamehandler.populateRooms();
         gamehandler.playGame();
         gamehandler.endGame();
     }

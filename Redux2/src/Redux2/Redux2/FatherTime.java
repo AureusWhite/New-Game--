@@ -47,7 +47,7 @@ public class FatherTime {
     }
 
     public enum DayPhase {
-        MORNING, LUNCH, DINNER, GREEN, BLUE, RED, FREETIME, SCHOOL_STRUCTUREDPLAY, TIDYUP, BATHS_BRUSHES, DORMS, BREAKFAST
+        MORNING, LUNCH, DINNER, GREEN, BLUE, RED, FREETIME, SCHOOL_STRUCTUREDPLAY,NAP,NIGHT, TIDYUP, BATHS_BRUSHES, DORMS, BREAKFAST
     }
     private static DayPhase currentPhase;
 
@@ -123,9 +123,9 @@ public class FatherTime {
             }
             case 8, 9, 10 -> {
                 GameHandler.getGui().display("Checking school event", "Black");
-                notifyEvent("school", currentRoom.equals("classroom"), "It's time for school. What would you like to do?",
+                notifyEvent("school", currentRoom.equals("Class_Room"), "It's time for school. What would you like to do?",
                         new String[]{"School", "Free Play", "Skip School"},
-                        () -> Player.setRoom(GameHandler.getRoomByName("Classroom")),
+                        () -> Player.setRoom(GameHandler.getRoomByName("Class_Room")),
                         () -> Player.setRoom(GameHandler.getRoomByName("Main_Room")),
                         () -> Player.setStatus(PlayerStatus.DISOBEDIENT)
                 );
@@ -144,7 +144,7 @@ public class FatherTime {
             }
             case 13, 14 -> {
                 GameHandler.getGui().display("Checking structured play event", "Black");
-                notifyEvent("structured play", currentRoom.equals("classroom") || currentRoom.equals("main_room"), "It's free time. What would you like to do?",
+                notifyEvent("structured play", currentRoom.equals("Class_Room") || currentRoom.equals("main_room"), "It's free time. What would you like to do?",
                         new String[]{"Free Play", "Structured Play", "Skip PlayGroup"},
                         () -> Player.setRoom(GameHandler.getRoomByName("Main_Room")),
                         () -> Player.setRoom(GameHandler.getRoomByName("Classroom")),

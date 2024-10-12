@@ -19,5 +19,6 @@ public enum ItemCondition {
         HIDDEN,
         DROPPABLE,
         INTERACTABLE,
+        DISPENCER, FOOD, TOY, TEST, KEY, CLOTHING, SEAT, UNREMOVABLE, DRINK,
 
     }
