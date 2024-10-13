@@ -52,12 +52,12 @@ class Commands {
                     GameHandler.getGui().display("You checked your inventory", "Black");
                 
                 case "help" -> {
-                        NPC helpingNPC = Player.getRoom().getFirstNPC();
+                        NPC helpingNPC = Player.getRoom().randomNPC(true);
                         if (helpingNPC == null) {
                             GameHandler.getGui().display("There is no one to help you", "Black");
                             return;
                         }
-                        String[] helpWith = {"Dressing", "Taking a bath", "A hug"};
+                        String[] helpWith = {"Dressing", "Taking a bath", "A hug", "Uppies!"};
                         String choice = (String) JOptionPane.showInputDialog(null, "What do you need help with?", "Help", JOptionPane.QUESTION_MESSAGE, null, helpWith, helpWith[0]);
                         switch (choice) {
                             case "Dressing" -> {
@@ -76,6 +76,11 @@ class Commands {
                             case "A hug" -> {
                                 GameHandler.getGui().display("You asked for a hug", "Black");
                                 // Add logic for a hug if needed
+                            }
+                            case "Uppies!" -> {
+                                GameHandler.getGui().display("You asked for uppies", "Black");
+                                GameHandler.getGui().display(helpingNPC.getName() + " picked you up", "Black");
+                                Player.setStatus(PlayerStatus.CARRIED);
                             }
                         }
                     }
@@ -99,11 +104,11 @@ class Commands {
                     GameHandler.getGui().display("You checked the routine", "Black");
                 }
                 case "story" -> {
-                    if (Player.getRoom().getFirstNPC() == null) {
+                    if (Player.getRoom().randomNPC(true) == null) {
                         GameHandler.getGui().display("There is no one here to guide you.", "Black");
                         return;
                     }
-                    Player.getRoom().getFirstNPC().guidePlayer(Events.STORY_TIME);
+                    Player.getRoom().randomNPC(true).guidePlayer(Events.STORY_TIME);
                 }
                 case "wander" -> {
                     GameHandler.getNPCByName("Fuzzy").wander(ROOMTYPE.GREEN);

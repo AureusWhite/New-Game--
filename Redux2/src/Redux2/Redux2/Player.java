@@ -13,7 +13,7 @@ public class Player {
     //primitives
     static String[] pronouns;
     public static String alignment = "Newbie";
-    public static int age=0, maturity=0, energy=100, blatter=10, pocketSize=0, backpackSize=0, experience=0, money=0, resilience=0, hunger=10, thirst=10;
+    public static int age = 0, maturity = 0, energy = 100, blatter = 10, pocketSize = 0, backpackSize = 0, experience = 0, money = 0, resilience = 0, hunger = 10, thirst = 10;
     private static boolean abilitiesSet, ageSet, alignmentSet, pottyTrained, leader, playerIsHidden;
     //arrays
     public final static ArrayList<Item> backpack = new ArrayList<>();
@@ -48,6 +48,15 @@ public class Player {
             }
         }
         return b;
+    }
+
+    public static void initualizeSkills() {
+        skillLevels.put(Skill.FINE_MOTOR, 1);
+        skillLevels.put(Skill.GROSS_MOTOR, 1);
+        skillLevels.put(Skill.SOCIAL, 1);
+        skillLevels.put(Skill.EMOTIONAL, 1);
+        skillLevels.put(Skill.IMAGINATION, 1);
+        skillLevels.put(Skill.LEARNING, 1);
     }
 
     public static ArrayList<Paw> getPaws() {
@@ -109,16 +118,27 @@ public class Player {
     }
 
     private static void setMood(int i) {
-        mood+=i;
-        switch(mood){
-            case 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100 -> setStatus(PlayerStatus.JUBILANT);
-            case 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89 -> setStatus(PlayerStatus.HAPPY);
-            case 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 -> setStatus(PlayerStatus.CONTENT);
-            case 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49 -> setStatus(PlayerStatus.UPSET);
-            case 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 -> setStatus(PlayerStatus.TANTRUM);
-            case 1, 2, 3, 4, 5, 6, 7, 8, 9 -> setStatus(PlayerStatus.MELTDOWN);
-            case 0 -> tantrum();
+        mood += i;
+        switch (mood) {
+            case 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100 ->
+                setStatus(PlayerStatus.JUBILANT);
+            case 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89 ->
+                setStatus(PlayerStatus.HAPPY);
+            case 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ->
+                setStatus(PlayerStatus.CONTENT);
+            case 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49 ->
+                setStatus(PlayerStatus.UPSET);
+            case 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 ->
+                setStatus(PlayerStatus.TANTRUM);
+            case 1, 2, 3, 4, 5, 6, 7, 8, 9 ->
+                setStatus(PlayerStatus.MELTDOWN);
+            case 0 ->
+                tantrum();
         }
+    }
+
+    static boolean isHeld() {
+        return Player.Status.contains(PlayerStatus.HOLDING_HANDS) || Player.Status.contains(PlayerStatus.CARRIED);
     }
 
     public ArrayList<Item> gatHands() {
@@ -292,13 +312,13 @@ public class Player {
     }
 
     public static void setHunger(int hunger1) {
-        if(hunger<60){
+        if (hunger < 60) {
             GameHandler.getGui().display("Your Stomach growls", "Black");
-        } else if(hunger<40){
+        } else if (hunger < 40) {
             GameHandler.getGui().display("You are getting a little hangry", "Black");
             Player.setMood(-10);
             getRoom().attractAttention("Hangry");
-        } else if(hunger<20){
+        } else if (hunger < 20) {
             GameHandler.getGui().display("You cry out in hunger", "Black");
             Player.setMood(-25);
             getRoom().attractAttention("Crying");
@@ -306,8 +326,8 @@ public class Player {
     }
 
     public static void setThirst(int thirst1) {
-        if(thirst<0){
-            thirst=0;
+        if (thirst < 0) {
+            thirst = 0;
             getRoom().attractAttention("Crying");
         }
         thirst = thirst1;
@@ -600,50 +620,91 @@ public class Player {
     }
 
     public static void sneak() {
-        if (getSkillLevel(Skill.MOTOR) < 4) {
-            GameHandler.getGui().display("You can't sneak.", "Black");
-            levelUpSkill(Skill.MOTOR);
-            return;
-        }
-        if (getSkillLevel(Skill.MOTOR) >= 4) {
-            {
-                if (playerIsHidden) {
-                    GameHandler.getGui().display("You are already hidden.", "Black");
-                    playerIsHidden = false;
-                    return;
-                }
-                if (!playerIsHidden) {
-                    for (NPC npc : getRoom().getNPCs()) {
-                        if (npc.getSuspicion() >= 1) {
-                            GameHandler.getGui().display(npc.getName() + ": I can see you. ", "Black");
-                            return;
-                        }
-                    }
-                }
-                GameHandler.getGui().display("You attempt to sneak unseen", "Black");
-                if (getRoom().getNPCs().isEmpty()) {
-                    GameHandler.getGui().display("No one here to see you.", "Black");
-                    setHidden(true);
-                    return;
-                }
-                int outcome = (int) (Math.random() * 100);
-                if (outcome > getSkillLevel(Skill.MOTOR) - 3) {
-                    GameHandler.getGui().display("You were seen.", "Black");
-                    Player.getRoom().getFirstNPC().setSuspicion(1, "sneaking");
-                    Player.setHidden(false);
-                    Player.getRoom().getFirstNPC().caughtPlayer("sneaking");
-                } else {
-                    GameHandler.getGui().display("You were not seen.", "Black");
-                    setHidden(true);
+        Random rand = new Random();
+        switch (getSkillLevel(Skill.FINE_MOTOR)) {
+            case 1 -> {
+                GameHandler.getGui().display("You attempt to sneak but comically fumble around making even more noise", "Black");
+                int outcome = rand.nextInt(20) + 1;
+                if (outcome > 18) {
+                    GameHandler.getGui().display("They must have been on their phone or something because no one noticed that, and now they can't see you. Proboblu still know you're there though.", "Black");
+                    PlayerStatus.HIDDEN.activate();
+                } else if (outcome == 17||outcome == 18) {
+                    levelUpSkill(Skill.FINE_MOTOR); 
+                }else {
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false) + " noticed you and smirked with a laugh.", "Black");
                 }
             }
-        } else {
-            GameHandler.getGui().display("You can't sneak.", "Black");
+            case 2 -> {
+                GameHandler.getGui().display("This time you know not to stomp and pretend to be a dinosaur, they are not allowed at school,", "Black");
+                int outcome = rand.nextInt(20) + 1;
+                if (outcome > 16) {
+                    GameHandler.getGui().display("Somehow you manage to get out of sight unnoticed. Try not to giggle when they look for you, not like last time.", "Black");
+                    PlayerStatus.HIDDEN.activate();
+                }else if (outcome == 15||outcome == 16) {
+                    levelUpSkill(Skill.FINE_MOTOR); 
+                }else {
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false) + " noticed you and smirked with a laugh.", "Black");
+                }
+                GameHandler.getGui().display(Player.getRoom().randomNPC(false) + ": Hello, "+Player.getName()+" are you a bank robber? I can see you.", "Black");
+            }
+            case 3 -> {
+                GameHandler.getGui().display("Giggles in check and serious faced you pretend to be a ninja, even though they are also not allowed at school, a ninja is queit about their mischeif", "Black");
+                int outcome = rand.nextInt(20) + 1;
+                if (outcome > 14) {
+                    GameHandler.getGui().display("You cannot be seen, the paper ninja stars however may be.", "Black");
+                    PlayerStatus.HIDDEN.activate();
+                }else if (outcome == 13||outcome == 14) {
+                    levelUpSkill(Skill.FINE_MOTOR); 
+                } else {
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false) + ": I see you, "+Player.getName()+", you are not a ninja.", "Black");
+                }
+            }
+            case 4 -> {
+                GameHandler.getGui().display("Okay rule one, be quiet, rule two don't throw things, sneaking is getting easier.", "Black");
+                int outcome = rand.nextInt(20) + 1;
+                if (outcome > 12) {
+                    GameHandler.getGui().display("Wow, people notice less if do not beaning them in the eye with a paper shuruken. Good to know", "Black");
+                    PlayerStatus.HIDDEN.activate();
+                }else if (outcome == 11||outcome == 12) {
+                    levelUpSkill(Skill.FINE_MOTOR); 
+                } else {
+                 GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " *clears their throat* It's obvious they can see you sneaking off.", "Black");
+                }
+            }
+            case 5 -> {
+                GameHandler.getGui().display("You attempt to sneak, making as little sound as possible", "Black");
+                int outcome = rand.nextInt(20) + 1;
+                if (outcome > 10) {
+                    GameHandler.getGui().display("you slip away into hiding keeping out of sight.", "Black");
+                    PlayerStatus.HIDDEN.activate();
+                }else if (outcome == 9||outcome == 10) {
+                    levelUpSkill(Skill.FINE_MOTOR); 
+                }else {
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " *clears their throat* It's obvious they can see you sneaking off.", "Black");
+                }
+            }
+            case 6 -> {
+                GameHandler.getGui().display("You attempt to sneak and slip away and are very hard to notice", "Black");
+                int outcome = rand.nextInt(20) + 1;
+                if (outcome > 8) {
+                    GameHandler.getGui().display("You easily duck into cover, quick reflexes keeping you hidden", "Black");
+                    PlayerStatus.HIDDEN.activate();
+                }else if (outcome == 7||outcome == 8) {
+                    levelUpSkill(Skill.FINE_MOTOR); 
+                }
+                else{
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " : "+Player.getName()+" what are you up to?, I barely saw you out of the corner of my eye.", "Black");
+                }
+            }
+            case 7, 8, 9, 10 -> {
+                GameHandler.getGui().display("Small framed, light footed, you vanish as soon as they turn away.", "Black");
+                PlayerStatus.HIDDEN.activate();
+            }
         }
     }
 
     public static boolean isLeader() {
-        return leader;
+        return PlayerStatus.LEADER.isActive();
     }
 
     public static void setFavorites(String color, String food, String toy, String game, String book, String subject, String activity) {
@@ -760,7 +821,7 @@ public class Player {
             }
             case 4 -> {
                 // Check if the item has conditions and the FOOD condition is present
-                if (item.getConditions() != null && (item.getConditions().containsKey(ItemCondition.FOOD)|| item.getConditions().containsKey(ItemCondition.DRINK))) {
+                if (item.getConditions() != null && (item.getConditions().containsKey(ItemCondition.FOOD) || item.getConditions().containsKey(ItemCondition.DRINK))) {
                     item.use(); // Eating the item if it’s food
                 } else {
                     GameHandler.getGui().display("You can't eat that.", "Black");
@@ -952,7 +1013,6 @@ public class Player {
         if (equipment.containsKey("Underpants") && equipment.containsKey("Top") && equipment.containsKey("Bottom") && equipment.containsKey("Shoes")) {
             return false;
         } else {
-            GameHandler.getGui().display("You are not wearing enough clothing.", "Black");
             npc.noticePlayer("nude");
             return true;
         }

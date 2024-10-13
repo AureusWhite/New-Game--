@@ -806,7 +806,22 @@ public class NPC extends Character {
     }
 
     public void dressPlayer() {
-        Player.isNude(this);
+        if(!Player.getEquipment().containsKey("Underpants")){
+            Player.equip(new Equipment("Underwear", "Clean Underwear", "underpants"), "Underpants");
+        }
+        if(!Player.getEquipment().containsKey("Top")){
+            Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
+        }
+        if(!Player.getEquipment().containsKey("Bottom")){
+            Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
+        }
+        if(!Player.getEquipment().containsKey("Socks")){
+            Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
+        }
+        if(!Player.getEquipment().containsKey("Shoes")){
+            Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
+        }
+
         GameHandler.getGui().display(this.getName() + " helps you get dressed", "black");
         GameHandler.getGui().display("removing all clothing related status effects", "black");
         if (Player.getStatus().contains(PlayerStatus.WET_CLOTHING)) {
@@ -822,6 +837,9 @@ public class NPC extends Character {
             Player.removeStatus(PlayerStatus.DIRTY_DIAPER);
         }
         GameHandler.getGui().display("emptying pockets", "black");
+        if(Player.getEquipment().isEmpty()){
+
+        }
         for (Equipment equipment : Player.getEquipment().values()) {
             if (!equipment.needsChanged()) {
                 continue;
@@ -880,6 +898,7 @@ public class NPC extends Character {
                     GameHandler.getGui().display("You are now wearing clean shoes", "black");
                 }
             }
+        
             this.displayInventory();
         }
     }

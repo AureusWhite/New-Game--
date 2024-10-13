@@ -23,6 +23,15 @@ public enum Events {
     public Room getRoom() {
         return room;
     }
+    public Events getSTORY_TIME(){
+        return STORY_TIME;
+    }
+    public void display(){
+        System.out.println("Event: " + name);
+        System.out.println("Room: " + room.getName());
+        System.out.println("Importance: " + importance);
+    }
+    
     
     
 }

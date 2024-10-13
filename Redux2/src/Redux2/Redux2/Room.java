@@ -301,7 +301,7 @@ public class Room {
                 GameHandler.getGui().display("You successfully stole " + takings.getName(), "Black");
             } else {
                 GameHandler.getGui().display("You failed to steal " + takings.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("stealing");
+                this.randomNPC(false).caughtPlayer("stealing");
 
             }
         }
@@ -319,7 +319,7 @@ public class Room {
                 breakItem(item);
             } else {
                 GameHandler.getGui().display("You failed to sabotage " + item.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("Vandalism");
+                this.randomNPC(false).caughtPlayer("Vandalism");
             }
         }
 
@@ -336,7 +336,7 @@ public class Room {
                 vandalizeItem(item);
             } else {
                 GameHandler.getGui().display("You failed to vandalize " + item.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("vandalism");
+                this.randomNPC(false).caughtPlayer("vandalism");
             }
         }
     }
@@ -349,24 +349,6 @@ public class Room {
         }
         return null;
     }
-
-    public NPC getFirstNPC() {
-        if (this.npcs.isEmpty()) {
-            int choice = JOptionPane.showConfirmDialog(null, "There are no NPCs in this room, do you want to call for Fuzzy?", "Fuzzy", JOptionPane.YES_NO_OPTION);
-            if (choice == 0) {
-                GameHandler.getGui().display("You called for Fuzzy", "Black");
-                GameHandler.getNPCByName("Fuzzy").noticePlayer("called");
-                this.addNPC(GameHandler.getNPCByName("Fuzzy"));
-            } else {
-                GameHandler.getGui().display("You decided not to call for Fuzzy", "Black");
-                return null;
-            }
-            return getFirstNPC();
-        }
-        return this.npcs.get(0);
-
-    }
-
     public String[] getFurniture() {
         ArrayList<Item> furniture = new ArrayList<>();
         for (Item item : this.getArrayInventory()) {
@@ -490,11 +472,11 @@ public class Room {
         if (parkourable == null) {
             GameHandler.getGui().display("That item does not exist", "Black");
         } else {
-            if (Player.getSkillLevel(Skill.MOTOR)>5) {
+            if (Player.getSkillLevel(Skill.GROSS_MOTOR)>5) {
                 GameHandler.getGui().display("You parkoured over " + parkourable.getName(), "Black");
             } else {
                 GameHandler.getGui().display("You failed to parkour over " + parkourable.getName(), "Black");
-                this.getFirstNPC().caughtPlayer("climbed");
+                this.randomNPC(false).caughtPlayer("climbed");
             }
         }
     }
@@ -535,7 +517,7 @@ public class Room {
         if (this.getNpcs().isEmpty()) {
             return;
         }
-        randomNPC().noticePlayer(reason);
+        randomNPC(false).noticePlayer(reason);
     }
 
     public Room[] getAdjacentRooms() {
@@ -543,12 +525,25 @@ public class Room {
                      .map(this::getExitByName) // Assuming getExitByName() retrieves a Room.
                      .toArray(Room[]::new);
     }
-    public NPC randomNPC() {
-        if (this.getNpcs().isEmpty()) {
-            return null;
-        }
+    public NPC randomNPC(boolean b) {
+        if (this.npcs.isEmpty()) {
+            if (!b) {
+                return null;
+            }
+            int choice = JOptionPane.showConfirmDialog(null, "There are no NPCs in this room, do you want to call for Fuzzy?", "Fuzzy", JOptionPane.YES_NO_OPTION);
+            if (choice == 0) {
+                GameHandler.getGui().display("You called for Fuzzy", "Black");
+                GameHandler.getNPCByName("Fuzzy").noticePlayer("called");
+                this.addNPC(GameHandler.getNPCByName("Fuzzy"));
+            } else {
+                GameHandler.getGui().display("You decided not to call for Fuzzy", "Black");
+                return null;
+            }
+            return randomNPC(b);
+        } else {
         Random rand = new Random();
         return this.getNpcs().get(rand.nextInt(this.getNpcs().size()));
+        }
     }
     public Room[] getExitsArray() {
         Room[] exits1 = new Room[this.exits.size()];

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Achievements {
-
     private final String name;
     private final String description;
     private boolean unlocked;
@@ -17,42 +16,35 @@ public class Achievements {
     private final HashMap<NPC, NPCStatus> requiredNPC = new HashMap<>();
 
     public enum NPCStatus {
-        NOT_SPOKEN_TO, SPOKEN_TO, FRIEND, ENEMY, ADULT, REJUVE, ANDRIOD, COMPANION
+        NOT_SPOKEN_TO, SPOKEN_TO, FRIEND, ENEMY, ADULT, REJUVE, ANDRIOD, COMPANION,VENDER,
     }
-
-    // Constructor for setting achievement details
+    // Constructor for the achievement
     public Achievements(String name, String description, int points) {
         this.name = name;
         this.description = description;
         this.points = points;
         this.unlocked = false;
     }
-
     // Getter for the achievement name
     public String getName() {
         return name;
     }
-
     // Getter for the achievement description
     public String getDescription() {
         return description;
     }
-
     // Checks if the achievement is unlocked
     public boolean isUnlocked() {
         return unlocked;
     }
-
     // Set the achievement as unlocked
     public void setUnlocked(boolean unlocked) {
         this.unlocked = unlocked;
     }
-
     // Getter for the achievement points
     public int getPoints() {
         return points;
     }
-
     // Method to check if all conditions for the achievement are met
     public boolean checkAchievements() {
         // Check if all required items have been collected
@@ -99,7 +91,6 @@ public class Achievements {
 
         return true;  // All conditions are met
     }
-
     // Method to update the achievement when a condition is met
     public void updateAchievement() {
         if (checkAchievements()) {
@@ -107,7 +98,6 @@ public class Achievements {
             System.out.println("Achievement unlocked: " + this.name);
         }
     }
-
     // Mark a room as visited
     public void markRoomVisited(Room room) {
         if (requiredPlaces.containsKey(room)) {
@@ -115,14 +105,12 @@ public class Achievements {
             updateAchievement();
         }
     }
-
     public void markEquipmentEquipped(Equipment equipment) {
         if (requiredEquipment.containsKey(equipment)) {
             requiredEquipment.put(equipment, true);
             updateAchievement();
         }
     }
-
     // Mark an item as interacted with (like opening a PAW figure)
     public void openItem(Item item) {
         if (requiredItems.containsKey(item)) {
@@ -130,21 +118,18 @@ public class Achievements {
             updateAchievement();
         }
     }
-
     public void markItemCollected(Item item) {
         if (requiredItems.containsKey(item)) {
             requiredItems.put(item, true);
             updateAchievement();
         }
     }
-
     public void markNPCSpokenTo(NPC npc) {
         if (requiredNPC.containsKey(npc)) {
             requiredNPC.put(npc, NPCStatus.SPOKEN_TO);
             updateAchievement();
         }
     }
-
 // Method to mark that the player has befriended an NPC
     public void markNPCBefriended(NPC npc) {
         if (requiredNPC.containsKey(npc)) {
@@ -152,7 +137,6 @@ public class Achievements {
             updateAchievement();
         }
     }
-
 // Method to mark that the player has become enemies with an NPC
     public void markNPCEnemy(NPC npc) {
         if (requiredNPC.containsKey(npc)) {
@@ -160,51 +144,40 @@ public class Achievements {
             updateAchievement();
         }
     }
-
     // Add required items for an achievement (e.g., a specific collectible like a PAW figure)
     public void addRequiredItem(Item item) {
         requiredItems.put(item, false);  // initially set to false
     }
-
     // Add required places for an achievement (e.g., visit a specific room)
     public void addRequiredPlace(Room room) {
         requiredPlaces.put(room, false);  // initially set to false
     }
-
     // Add required status for an achievement (e.g., a specific state like 'spoken to NPC')
     public void addRequiredStatus(String status) {
         requiredStatus.put(status, false);  // initially set to false
     }
-
     public void addRequiredEquipment(Equipment equipment) {
         requiredEquipment.put(equipment, false);
     }
-
     public void addRequiredNPC(NPC npc, NPCStatus status) {
         requiredNPC.put(npc, NPCStatus.NOT_SPOKEN_TO);  // Initially not spoken to
         requiredNPC.put(npc,status);  // Initially not spoken to
     } 
-
     public HashMap<NPC, NPCStatus> getRequiredNPC() {
         return requiredNPC; 
     }
-
     public HashMap<Room, Boolean> getRequiredPlaces() {
         return requiredPlaces;
     }
-
     public HashMap<Item, Boolean> getRequiredItems() {
         return requiredItems;
     }
-
     public HashMap<Equipment, Boolean> getRequiredEquipment() {
         return requiredEquipment;
     }
-
     public HashSet<Achievements> getRequiredAchievements() {
         return requiredAchievements;
     }
-
     public HashMap<String, Boolean> getRequiredStatus() {
         return requiredStatus;
     }

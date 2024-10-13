@@ -205,6 +205,30 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
+                    if (Player.isHeld()) {
+                        GameHandler.getGui().display("You are being held and can't move", "Black");
+                        String[] choices = {"Yes", "No"};
+                        int selectedOption = JOptionPane.showOptionDialog(null,
+                                "Do you want to be put down?",
+                                "Held",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                choices,
+                                choices[0]);
+                        switch (selectedOption) {
+                            case 0 -> {
+                                GameHandler.getGui().display("You are put down and let go", "Black");
+                                Player.removeStatus(PlayerStatus.CARRIED);
+                                Player.removeStatus(PlayerStatus.HOLDING_HANDS);
+                            }
+                            case 1 -> {
+                                GameHandler.getGui().display("You are still being held", "Black");
+                            }
+                        }
+
+                        return;
+                    }
                     String[] exits = Player.getRoom().getExits();
                     for (int i = 0; i < exits.length; i++) {
                         exits[i] = exits[i].replace("_", " ");
@@ -216,18 +240,23 @@ public class GUI extends JFrame {
                             null, exits, exits[0]);
 
                     if (selectedExit != null) {
-                        Room tempRoom = Player.getRoom();
                         Room room = GameHandler.getRoomByName(selectedExit.replace(" ", "_"));
                         GameHandler.getGui().display("You move to the " + selectedExit + ".", "Black");
                         Player.setRoom(room);
                         room.initializeRoomFiles();
-                        Player.getRoom().randomNPC().noticePlayer();
-                            
-                        
+                        if (Player.getRoom().randomNPC(false) != null) {
+                            Player.isNude(Player.getRoom().randomNPC(false));
+                            Player.getRoom().randomNPC(false).noticePlayer();
+                        } else {
+
+                        }
+                        Player.isNude(Player.getRoom().randomNPC(false));
                     } else {
                         notify();
                     }
                 }
+            } else {
+                GameHandler.getGui().display("You can't move right now", "Black");
             }
             updateSidePanels();
 
@@ -274,6 +303,10 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
+                    if (Player.isHeld()) {
+                        GameHandler.getGui().display("You are being held and can't parkour", "Black");
+                        return;
+                    }
                     String[] parkourables = Player.getRoom().getParkourables();
                     if (parkourables.length == 0) {
                         GameHandler.getGui().display("There is nothing to parkour on", "Black");
@@ -297,6 +330,8 @@ public class GUI extends JFrame {
                         notify();
                     }
                 }
+            } else {
+                GameHandler.getGui().display("You can't parkour right now", "Black");
             }
             updateSidePanels();
         });
@@ -304,6 +339,10 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
+                    if (Player.isHeld()) {
+                        GameHandler.getGui().display("You are being held and can't interact with objects in the room.", "Black");
+                        return;
+                    }
                     String[] interactables = Player.getRoom().getInteractables();
                     if (interactables.length == 0) {
                         GameHandler.getGui().display("There is nothing to interact with", "Black");
@@ -328,6 +367,8 @@ public class GUI extends JFrame {
                         notify();
                     }
                 }
+            } else {
+                GameHandler.getGui().display("You can't interact right now", "Black");
             }
             updateSidePanels();
         });
@@ -522,12 +563,11 @@ public class GUI extends JFrame {
             }
             updateSidePanels();
         });
-
         learnButton.addActionListener(e -> {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    /*String[] topics = {"Story Time", "Arts & Crafts", "Educational Games", "Language", "Puzzles"};
+                    String[] topics = {"Story Time", "Arts & Crafts (CLOSED DO TO VANDALIZEM)", "Educational Games (CLOSED,SAME REASON)", "Language CLOSED (YOU KNOW WHAT THEY DID)", "Puzzles(CLOSED, YOU KNOW WHY, STOP ASKING)"};
                     String selectedTopic = (String) JOptionPane.showInputDialog(
                             null,
                             "What do you want to study?",
@@ -541,32 +581,28 @@ public class GUI extends JFrame {
                             case "Story Time" -> {
                                 GameHandler.storyTime();
                             }
-                            case "Arts & Crafts" -> {
-                                GameHandler.getGui().display("You do arts & crafts", "Black");
-                                GameHandler.artsCrafts();
+                            case "Arts & Crafts (CLOSED DO TO VANDALIZEM)" -> {
+                                GameHandler.getGui().display("Arts & Crafts is closed due to vandalism", "Black");
                             }
-                            case "Educational Games" -> {
-                                GameHandler.getGui().display("You play educational games", "Black");
-                                GameHandler.educationalGames();
+                            case "Educational Games (CLOSED,SAME REASON)" -> {
+                                GameHandler.getGui().display("Educational Games is closed due to vandalism", "Black");
                             }
-                            case "Language" -> {
-                                GameHandler.getGui().display("You study language", "Black");
-                                GameHandler.language();
+                            case "Language CLOSED (YOU KNOW WHAT THEY DID)" -> {
+                                GameHandler.getGui().display("Language is closed due to vandalism", "Black");
                             }
-                            case "Puzzles" -> {
-                                GameHandler.getGui().display("You solve puzzles", "Black");
-                                GameHandler.puzzles();
+                            case "Puzzles(CLOSED, YOU KNOW WHY, STOP ASKING)" -> {
+                                GameHandler.getGui().display("Puzzles is closed due to vandalism", "Black");
                             }
+
                         }
                     } else {
                         notify();
                     }
-                     */
+
                 }
             }
             updateSidePanels();
         });
-
         inventoryButton.addActionListener(e -> {
             if (!locked) {
                 synchronized (this) {
@@ -693,7 +729,7 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] care = {"Nap", "Potty", "Tantrum", "Eat/Drink", "Reflect"};
+                    String[] care = {"Nap", "Potty", "Tantrum", "Reflect"};
                     String selectedCare = (String) JOptionPane.showInputDialog(
                             null,
                             "What do you want to do?",
@@ -712,12 +748,46 @@ public class GUI extends JFrame {
                                 Player.potty();
                             }
                             case "Tantrum" -> {
-                                GameHandler.getGui().display("You calm the beaver down", "Black");
-                                Player.tantrum();
+                                if (PlayerStatus.JUBILANT.isActive()) {
+                                    GameHandler.getGui().display("You throw a  gigglefit to blow off some steam", "Black");
+                                    return;
+                                } else if (PlayerStatus.TANTRUM.isActive()) {
+                                    GameHandler.getGui().display("You're not in a bad mood but it's getting there.", "Black");
+                                    return;
+                                } else if (PlayerStatus.MELTDOWN.isActive()) {
+                                    GameHandler.getGui().display("You throw normal tantrum, it happens", "Black");
+                                    return;
+                                } else if (PlayerStatus.TIRED.isActive()) {
+                                    GameHandler.getGui().display("You throw a sleepy tantrum, one fist in your eye, and crying", "Black");
+                                    return;
+                                } else if (PlayerStatus.BORED.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum is slow motion to make it last longer, because you are bored.", "Black");
+                                    Player.tantrum();
+                                } else if (PlayerStatus.HURT.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum, because you are hurt.", "Black");
+                                    Player.tantrum();
+                                } else if (PlayerStatus.UPSET.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum, because you are upset.", "Black");
+                                    Player.tantrum();
+                                } else if (PlayerStatus.CRYING.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum, because you are crying.", "Black");
+                                    Player.tantrum();
+                                } else if (PlayerStatus.DIRTY.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum, because you are dirty and want to be clean.", "Black");
+                                    Player.tantrum();
+                                } else if (PlayerStatus.HUNGRY.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum, because you are hungry.", "Black");
+                                    Player.tantrum();
+                                } else if (PlayerStatus.THIRSTY.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum, because you are thirsty.", "Black");
+                                    Player.tantrum();
+                                } else if (PlayerStatus.SICK.isActive()) {
+                                    GameHandler.getGui().display("You throw a tantrum, because you are sick.", "Black");
+                                    Player.tantrum();
+                                }
                             }
                             case "Reflect" -> {
-                                GameHandler.getGui().display("You reflect on the beaver's behavior", "Black");
-                                Player.reflect();
+                                GameHandler.getGui().display("You reflect on your day", "Black");
                             }
                         }
                     } else {
@@ -728,335 +798,341 @@ public class GUI extends JFrame {
             updateSidePanels();
         });
         socializeButton.addActionListener(e -> {
-            if (!locked) {
-                synchronized (this) {
-                    notify();
-                    String[] socialize = {"Play", "Help", "Lead", "Pretend", "Dance"};
-                    String selectedSocialize = (String) JOptionPane.showInputDialog(
-                            null,
-                            "What do you want to do?",
-                            "Socialize",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            socialize,
-                            socialize[0]
-                    );
-                    if (selectedSocialize != null) {
-                        switch (selectedSocialize) {
-                            case "Play" -> {
-                                String[] npcChoises = Player.getRoom().getNPCChoises();
-                                if (npcChoises.length == 0) {
-                                    GameHandler.getGui().display("There is no one to play with", "Black");
-                                    return;
-                                }
-                                for (int i = 0; i < npcChoises.length; i++) {
-                                    npcChoises[i] = npcChoises[i].replace("_", " ");
-                                }
-                                String selectedNPC = (String) JOptionPane.showInputDialog(
-                                        null,
-                                        "Who do you want to play with?",
-                                        "Play",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        npcChoises,
-                                        npcChoises[0]);
-                                if (selectedNPC != null) {
-                                    String[] toyChoises = Player.getRoom().getToyChoices();
-                                    if (toyChoises.length == 0) {
-                                        GameHandler.getGui().display("There are no toys to play with", "Black");
-                                        Player.getRoom().play(selectedNPC, null);
-                                    } else {
-                                        for (int i = 0; i < toyChoises.length; i++) {
-                                            toyChoises[i] = toyChoises[i].replace("_", " ");
+                                    if (!locked) {
+                                        synchronized (this) {
+                                            notify();
+                                            String[] socialize = {"Play", "Help", "Lead", "Pretend", "Dance"};
+                                            String selectedSocialize = (String) JOptionPane.showInputDialog(
+                                                    null,
+                                                    "What do you want to do?",
+                                                    "Socialize",
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,
+                                                    socialize,
+                                                    socialize[0]
+                                            );
+                                            if (selectedSocialize != null) {
+                                                switch (selectedSocialize) {
+                                                    case "Play" -> {
+                                                        String[] npcChoises = Player.getRoom().getNPCChoises();
+                                                        if (npcChoises.length == 0) {
+                                                            GameHandler.getGui().display("There is no one to play with", "Black");
+                                                            return;
+                                                        }
+                                                        for (int i = 0; i < npcChoises.length; i++) {
+                                                            npcChoises[i] = npcChoises[i].replace("_", " ");
+                                                        }
+                                                        String selectedNPC = (String) JOptionPane.showInputDialog(
+                                                                null,
+                                                                "Who do you want to play with?",
+                                                                "Play",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                npcChoises,
+                                                                npcChoises[0]);
+                                                        if (selectedNPC != null) {
+                                                            String[] toyChoises = Player.getRoom().getToyChoices();
+                                                            if (toyChoises.length == 0) {
+                                                                GameHandler.getGui().display("There are no toys to play with", "Black");
+                                                                Player.getRoom().play(selectedNPC, null);
+                                                            } else {
+                                                                for (int i = 0; i < toyChoises.length; i++) {
+                                                                    toyChoises[i] = toyChoises[i].replace("_", " ");
+                                                                }
+                                                                String selectedToy = (String) JOptionPane.showInputDialog(
+                                                                        null,
+                                                                        "What do you want to play with?",
+                                                                        "Play",
+                                                                        JOptionPane.QUESTION_MESSAGE,
+                                                                        null,
+                                                                        toyChoises,
+                                                                        toyChoises[0]);
+                                                                if (selectedToy != null) {
+                                                                    Player.getRoom().play(selectedNPC, selectedToy);
+                                                                } else {
+                                                                    notify();
+                                                                }
+                                                            }
+                                                        } else {
+                                                            notify();
+                                                        }
+                                                    }
+                                                    case "Help" -> {
+                                                    }
+                                                    case "Lead" -> {
+                                                        String[] choises = Player.getRoom().getNPCChoises();
+                                                        if (choises.length == 0) {
+                                                            GameHandler.getGui().display("There is no one to lead", "Black");
+                                                            return;
+                                                        } else {
+                                                            for (int i = 0; i < choises.length; i++) {
+                                                                choises[i] = choises[i].replace("_", " ");
+                                                            }
+                                                            String selectedLead = (String) JOptionPane.showInputDialog(
+                                                                    null,
+                                                                    "Who do you want to lead?",
+                                                                    "Lead",
+                                                                    JOptionPane.QUESTION_MESSAGE,
+                                                                    null,
+                                                                    choises,
+                                                                    choises[0]);
+                                                            NPC npc = GameHandler.getNPCByName(selectedLead.replace(" ", "_"));
+                                                            if (!selectedLead.equals("Nobody") && npc.getAge() < 5) {
+                                                                if (npc.isFollower()) {
+                                                                    GameHandler.getGui().display("You stop leading " + selectedLead, "Black");
+                                                                    npc.follower = false;
+                                                                } else {
+                                                                    GameHandler.getGui().display("You ask " + selectedLead + "to follow you. ", "Black");
+                                                                    NPC.followPlayer(GameHandler.getNPCByName(selectedLead.replace(" ", "_")));
+
+                                                                }
+                                                            } else {
+                                                                notify();
+                                                            }
+                                                        }
+                                                    }
+                                                    case "Pretend" -> {
+                                                        String[] pretendChoices = {"Pirate", "Princess", "Superhero", "Villain"};
+                                                        String selectedPretend = (String) JOptionPane.showInputDialog(
+                                                                null,
+                                                                "What do you want to pretend to be?",
+                                                                "Pretend",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                pretendChoices,
+                                                                pretendChoices[0]);
+                                                        switch (selectedPretend) {
+                                                            case "Pirate" -> {
+                                                                GameHandler.getGui().display("You pretend to be a pirate", "Black");
+                                                            }
+                                                            case "Prince(ss)" -> {
+                                                                GameHandler.getGui().display("You pretend to be a princess", "Black");
+                                                            }
+                                                            case "Superhero" -> {
+                                                                GameHandler.getGui().display("You pretend to be a superhero", "Black");
+                                                            }
+                                                            case "Villain" -> {
+                                                                GameHandler.getGui().display("You pretend to be a villain", "Black");
+                                                            }
+                                                        }
+                                                    }
+
+                                                    case "Dance" -> {
+                                                        String[] danceChoices = {"Ballet", "Breakdance", "Hip Hop", "Tap"};
+                                                        String selectedDance = (String) JOptionPane.showInputDialog(
+                                                                null,
+                                                                "What do you want to dance?",
+                                                                "Dance",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                danceChoices,
+                                                                danceChoices[0]);
+                                                        switch (selectedDance) {
+                                                            case "Ballet" -> {
+                                                                GameHandler.getGui().display("You dance ballet", "Black");
+                                                            }
+                                                            case "Breakdance" -> {
+                                                                GameHandler.getGui().display("You breakdance", "Black");
+                                                            }
+                                                            case "Hip Hop" -> {
+                                                                GameHandler.getGui().display("You dance hip hop", "Black");
+                                                            }
+                                                            case "Tap" -> {
+                                                                GameHandler.getGui().display("You tap dance", "Black");
+                                                            }
+                                                        }
+
+                                                    }
+
+                                                }
+                                            } else {
+                                                notify();
+                                            }
                                         }
-                                        String selectedToy = (String) JOptionPane.showInputDialog(
-                                                null,
-                                                "What do you want to play with?",
-                                                "Play",
-                                                JOptionPane.QUESTION_MESSAGE,
-                                                null,
-                                                toyChoises,
-                                                toyChoises[0]);
-                                        if (selectedToy != null) {
-                                            Player.getRoom().play(selectedNPC, selectedToy);
+                                    }
+                                    updateSidePanels();
+                                });
+
+                                takeButton.addActionListener(e -> {
+                                    if (!locked) {
+                                        synchronized (this) {
+                                            notify();
+                                            if (Player.getRoom().getArrayInventory().isEmpty()) {
+                                                GameHandler.getGui().display("There is nothing to take", "Black");
+                                                return;
+                                            }
+                                            String[] items = Player.getRoom().getItemChoices();
+                                            if (items.length == 0) {
+                                                GameHandler.getGui().display("There is nothing to take", "Black");
+                                                return;
+                                            }
+                                            for (int i = 0; i < items.length; i++) {
+                                                items[i] = items[i].replace("_", " ");
+                                            }
+                                            String selectedItem = (String) JOptionPane.showInputDialog(
+                                                    null,
+                                                    "What do you want to take?",
+                                                    "Items",
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,
+                                                    items,
+                                                    items[0]);
+                                            if (selectedItem != null) {
+                                                Item item = GameHandler.getItemByName(selectedItem);
+                                                if (item.getConditions().get(ItemCondition.TAKEABLE) == false) {
+                                                    GameHandler.getGui().display("You can't pick that up item.", "Black");
+                                                    return;
+                                                }
+                                                Player.addItem(item);
+                                                Player.getRoom().removeItem(item);
+                                            } else {
+                                                notify();
+                                            }
+                                        }
+                                    }
+                                    updateSidePanels();
+                                });
+                                mischiefButton.addActionListener(e -> {
+                                    if (!locked) {
+                                        synchronized (this) {
+                                            notify();
+                                            if (Player.isHeld()) {
+                                                GameHandler.getGui().display("You are being held and can't do mischief", "Black");
+                                                return;
+                                            }
+                                            String[] mischief = {"Sneak", "Prank", "Steal", "Sabotage", "Vandalize"};
+                                            String selectedMischief = (String) JOptionPane.showInputDialog(
+                                                    null,
+                                                    "What do you want to do?",
+                                                    "Mischief",
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,
+                                                    mischief,
+                                                    mischief[0]
+                                            );
+                                            if (selectedMischief != null) {
+                                                switch (selectedMischief) {
+                                                    case "Sneak" -> {
+                                                        Player.sneak();
+                                                    }
+                                                    case "Prank" -> {
+                                                        String[] choises = Player.getRoom().getNPCChoises();
+                                                        if (choises.length == 0) {
+                                                            GameHandler.getGui().display("There is no one to prank", "Black");
+                                                            return;
+                                                        }
+                                                        for (int i = 0; i < choises.length; i++) {
+                                                            choises[i] = choises[i].replace("_", " ");
+                                                        }
+                                                        String selectedPrank = (String) JOptionPane.showInputDialog(
+                                                                null,
+                                                                "Who do you want to prank?",
+                                                                "Prank",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                choises,
+                                                                choises[0]);
+                                                        if (selectedPrank != null) {
+                                                            GameHandler.getGui().display("You prank " + selectedPrank, "Black");
+                                                            GameHandler.getNPCByName(selectedPrank.replace(" ", "_")).getPranked();
+                                                        } else {
+                                                            display("No one here to prank.", "Black");
+                                                            notify();
+                                                        }
+                                                    }
+                                                    case "Steal" -> {
+                                                        String[] choises = Player.getRoom().getContraband();
+                                                        if (choises.length == 0) {
+                                                            GameHandler.getGui().display("There is nothing to steal", "Black");
+                                                            return;
+                                                        }
+                                                        String selectedSteal = (String) JOptionPane.showInputDialog(
+                                                                null,
+                                                                "What do you want to steal?",
+                                                                "Steal",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                choises,
+                                                                choises[0]);
+                                                        if (selectedSteal != null) {
+                                                            GameHandler.getGui().display("You steal something", "Black");
+                                                            Player.getRoom().steal(selectedSteal);
+                                                        } else {
+                                                            notify();
+                                                        }
+                                                    }
+                                                    case "Sabotage" -> {
+                                                        String[] choises = Player.getRoom().getFurniture();
+                                                        if (choises.length == 0) {
+                                                            GameHandler.getGui().display("There is nothing to sabotage", "Black");
+                                                            return;
+                                                        }
+                                                        String selectedSabotage = (String) JOptionPane.showInputDialog(
+                                                                null,
+                                                                "What do you want to sabotage?",
+                                                                "Sabotage",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                choises,
+                                                                choises[0]);
+                                                        Item item = GameHandler.getItemByName(selectedSabotage);
+                                                        if (item != null) {
+                                                            GameHandler.getGui().display("You sabotage something", "Black");
+                                                            Player.getRoom().sabotage(item);
+                                                        } else {
+                                                            notify();
+                                                        }
+                                                    }
+                                                    case "Vandalize" -> {
+                                                        String[] choises = Player.getRoom().getFurniture();
+                                                        if (choises.length == 0) {
+                                                            GameHandler.getGui().display("There is nothing to vandalize", "Black");
+                                                            return;
+                                                        }
+                                                        String selectedVandalize = (String) JOptionPane.showInputDialog(
+                                                                null,
+                                                                "What do you want to vandalize?",
+                                                                "Vandalize",
+                                                                JOptionPane.QUESTION_MESSAGE,
+                                                                null,
+                                                                choises,
+                                                                choises[0]);
+                                                        Item item = GameHandler.getItemByName(selectedVandalize);
+                                                        if (item != null) {
+                                                            GameHandler.getGui().display("You vandalize something", "Black");
+                                                            Player.getRoom().vandalize(item);
+                                                        } else {
+                                                            notify();
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                notify();
+                                            }
+                                        }
+                                    }
+                                    updateSidePanels();
+                                });
+                                jTextField.addActionListener(e -> {
+                                    synchronized (this) {
+                                        notify();
+                                        if (!locked) {
+                                            Commands.execute(jTextField.getText());
                                         } else {
                                             notify();
                                         }
                                     }
-                                } else {
-                                    notify();
-                                }
-                            }
-                            case "Help" -> {
-                            }
-                            case "Lead" -> {
-                                String[] choises = Player.getRoom().getNPCChoises();
-                                if (choises.length == 0) {
-                                    GameHandler.getGui().display("There is no one to lead", "Black");
-                                    return;
-                                } else {
-                                    for (int i = 0; i < choises.length; i++) {
-                                        choises[i] = choises[i].replace("_", " ");
-                                    }
-                                    String selectedLead = (String) JOptionPane.showInputDialog(
-                                            null,
-                                            "Who do you want to lead?",
-                                            "Lead",
-                                            JOptionPane.QUESTION_MESSAGE,
-                                            null,
-                                            choises,
-                                            choises[0]);
-                                    NPC npc = GameHandler.getNPCByName(selectedLead.replace(" ", "_"));
-                                    if (!selectedLead.equals("Nobody") && npc.getAge() < 5) {
-                                        if (npc.isFollower()) {
-                                            GameHandler.getGui().display("You stop leading " + selectedLead, "Black");
-                                            npc.follower = false;
-                                        } else {
-                                            GameHandler.getGui().display("You ask " + selectedLead + "to follow you. ", "Black");
-                                            NPC.followPlayer(GameHandler.getNPCByName(selectedLead.replace(" ", "_")));
+                                    updateSidePanels();
+                                });
 
-                                        }
-                                    } else {
-                                        notify();
-                                    }
-                                }
-                            }
-                            case "Pretend" -> {
-                                String[] pretendChoices = {"Pirate", "Princess", "Superhero", "Villain"};
-                                String selectedPretend = (String) JOptionPane.showInputDialog(
-                                        null,
-                                        "What do you want to pretend to be?",
-                                        "Pretend",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        pretendChoices,
-                                        pretendChoices[0]);
-                                switch (selectedPretend) {
-                                    case "Pirate" -> {
-                                        GameHandler.getGui().display("You pretend to be a pirate", "Black");
-                                    }
-                                    case "Prince(ss)" -> {
-                                        GameHandler.getGui().display("You pretend to be a princess", "Black");
-                                    }
-                                    case "Superhero" -> {
-                                        GameHandler.getGui().display("You pretend to be a superhero", "Black");
-                                    }
-                                    case "Villain" -> {
-                                        GameHandler.getGui().display("You pretend to be a villain", "Black");
-                                    }
-                                }
+                                setVisible(true);
                             }
 
-                            case "Dance" -> {
-                                String[] danceChoices = {"Ballet", "Breakdance", "Hip Hop", "Tap"};
-                                String selectedDance = (String) JOptionPane.showInputDialog(
-                                        null,
-                                        "What do you want to dance?",
-                                        "Dance",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        danceChoices,
-                                        danceChoices[0]);
-                                switch (selectedDance) {
-                                    case "Ballet" -> {
-                                        GameHandler.getGui().display("You dance ballet", "Black");
-                                    }
-                                    case "Breakdance" -> {
-                                        GameHandler.getGui().display("You breakdance", "Black");
-                                    }
-                                    case "Hip Hop" -> {
-                                        GameHandler.getGui().display("You dance hip hop", "Black");
-                                    }
-                                    case "Tap" -> {
-                                        GameHandler.getGui().display("You tap dance", "Black");
-                                    }
-                                }
-
-                            }
-
-                        }
-                    } else {
-                        notify();
-                    }
-                }
-            }
-            updateSidePanels();
-        });
-
-        takeButton.addActionListener(e -> {
-            if (!locked) {
-                synchronized (this) {
-                    notify();
-                    if (Player.getRoom().getArrayInventory().isEmpty()) {
-                        GameHandler.getGui().display("There is nothing to take", "Black");
-                        return;
-                    }
-                    String[] items = Player.getRoom().getItemChoices();
-                    if (items.length == 0) {
-                        GameHandler.getGui().display("There is nothing to take", "Black");
-                        return;
-                    }
-                    for (int i = 0; i < items.length; i++) {
-                        items[i] = items[i].replace("_", " ");
-                    }
-                    String selectedItem = (String) JOptionPane.showInputDialog(
-                            null,
-                            "What do you want to take?",
-                            "Items",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            items,
-                            items[0]);
-                    if (selectedItem != null) {
-                        Item item = GameHandler.getItemByName(selectedItem);
-                        if (item.getConditions().get(ItemCondition.TAKEABLE) == false) {
-                            GameHandler.getGui().display("You can't pick that up item.", "Black");
-                            return;
-                        }
-                        Player.addItem(item);
-                        Player.getRoom().removeItem(item);
-                    } else {
-                        notify();
-                    }
-                }
-            }
-            updateSidePanels();
-        });
-        mischiefButton.addActionListener(e -> {
-            if (!locked) {
-                synchronized (this) {
-                    notify();
-                    String[] mischief = {"Sneak", "Prank", "Steal", "Sabotage", "Vandalize"};
-                    String selectedMischief = (String) JOptionPane.showInputDialog(
-                            null,
-                            "What do you want to do?",
-                            "Mischief",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            mischief,
-                            mischief[0]
-                    );
-                    if (selectedMischief != null) {
-                        switch (selectedMischief) {
-                            case "Sneak" -> {
-                                Player.sneak();
-                            }
-                            case "Prank" -> {
-                                String[] choises = Player.getRoom().getNPCChoises();
-                                if (choises.length == 0) {
-                                    GameHandler.getGui().display("There is no one to prank", "Black");
-                                    return;
-                                }
-                                for (int i = 0; i < choises.length; i++) {
-                                    choises[i] = choises[i].replace("_", " ");
-                                }
-                                String selectedPrank = (String) JOptionPane.showInputDialog(
-                                        null,
-                                        "Who do you want to prank?",
-                                        "Prank",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        choises,
-                                        choises[0]);
-                                if (selectedPrank != null) {
-                                    GameHandler.getGui().display("You prank " + selectedPrank, "Black");
-                                    GameHandler.getNPCByName(selectedPrank.replace(" ", "_")).getPranked();
-                                } else {
-                                    display("No one here to prank.", "Black");
-                                    notify();
-                                }
-                            }
-                            case "Steal" -> {
-                                String[] choises = Player.getRoom().getContraband();
-                                if (choises.length == 0) {
-                                    GameHandler.getGui().display("There is nothing to steal", "Black");
-                                    return;
-                                }
-                                String selectedSteal = (String) JOptionPane.showInputDialog(
-                                        null,
-                                        "What do you want to steal?",
-                                        "Steal",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        choises,
-                                        choises[0]);
-                                if (selectedSteal != null) {
-                                    GameHandler.getGui().display("You steal something", "Black");
-                                    Player.getRoom().steal(selectedSteal);
-                                } else {
-                                    notify();
-                                }
-                            }
-                            case "Sabotage" -> {
-                                String[] choises = Player.getRoom().getFurniture();
-                                if (choises.length == 0) {
-                                    GameHandler.getGui().display("There is nothing to sabotage", "Black");
-                                    return;
-                                }
-                                String selectedSabotage = (String) JOptionPane.showInputDialog(
-                                        null,
-                                        "What do you want to sabotage?",
-                                        "Sabotage",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        choises,
-                                        choises[0]);
-                                Item item = GameHandler.getItemByName(selectedSabotage);
-                                if (item != null) {
-                                    GameHandler.getGui().display("You sabotage something", "Black");
-                                    Player.getRoom().sabotage(item);
-                                } else {
-                                    notify();
-                                }
-                            }
-                            case "Vandalize" -> {
-                                String[] choises = Player.getRoom().getFurniture();
-                                if (choises.length == 0) {
-                                    GameHandler.getGui().display("There is nothing to vandalize", "Black");
-                                    return;
-                                }
-                                String selectedVandalize = (String) JOptionPane.showInputDialog(
-                                        null,
-                                        "What do you want to vandalize?",
-                                        "Vandalize",
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null,
-                                        choises,
-                                        choises[0]);
-                                Item item = GameHandler.getItemByName(selectedVandalize);
-                                if (item != null) {
-                                    GameHandler.getGui().display("You vandalize something", "Black");
-                                    Player.getRoom().vandalize(item);
-                                } else {
-                                    notify();
-                                }
-                            }
-                        }
-                    } else {
-                        notify();
-                    }
-                }
-            }
-            updateSidePanels();
-        });
-        jTextField.addActionListener(e -> {
-            synchronized (this) {
-                notify();
-                if (!locked) {
-                    Commands.execute(jTextField.getText());
-                } else {
-                    notify();
-                }
-            }
-            updateSidePanels();
-        });
-
-        setVisible(true);
-    }
-
-    public static void setjTextField(JTextField jTextField) {
+                        public static void setjTextField(JTextField jTextField) {
         GUI.jTextField = jTextField;
     }
+
+    
 
     public void display(String message, String color) {
         HTMLEditorKit editorKit = (HTMLEditorKit) jTextPane.getEditorKit();

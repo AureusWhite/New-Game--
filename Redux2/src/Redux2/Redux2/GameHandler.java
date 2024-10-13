@@ -36,6 +36,10 @@ public class GameHandler {
         return name;
     }
 
+    static void storyTime() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     private Container box,foodTray;
     
     public Room recoveryRoom, kitchen, mainRoom,
@@ -821,7 +825,7 @@ public class GameHandler {
     }
 
     public static void setFileSection2(String fileSection2) {
-        GameHandler.fileSection2 = fileSection2;
+        fileSection2 = fileSection2;
     }
 
     public static String getFileSection3() {
@@ -829,7 +833,7 @@ public class GameHandler {
     }
 
     public static void setFileSection3(String fileSection3) {
-        GameHandler.fileSection3 = fileSection3;
+        fileSection3 = fileSection3;
     }
 
     public static String getFileSection4() {
@@ -837,7 +841,7 @@ public class GameHandler {
     }
 
     public static void setFileSection4(String fileSection4) {
-        GameHandler.fileSection4 = fileSection4;
+        fileSection4 = fileSection4;
     }
     public static PawFigure getFigureByName(String name) {
         for (Item item : items.values()) {
@@ -903,13 +907,13 @@ public class GameHandler {
                 }
                 return content.toString(); // Return the content before first '#'
             } catch (IOException e) {
-                GameHandler.getGui().display("Error reading file.", "Red");
+                getGui().display("Error reading file.", "Red");
             }
         } else {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                GameHandler.getGui().display("Error creating file.", "Red");
+                getGui().display("Error creating file.", "Red");
             }
         }
         return null;
@@ -1015,8 +1019,8 @@ public class GameHandler {
     static void playerTimeOut(int i, String act, NPC npc) {
         boolean apology = false;
         getGui().lockButtons();
-        GameHandler.getGui().clearTextPane();
-        GameHandler.getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
+        getGui().clearTextPane();
+        getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
         while (!apology) {
             String[] acts = {"stealing", "pranking", "Vandalism", "Skipped", "Trespassing", "Sneaking", "climbed", "I don't know"};
             String response = (String) JOptionPane.showInputDialog(null,
@@ -1024,7 +1028,7 @@ public class GameHandler {
                     "Choose", JOptionPane.QUESTION_MESSAGE,
                     null, acts, acts[0]);
             if (response == null) {
-                GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                getGui().display("You Will stay here until you give the correct answers.", "Red");
                 break;
             }
             switch (response) {
@@ -1040,7 +1044,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1064,7 +1068,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1088,7 +1092,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1112,7 +1116,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1136,7 +1140,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1160,7 +1164,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1184,7 +1188,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1208,7 +1212,7 @@ public class GameHandler {
                             null, reasons, reasons[0]);
 
                     if (response == null) {
-                        GameHandler.getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
                         break;
                     }
                     switch (response) {
@@ -1270,7 +1274,7 @@ public class GameHandler {
     }
     public static void updateAchievementsForRoomVisit(Room room) {
         // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
-        for (Achievements Achievement : GameHandler.getAchievements()) {
+        for (Achievements Achievement : getAchievements()) {
             // Check if the achievement involves visiting rooms
             if (Achievement.getRequiredPlaces().containsKey(room)) {
                 Achievement.markRoomVisited(room); // Mark the room as visited for the achievement
@@ -1279,7 +1283,7 @@ public class GameHandler {
     }
     public static void updateAchievementsForEquip(Equipment equipment) {
         // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
-        for (Achievements Achievement : GameHandler.getAchievements()) {
+        for (Achievements Achievement : getAchievements()) {
             // Check if the achievement involves equipping items
             if (Achievement.getRequiredEquipment().containsKey(equipment)) {
                 Achievement.markEquipmentEquipped(equipment); // Mark the equipment as equipped for the achievement
@@ -1307,10 +1311,10 @@ public class GameHandler {
     }
 
     public static void makeFoodTray() {
-        Container foodTray1 = (Container) GameHandler.getItems().get("Food Tray");
+        Container foodTray1 = (Container) getItems().get("Food Tray");
                 if (foodTray1 == null) {
                     foodTray1 = new Container("Food Tray", "A plastic food tray", "Container", false);
-                    GameHandler.getItems().put("Food Tray", foodTray1); // Add it to game items
+                    getItems().put("Food Tray", foodTray1); // Add it to game items
                 }
     
                 Random rand = new Random();
@@ -1361,7 +1365,7 @@ public class GameHandler {
 
     
                 // Display success message
-                GameHandler.getGui().display("You filled the food tray with delicious items!", "Red");
+                getGui().display("You filled the food tray with delicious items!", "Red");
                 foodTrayDispenser.addItem(foodTray1);
                 foodTray1.displayInventory();
                 foodTrayDispenser.displayInventory();
