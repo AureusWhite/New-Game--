@@ -4,20 +4,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Achievements {
-    private final String name;
-    private final String description;
-    private boolean unlocked;
+    private final String name, description;
+
+    private boolean unlocked, completed;
     private final int points;
     private final HashMap<Item, Boolean> requiredItems = new HashMap<>();
     private final HashMap<Room, Boolean> requiredPlaces = new HashMap<>();
-    private final HashMap<String, Boolean> requiredStatus = new HashMap<>();
+    private final HashMap<PlayerStatus, Boolean> requiredStatus = new HashMap<>();
     private final HashSet<Achievements> requiredAchievements = new HashSet<>();
     private final HashMap<Equipment, Boolean> requiredEquipment = new HashMap<>();
     private final HashMap<NPC, NPCStatus> requiredNPC = new HashMap<>();
 
-    public enum NPCStatus {
-        NOT_SPOKEN_TO, SPOKEN_TO, FRIEND, ENEMY, ADULT, REJUVE, ANDRIOD, COMPANION,VENDER,
-    }
     // Constructor for the achievement
     public Achievements(String name, String description, int points) {
         this.name = name;
@@ -48,22 +45,22 @@ public class Achievements {
     // Method to check if all conditions for the achievement are met
     public boolean checkAchievements() {
         // Check if all required items have been collected
-        for (Boolean collected : requiredItems.values()) {
-            if (!collected) {
+        for (Boolean collected1 : requiredItems.values()) {
+            if (!collected1) {
                 return false;  // Not all items have been collected
             }
         }
 
         // Check if all required places have been visited
-        for (Boolean visited : requiredPlaces.values()) {
-            if (!visited) {
+        for (Boolean visited1 : requiredPlaces.values()) {
+            if (!visited1) {
                 return false;  // Not all places have been visited
             }
         }
 
         // Check if all required statuses have been met
-        for (Boolean status : requiredStatus.values()) {
-            if (!status) {
+        for (Boolean status1 : requiredStatus.values()) {
+            if (!status1) {
                 return false;  // Not all statuses have been met
             }
         }
@@ -76,8 +73,8 @@ public class Achievements {
         }
 
         // Check if all required equipment has been equipped
-        for (Boolean equipped : requiredEquipment.values()) {
-            if (!equipped) {
+        for (Boolean equipped1 : requiredEquipment.values()) {
+            if (!equipped1) {
                 return false;  // Not all equipment has been equipped
             }
         }
@@ -153,16 +150,20 @@ public class Achievements {
         requiredPlaces.put(room, false);  // initially set to false
     }
     // Add required status for an achievement (e.g., a specific state like 'spoken to NPC')
-    public void addRequiredStatus(String status) {
+    public void addRequiredStatus(PlayerStatus status) {
         requiredStatus.put(status, false);  // initially set to false
     }
+    // Add required equipment for an achievement (e.g., equip a specific clothing) 
     public void addRequiredEquipment(Equipment equipment) {
         requiredEquipment.put(equipment, false);
     }
+    // Add required NPC for an achievement (e.g., speak to a specific NPC)
     public void addRequiredNPC(NPC npc, NPCStatus status) {
         requiredNPC.put(npc, NPCStatus.NOT_SPOKEN_TO);  // Initially not spoken to
         requiredNPC.put(npc,status);  // Initially not spoken to
     } 
+
+    // get methods for the required items, places, status, achievements, equipment, and NPCs
     public HashMap<NPC, NPCStatus> getRequiredNPC() {
         return requiredNPC; 
     }
@@ -178,9 +179,10 @@ public class Achievements {
     public HashSet<Achievements> getRequiredAchievements() {
         return requiredAchievements;
     }
-    public HashMap<String, Boolean> getRequiredStatus() {
+    public HashMap<PlayerStatus, Boolean> getRequiredStatus() {
         return requiredStatus;
     }
+    // Method to check if all required NPCs have been interacted with
     public boolean checkNPCs() {
         for (NPCStatus status : requiredNPC.values()) {
             if (status == NPCStatus.NOT_SPOKEN_TO) {
@@ -189,6 +191,7 @@ public class Achievements {
         }
         return true;  // All required NPCs have been interacted with in some way
     }
+    // Method to check if all required NPCs conditions have been met
     public boolean checkNPCAchievements() {
         // Include other checks like places, items, etc.
         return checkNPCs() && checkAchievements();  // Combine with other checks
@@ -199,5 +202,11 @@ public class Achievements {
                 + points + ", requiredItems=" + requiredItems + ", requiredPlaces=" + requiredPlaces
                 + ", requiredStatus=" + requiredStatus + ", requiredAchievements=" + requiredAchievements
                 + ", requiredNPC=" + requiredNPC + ", requiredEquipment=" + requiredEquipment + "]";
+    }
+    public boolean isCompleted() {
+        return completed;
+    }
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

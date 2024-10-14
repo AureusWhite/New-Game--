@@ -29,4 +29,8 @@ public class Container extends Item {
         return items;
     }
 
+    void setType(ItemType itemType) {
+        this.getTypes().put(itemType, true);
+    }
+
 }

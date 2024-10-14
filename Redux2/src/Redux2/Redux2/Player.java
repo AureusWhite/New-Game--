@@ -40,7 +40,9 @@ public class Player {
     public static ArrayList<Item> getHands() {
         return hands;
     }
-
+    public boolean getLeader() {
+        return leader;
+    }
     public static boolean hasFigure(boolean b) {
         for (Item item : hands) {
             if (item.getName().equals("Paw Figure")) {
@@ -141,6 +143,14 @@ public class Player {
         return Player.Status.contains(PlayerStatus.HOLDING_HANDS) || Player.Status.contains(PlayerStatus.CARRIED);
     }
 
+    public static boolean isPlayerIsHidden() {
+        return playerIsHidden;
+    }
+
+    public static void setPlayerIsHidden(boolean playerIsHidden) {
+        Player.playerIsHidden = playerIsHidden;
+    }
+
     public ArrayList<Item> gatHands() {
         return hands;
     }
@@ -200,6 +210,8 @@ public class Player {
     public static void setRoom(Room room1) {
         GameHandler.updateAchievementsForRoomVisit(room1);
         room = room1;
+        room.initializeRoomFiles();
+        GameHandler.getGui().updateSidePanels();
         if (room == GameHandler.getRoomByName("Demo_Room")) {
             GameHandler.demo();
         }
@@ -433,7 +445,7 @@ public class Player {
 
     public static void potty() {
 
-        if (getRoom().getType().equals(Room.ROOMTYPE.BATHROOM)) {
+        if (getRoom().getType().equals(RoomType.BATHROOM)) {
             if (Player.isPottyTrained()) {
                 GameHandler.getGui().display("You used the potty.", "Black");
                 blatter = 0;
@@ -631,7 +643,7 @@ public class Player {
                 } else if (outcome == 17||outcome == 18) {
                     levelUpSkill(Skill.FINE_MOTOR); 
                 }else {
-                    GameHandler.getGui().display(Player.getRoom().randomNPC(false) + " noticed you and smirked with a laugh.", "Black");
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " noticed you and smirked with a laugh.", "Black");
                 }
             }
             case 2 -> {
@@ -643,9 +655,9 @@ public class Player {
                 }else if (outcome == 15||outcome == 16) {
                     levelUpSkill(Skill.FINE_MOTOR); 
                 }else {
-                    GameHandler.getGui().display(Player.getRoom().randomNPC(false) + " noticed you and smirked with a laugh.", "Black");
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " noticed you and smirked with a laugh.", "Black");
                 }
-                GameHandler.getGui().display(Player.getRoom().randomNPC(false) + ": Hello, "+Player.getName()+" are you a bank robber? I can see you.", "Black");
+                GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + ": Hello, "+Player.getName()+" are you a bank robber? I can see you.", "Black");
             }
             case 3 -> {
                 GameHandler.getGui().display("Giggles in check and serious faced you pretend to be a ninja, even though they are also not allowed at school, a ninja is queit about their mischeif", "Black");
@@ -656,7 +668,7 @@ public class Player {
                 }else if (outcome == 13||outcome == 14) {
                     levelUpSkill(Skill.FINE_MOTOR); 
                 } else {
-                    GameHandler.getGui().display(Player.getRoom().randomNPC(false) + ": I see you, "+Player.getName()+", you are not a ninja.", "Black");
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + ": I see you, "+Player.getName()+", you are not a ninja.", "Black");
                 }
             }
             case 4 -> {
@@ -821,7 +833,7 @@ public class Player {
             }
             case 4 -> {
                 // Check if the item has conditions and the FOOD condition is present
-                if (item.getConditions() != null && (item.getConditions().containsKey(ItemCondition.FOOD) || item.getConditions().containsKey(ItemCondition.DRINK))) {
+                if (item.getTypes() != null && (item.getTypes().containsKey(ItemType.FOOD) || item.getTypes().containsKey(ItemType.DRINK))) {
                     item.use(); // Eating the item if it’s food
                 } else {
                     GameHandler.getGui().display("You can't eat that.", "Black");
@@ -947,7 +959,7 @@ public class Player {
         }
     }
 
-    private static void setHidden(boolean b) {
+    public static void setHidden(boolean b) {
         playerIsHidden = b;
     }
 

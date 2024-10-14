@@ -1,0 +1,5 @@
+package Redux2;
+
+public enum NPCType {
+    ADULT, REJUVE, ANDRIOD, COMPANION, VENDER, ENEMY, INFANT, TIRED, SLEEPING, BADMOOD,
+}

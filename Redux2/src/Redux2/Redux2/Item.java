@@ -9,21 +9,22 @@ public class Item {
     private int saturation;
     protected String name;
     protected String description;
-    private String type;
     private int price;
     private final HashMap<ItemCondition, Boolean> conditions = new HashMap<>();
     private final ArrayList<Item> inventory = new ArrayList<>();
+    private final HashMap<ItemType, Boolean> types = new HashMap<>();
 
     public HashMap<ItemCondition, Boolean> getConditions() {
         return this.conditions;
     }
-
+    public HashMap<ItemType, Boolean> getTypes() {
+        return this.types;
+    }
     public Item(String name, String description, String type, boolean takable) {
         this.name = name;
         this.description = description;
-        this.type = type;
         this.price = 0;
-        this.conditions.put(ItemCondition.TAKEABLE, takable);
+        this.types.put(ItemType.TAKEABLE, takable);
     }
 
     public boolean isBroken() {
@@ -49,8 +50,8 @@ public class Item {
     }
 
     public boolean isTakable() {
-        if (this.conditions.containsKey(ItemCondition.TAKEABLE)) {
-            return this.conditions.get(ItemCondition.TAKEABLE);
+        if (this.types.containsKey(ItemType.TAKEABLE)) {
+            return this.types.get(ItemType.TAKEABLE);
         }
         return false;
     }
@@ -62,17 +63,8 @@ public class Item {
         this.saturation = saturation;
     }
     public void setTakable(boolean takable) {
-        this.conditions.put(ItemCondition.TAKEABLE, takable);
+        this.types.put(ItemType.TAKEABLE, takable);
     }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public void use() {
         if (this.getClass().equals(Container.class)) {
             String[] choices = this.getItemChoices();
@@ -89,21 +81,21 @@ public class Item {
                 }
             }
         }
-        else if (this.conditions.containsKey(ItemCondition.FOOD)||this.conditions.containsKey(ItemCondition.DRINK)) {
-            if(this.conditions.containsKey(ItemCondition.FOOD)){
+        else if (this.types.containsKey(ItemType.FOOD)||this.types.containsKey(ItemType.DRINK)) {
+            if(this.types.containsKey(ItemType.FOOD)){
                 Player.setHunger(Player.getHunger() + this.getSaturation());
             GameHandler.getGui().display("Saturation: " + this.getSaturation(), "Black");
             GameHandler.getGui().display("You eat the " + this.getName(), "Black");
             GameHandler.getGui().display("You are now " + Player.getHunger() + "% full", "Black");
             }
-            else if(this.conditions.containsKey(ItemCondition.DRINK)){
+            else if(this.types.containsKey(ItemType.DRINK)){
                 Player.setThirst(Player.getThirst() + this.getSaturation());
             GameHandler.getGui().display("Saturation: " + this.getSaturation(), "Black");
             GameHandler.getGui().display("You drink the " + this.getName(), "Black");
             GameHandler.getGui().display("You are now " + Player.getThirst() + "% quenched", "Black");
                 Player.setBlatter(Player.getBlatter() + this.getSaturation());
         }
-        } else if (this.conditions.containsKey(ItemCondition.DISPENCER)) {
+        } else if (this.types.containsKey(ItemType.DISPENCER)) {
             String[] choices = getItemChoices();
             String choice = JOptionPane.showInputDialog(null, "Choose an item to take", "Dispencer", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]).toString();
             if (choice.equals("Close")) {
@@ -117,19 +109,19 @@ public class Item {
                     return;
                 }
             }
-        } else if (this.conditions.containsKey(ItemCondition.TOY)) {
+        } else if (this.types.containsKey(ItemType.TOY)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
             Player.removeItem(this);
-        } else if (this.conditions.containsKey(ItemCondition.TEST)) {
+        } else if (this.types.containsKey(ItemType.TEST)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
             Player.removeItem(this);
-        } else if (this.conditions.containsKey(ItemCondition.KEY)) {
+        } else if (this.types.containsKey(ItemType.KEY)) {
             String[] choices = Player.getRoom().getExitChoises();
             String choice = JOptionPane.showInputDialog(null, "Choose a door to unlock", "Unlock", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]).toString();
             if (choice.equals("Close")) {
-                return;
+                //return;
             }
-            if (!Player.getRoom().getExit(choice).isLocked()) {
+            /*if (!Player.getRoom().getExit(choice).isLocked()) {
                 GameHandler.getGui().display("The " + choice + " door is already unlocked", "Black");
             } else if (Player.getRoom().getExit(choice).isLocked()) {
                 if (this.getName().equals(Player.getRoom().getExit(choice).getKey())) {
@@ -142,22 +134,22 @@ public class Item {
             } else {
                 GameHandler.getGui().display("The " + choice + " door is already unlocked", "Black");
             }
-
-        } else if (this.conditions.containsKey(ItemCondition.CLOTHING)) {
+*/
+        } else if (this.types.containsKey(ItemType.CLOTHING)) {
             GameHandler.getGui().display("Use equip..", "Black");
 
-        } else if (this.conditions.containsKey(ItemCondition.SEAT)) {
+        } else if (this.types.containsKey(ItemType.SEAT)) {
             GameHandler.getGui().display("You sit on the " + this.getName(), "Black");
-        } else if (this.conditions.containsKey(ItemCondition.CONTRABAND)) {
+        } else if (this.types.containsKey(ItemType.CONTRABAND)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
             Player.removeItem(this);
-        } else if (this.conditions.containsKey(ItemCondition.DROPPABLE)) {
+        } else if (this.types.containsKey(ItemType.DROPPABLE)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
             Player.removeItem(this);
         } else if (this.conditions.containsKey(ItemCondition.VANDELIZED)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
             Player.removeItem(this);
-        } else if (this.conditions.containsKey(ItemCondition.INTERACTABLE)) {
+        } else if (this.types.containsKey(ItemType.INTERACTABLE)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
             Player.removeItem(this);
         } else if (this.conditions.containsKey(ItemCondition.BROKEN)) {
@@ -166,9 +158,9 @@ public class Item {
         } else if (this.conditions.containsKey(ItemCondition.LOCKED)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
             Player.removeItem(this);
-        } else if (this.conditions.containsKey(ItemCondition.TAKEABLE)) {
+        } else if (this.types.containsKey(ItemType.TAKEABLE)) {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
-        } else if (this.conditions.containsKey(ItemCondition.DRINK)) {
+        } else if (this.types.containsKey(ItemType.DRINK)) {
         } else {
             GameHandler.getGui().display("You use the " + this.getName(), "Black");
         }
@@ -176,7 +168,7 @@ public class Item {
     }
 
     public void setContraband(boolean b) {
-        this.conditions.put(ItemCondition.CONTRABAND, b);
+        this.types.put(ItemType.CONTRABAND, b);
     }
 
     public String getName() {
@@ -201,19 +193,19 @@ public class Item {
     }
 
     public boolean isDroppable() {
-        if (this.conditions.containsKey(ItemCondition.DROPPABLE)) {
-            return this.conditions.get(ItemCondition.DROPPABLE);
+        if (this.types.containsKey(ItemType.DROPPABLE)) {
+            return this.types.get(ItemType.DROPPABLE);
         }
         return true;
     }
 
     public void setDroppable(boolean b) {
-        this.conditions.put(ItemCondition.DROPPABLE, b);
+        this.types.put(ItemType.DROPPABLE, b);
     }
 
     public boolean isContraband() {
-        if (this.conditions.containsKey(ItemCondition.CONTRABAND)) {
-            return this.conditions.get(ItemCondition.CONTRABAND);
+        if (this.types.containsKey(ItemType.CONTRABAND)) {
+            return this.types.get(ItemType.CONTRABAND);
         }
         return false;
     }
@@ -235,8 +227,8 @@ public class Item {
     }
 
     public void interact() {
-        if (this.conditions.containsKey(ItemCondition.INTERACTABLE)) {
-            if (this.conditions.get(ItemCondition.DISPENCER)) {
+        if (this.types.containsKey(ItemType.INTERACTABLE)) {
+            if (this.types.get(ItemType.DISPENCER)) {
                 switch (this.getName()) {
                     case "Food Tray Dispenser" -> {
                         GameHandler.makeFoodTray();
@@ -262,13 +254,19 @@ public class Item {
         }
     }
     public void removeItem(Item item) {
-        if (!item.isConditionMet(ItemCondition.UNREMOVABLE)) {
+        if (!item.isTypeMet(ItemType.UNREMOVABLE)) {
             this.inventory.remove(item);
         }
     }
-    private boolean isConditionMet(ItemCondition condition) {
+    public boolean isConditionMet(ItemCondition condition) {
         if (this.conditions.containsKey(condition)) {
             return this.conditions.get(condition);
+        }
+        return false;
+    }
+    public boolean isTypeMet(ItemType type) {
+        if (this.types.containsKey(type)) {
+            return this.types.get(type);
         }
         return false;
     }
@@ -290,5 +288,12 @@ public class Item {
         }
         choices.add("Close");
         return choices.toArray(String[]::new);
+    }
+
+    boolean isVandalized() {
+        if (this.conditions.containsKey(ItemCondition.VANDELIZED)) {
+            return this.conditions.get(ItemCondition.VANDELIZED);
+        }
+        return false;
     }
 }

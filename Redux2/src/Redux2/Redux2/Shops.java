@@ -8,10 +8,10 @@ public class Shops extends Item {
 
     private final ArrayList<Item> inventory;
     private final HashMap<ItemCondition, Boolean> conditions = new HashMap<>();
+    
 
     public Shops(String name, String description) {
         super(name, description, "Shop/Container/Furniture", false);
-        this.conditions.put(ItemCondition.TAKEABLE, false);
         this.inventory = new ArrayList<>();
     }
 

@@ -20,30 +20,36 @@ public class NPC extends Character {
             GameHandler.getGui().display(npc.getName() + " is not interested in following you", "black");
         }
     }
+    private final Map<Skill, Integer> skillLevels = new HashMap<>();
+
+    public Map<Skill, Integer> getSkillLevels() {
+        return this.skillLevels;
+    }
     private int npcAge;
     private boolean faction;
     private final Map<Integer, Double> pRep = new HashMap<>();
     private boolean confederate;
-    private String type;
     private int suspicion;
     private String playerRep = "Good";
     private String alignment;
     boolean follower;
+    private final HashMap<NPCType, Boolean> types = new HashMap<>();
+    private final HashMap<NPCType, Boolean> npcStatus = new HashMap<>();
 
     public NPC(String name, String description, Room room, String type) {
         super(name, description, room);
-        this.type = type;
         this.pRep.put(0, 1.33);
         this.pRep.put(1, 1.33);
         this.pRep.put(2, 1.33);
         this.pRep.put(3, 1.33);
+        initualizeSkills();
     }
 
     public int getNpcAge() {
         return npcAge;
     }
 
-    public void wander(Room.ROOMTYPE roomType) {
+    public void wander(RoomType roomType) {
         // Get the current room of the NPC
         Room currentRoom = this.getRoom();
         GameHandler.getGui().display(this.getRoom().getName(), "black");
@@ -82,11 +88,11 @@ public class NPC extends Character {
     }
 
     public void routine() {
-        if (this.getType().equals("child")) {
+        if (this.getType().containsKey(NPCType.REJUVE)) {
             FatherTime.DayPhase phase = FatherTime.getCurrentPhase();
             switch (phase) {
                 case MORNING -> {
-                    wander(Room.ROOMTYPE.GREEN);
+                    //wander(Room.ROOMTYPE.GREEN);
                 }
                 case BREAKFAST -> {
                     setRoom(GameHandler.getRoomByName("Snack Area"));
@@ -104,7 +110,7 @@ public class NPC extends Character {
 
                 }
                 case FREETIME -> {
-                    wander(Room.ROOMTYPE.GREEN);
+                   // wander(Room.ROOMTYPE.GREEN);
 
                 }
                 case DINNER -> {
@@ -124,7 +130,7 @@ public class NPC extends Character {
 
                 }
                 case GREEN -> {
-                    wander(Room.ROOMTYPE.GREEN);
+                  //  wander(Room.ROOMTYPE.GREEN);
 
                 }
                 case RED -> {
@@ -183,7 +189,7 @@ public class NPC extends Character {
     }
 
     public void getPranked() {
-        if (this.getType().equals("adult")) {
+        if (this.getType().containsKey(NPCType.ADULT)||this.getType().containsKey(NPCType.COMPANION)) {
             Random random = new Random();
             int num = random.nextInt(2);
             switch (num) {
@@ -198,25 +204,25 @@ public class NPC extends Character {
                     break;
                 }
             }
-        } else {
+        } else if (this.getType().containsKey(NPCType.REJUVE)) {
             GameHandler.getGui().display(this.getName() + " is not amused by your prank", "black");
         }
     }
 
     public void caughtPlayer(String act) {
-        String type1 = this.getType();
-        switch (type1) {
-            case "child" -> {
-                if (this.faction == confederate) {
-                    this.tattle(act);
-                } else {
-                    GameHandler.getGui().display("" + this.getName() + " notices you" + act + ", but does not seem to care", "black");
-                }
-            }
-            case "adult" -> {
+        for (NPC npc : this.getRoom().getNPCs()) {
+            if (npc.getType().containsKey(NPCType.ADULT)) {
                 GameHandler.getGui().display("You are caught by " + this.getName() + " while " + act, "black");
-                this.disipline(act, this, 10);
+                this.disipline(act, npc, 10);
             }
+            if (npc.getType().containsKey(NPCType.REJUVE)) {
+                GameHandler.getGui().display("You are caught by " + this.getName() + " while " + act, "black");
+            }
+            if(npc.getType().containsKey(NPCType.COMPANION)){
+                GameHandler.getGui().display("You are caught by " + this.getName() + " while " + act, "black");
+                this.disipline(act, npc, 10);
+            }
+
         }
     }
 
@@ -230,18 +236,28 @@ public class NPC extends Character {
         this.room = room;
 
     }
-
+    public int getSkillLevel(Skill skill) {
+        return skillLevels.get(skill);
+    }
     public void setSuspicion(int suspicion, String reason) {
-        if (this.getType().equals("adult")) {
+        if (this.getType().containsKey(NPCType.ADULT)) {
             GameHandler.getGui().display(this.getName() + " is suspicious of you", "black");
             this.suspicion += 1;
         } else {
             GameHandler.getGui().display(this.getName() + " is suspicious of you", "black");
         }
     }
+        public final void initualizeSkills() {
+            this.skillLevels.put(Skill.FINE_MOTOR, 1);
+            this.skillLevels.put(Skill.GROSS_MOTOR, 1);
+            this.skillLevels.put(Skill.SOCIAL, 1);
+            this.skillLevels.put(Skill.EMOTIONAL, 1);
+            this.skillLevels.put(Skill.IMAGINATION, 1);
+            this.skillLevels.put(Skill.LEARNING, 1);
+        }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setType(NPCType type) {
+        this.types.put(type, true);
     }
 
     public void setFaction(boolean faction) {
@@ -401,9 +417,9 @@ public class NPC extends Character {
         return this.npcAge;
     }
 
-    private void tattle(String act) {
+    public void tattle(String act) {
         for (NPC npc : this.getRoom().getNPCs()) {
-            if (npc.getType().equals("adult")) {
+            if (npc.getType().containsKey(NPCType.ADULT)) {
                 GameHandler.getGui().display("You are caught by " + this.getName() + " while " + act, "black");
                 this.disipline(act, npc, 10);
             }
@@ -444,8 +460,8 @@ public class NPC extends Character {
         }
     }
 
-    private String getType() {
-        return this.type;
+    HashMap<NPCType, Boolean> getType() {
+        return types;
     }
 
     public void adjustPlayerRep(double i, double i0, double i1, double i2) {
@@ -481,7 +497,7 @@ public class NPC extends Character {
     }
 
     public void playedWith(Item toy) {
-        if (!this.getType().equals("child")) {
+        if (!this.getType().containsKey(NPCType.REJUVE)) {
             GameHandler.getGui().display(this.getName() + " is playing with " + toy.getName() + " with you.", "black");
         } else {
             GameHandler.getGui().display(this.getName() + " is not interested in playing with you", "black");
@@ -556,6 +572,9 @@ public class NPC extends Character {
     }
 
     public void noticePlayer() {
+        if (Player.getStatus().isEmpty()) {
+            GameHandler.getGui().display(this.getName() + " does not notice anything", "black");
+        }
         for (PlayerStatus status : Player.getStatus()) {
             switch (status) {
                 case WET_CLOTHING -> {
@@ -907,5 +926,9 @@ public class NPC extends Character {
         for (Item item : this.getInventory()) {
             GameHandler.getGui().display(item.getName(), "black");
         }
+    }
+
+    public HashMap<NPCType, Boolean> getStatus() {
+        return this.npcStatus;
     }
 }

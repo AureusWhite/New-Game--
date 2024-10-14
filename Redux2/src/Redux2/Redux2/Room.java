@@ -1,4 +1,5 @@
 package Redux2;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,45 +7,40 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
 import javax.swing.JOptionPane;
 
 public class Room {
 
-    Object getKey() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public enum ROOMTYPE{
-        GREEN,BLUE,RED,SCHOOL,LABORATORY,OFFICE,OUTDOOR,INDOOR,BATHROOM,KITCHEN,
-    }
-    public static HashMap<Room,ROOMTYPE> roomType = new HashMap<>();
+    public static HashMap<Room, RoomType> roomType = new HashMap<>();
     public ArrayList<Item> inventory;
     private String name;
     private String description;
     public HashMap<String, Room> exits;
     private ArrayList<NPC> npcs;
     private ArrayList<Room> rooms;
-    private boolean locked;
-    private boolean updated;
-    private final ROOMTYPE type;
+    private Keys key;
+    private Locks lock;
 
-    public Room(String name, String description,ROOMTYPE type) {
+    public Room(String name, String description) {
         this.name = name;
         this.description = description;
         this.npcs = new ArrayList<>();
         this.exits = new HashMap<>();
         this.inventory = new ArrayList<>();
         this.rooms = new ArrayList<>();
-        this.type = type;
     }
 
-    public boolean isLocked() {
-        return locked;
+    public Locks isLocked() {
+        return lock;
     }
 
-    
-    public void setLocked(boolean locked) {
-        this.locked = locked;
+    public Keys getKey() {
+        return key;
+    }
+
+    public void setLocked(Locks locked) {
+        this.lock = new Locks(locked);
     }
 
     public ArrayList<Item> getInventory() {
@@ -87,16 +83,6 @@ public class Room {
         this.npcs.remove(npc);
     }
 
-    public ArrayList<Item> getArrayInventory() {
-        if (this.inventory != null) {
-            return this.inventory;
-        } else {
-            ArrayList<Item> newInventory = new ArrayList<>();
-            this.inventory = newInventory;
-            return this.inventory;
-        }
-    }
-
     public Room getExitByName(String string) {
         for (String exit : exits.keySet()) {
             if (exit.equals(string)) {
@@ -107,18 +93,19 @@ public class Room {
     }
 
     public String[] getInventoryString() {
-        if (this.getArrayInventory().isEmpty()) {
+        if (this.getInventory().isEmpty()) {
             return new String[]{};
         }
-        String[] items = new String[this.getArrayInventory().size()];
-        for (int i = 0; i < this.getArrayInventory().size(); i++) {
-            items[i] = this.getArrayInventory().get(i).getName();
+        String[] items = new String[this.getInventory().size()];
+        for (int i = 0; i < this.getInventory().size(); i++) {
+            items[i] = this.getInventory().get(i).getName();
         }
         return items;
     }
+
     public String[] getItemChoices() {
         List<String> filteredItems = new ArrayList<>();
-        for (Item item : this.getArrayInventory()) {
+        for (Item item : this.getInventory()) {
             String itemName = item.getName();
             if (!itemName.toLowerCase().contains("shop")) {
                 filteredItems.add(itemName);
@@ -127,9 +114,8 @@ public class Room {
         return filteredItems.toArray(String[]::new);
     }
 
-
     public Item getItemByName(String string) {
-        for (Item item : this.getArrayInventory()) {
+        for (Item item : this.getInventory()) {
             if (item.getName().equalsIgnoreCase(string)) {
                 return item;
             }
@@ -233,12 +219,12 @@ public class Room {
 
     public Item[] getContainers() {
         ArrayList<Item> containers = new ArrayList<>();
-        if (this.getArrayInventory().isEmpty()) {
+        if (this.getInventory().isEmpty()) {
             return new Item[]{};
         }
-        for (Item item : this.getArrayInventory()) {
-            if (item.getType() != null) {
-                if (item.getType().equalsIgnoreCase("Container")) {
+        for (Item item : this.getInventory()) {
+            if (item.getTypes() != null) {
+                if (item.getTypes().containsKey(ItemType.CONTAINER)) {
                     containers.add(item);
                 }
             }
@@ -269,7 +255,7 @@ public class Room {
             GameHandler.getGui().display("You played with " + npc.getName() + " using " + toy.getName(), "Black");
             npc.playedWith(toy);
         }
-        
+
     }
 
     public void prank() {
@@ -308,19 +294,19 @@ public class Room {
     }
 
     public void sabotage(Item item) {
+        if (item.isBroken()) {
+            GameHandler.getGui().display("This item is already broken", "Black");
+            return;
+        }
         GameHandler.getGui().display("What do you want to sabotage?", "Black");
-        if (item == null) {
-            GameHandler.getGui().display("That item does not exist", "Black");
+        GameHandler.getGui().display("You attempt to sabotage " + item.getName(), "Black");
+        int outcome = (int) (Math.random() * 100);
+        if (outcome > 1) {
+            GameHandler.getGui().display("You successfully sabotaged " + item.getName(), "Black");
+            breakItem(item);
         } else {
-            GameHandler.getGui().display("You attempt to sabotage " + item.getName(), "Black");
-            int outcome = (int) (Math.random() * 100);
-            if (outcome > 99) {
-                GameHandler.getGui().display("You successfully sabotaged " + item.getName(), "Black");
-                breakItem(item);
-            } else {
-                GameHandler.getGui().display("You failed to sabotage " + item.getName(), "Black");
-                this.randomNPC(false).caughtPlayer("Vandalism");
-            }
+            GameHandler.getGui().display("You failed to sabotage " + item.getName(), "Black");
+            this.randomNPC(false).caughtPlayer("Vandalism");
         }
 
     }
@@ -331,7 +317,7 @@ public class Room {
         } else {
             GameHandler.getGui().display("You attempt to vandalize " + item.getName(), "Black");
             int outcome = (int) (Math.random() * 100);
-            if (outcome > 99) {
+            if (outcome > 1) {
                 GameHandler.getGui().display("You successfully vandalized " + item.getName(), "Black");
                 vandalizeItem(item);
             } else {
@@ -341,18 +327,19 @@ public class Room {
         }
     }
 
-    public String[] getItemsByType(String string) {
-        for (Item item : this.getArrayInventory()) {
-            if (item.getType().equalsIgnoreCase(string)) {
+    public String[] getItemsByType(ItemType type) {
+        for (Item item : this.getInventory()) {
+            if (item.getTypes().containsKey(type)) {
                 return new String[]{item.getName()};
             }
         }
         return null;
     }
+
     public String[] getFurniture() {
         ArrayList<Item> furniture = new ArrayList<>();
-        for (Item item : this.getArrayInventory()) {
-            if (item.getType().equalsIgnoreCase("Furniture")) {
+        for (Item item : this.getInventory()) {
+            if (item.getTypes().containsKey(ItemType.FURNITURE)) {
                 furniture.add(item);
             }
         }
@@ -366,16 +353,25 @@ public class Room {
     public String[] getToyChoices() {
         String[] items = this.getItemChoices();
         String[] toys = new String[items.length];
+        boolean hasToys = false;
         int i = 0;
+
         for (String itemName : items) {
             Item item = this.getItemByName(itemName);
-            if (item != null && item.getType() != null && item.getType().equalsIgnoreCase("Toy")) {
+            if (item != null && item.getTypes() != null && item.getTypes().containsKey(ItemType.TOY)) {
                 toys[i] = itemName;
+                hasToys = true;
             } else {
                 toys[i] = "";
             }
             i++;
         }
+
+        if (!hasToys) {
+            System.out.println("There are no toys in the room to play with");
+            return null;
+        }
+
         return toys;
     }
 
@@ -388,10 +384,6 @@ public class Room {
 
     public void setNpcs(ArrayList<NPC> npcs) {
         this.npcs = npcs;
-    }
-
-    public boolean isUpdated() {
-        return updated;
     }
 
     public void initializeRoomFiles() { //initializes the room files and creates them if they don't exist already.
@@ -417,7 +409,7 @@ public class Room {
 
     public String[] getContraband() {
         ArrayList<Item> contraband = new ArrayList<>();
-        for (Item item : this.getArrayInventory()) {
+        for (Item item : this.getInventory()) {
             if (item.isContraband()) {
                 contraband.add(item);
             }
@@ -428,27 +420,32 @@ public class Room {
         }
         return contraband1;
     }
-    public Room(ROOMTYPE type) {
-        this.type = type;
-    }
 
-    public ROOMTYPE getType() {
-        return this.type;
+    public RoomType getType() {
+        return roomType.get(this);
     }
 
     private void breakItem(Item item) {
+        if (item.isBroken()) {
+            GameHandler.getGui().display("This item is already broken", "Black");
+            return;
+        }
         item.setBroken(true);
-        item.setName(name.concat(" (Broken)"));
+        item.setName(item.getName().concat(" (Broken)"));
     }
 
     private void vandalizeItem(Item item) {
+        if (item.isVandalized()) {
+            GameHandler.getGui().display("This item is already vandalized", "Black");
+            return;
+        }
         item.setVandalized(true);
         item.setName(item.getName().concat(" (Vandalized)"));
-        item.setDescription("This item is painted in the colors of "+Player.alignment+"<br> The logo scribbled onto it supports "+Player.alignment+"<br>"+item.getDescription());
+        item.setDescription("This item is painted in the colors of " + Player.alignment + "<br> The logo scribbled onto it supports " + Player.alignment + "<br>" + item.getDescription());
     }
 
     public boolean hasItem(Item item) {
-        for (Item item1 : this.getArrayInventory()) {
+        for (Item item1 : this.getInventory()) {
             if (item1.equals(item)) {
                 return true;
             }
@@ -458,9 +455,8 @@ public class Room {
 
     public String[] getParkourables() {
         List<String> filteredItems = new ArrayList<>();
-        for (Item item : this.getArrayInventory()) {
-            String itemType = item.getType();
-            if (itemType.toLowerCase().contains("parkour")) {
+        for (Item item : this.getInventory()) {
+            if (item.getTypes().containsKey(ItemType.PARKOURABLE)) {
                 filteredItems.add(item.getName());
             }
         }
@@ -472,7 +468,7 @@ public class Room {
         if (parkourable == null) {
             GameHandler.getGui().display("That item does not exist", "Black");
         } else {
-            if (Player.getSkillLevel(Skill.GROSS_MOTOR)>5) {
+            if (Player.getSkillLevel(Skill.GROSS_MOTOR) > 5) {
                 GameHandler.getGui().display("You parkoured over " + parkourable.getName(), "Black");
             } else {
                 GameHandler.getGui().display("You failed to parkour over " + parkourable.getName(), "Black");
@@ -483,8 +479,8 @@ public class Room {
 
     public String[] getInteractables() {
         List<String> filteredItems = new ArrayList<>();
-        for (Item item : this.getArrayInventory()) {
-            if (item.getConditions().containsKey(ItemCondition.INTERACTABLE)) {
+        for (Item item : this.getInventory()) {
+            if (item.getTypes().containsKey(ItemType.INTERACTABLE)) {
                 filteredItems.add(item.getName());
             }
         }
@@ -500,12 +496,12 @@ public class Room {
         }
     }
 
-    public void setType(ROOMTYPE type) {
-        roomType.put(this,type);
+    public void setType(RoomType type) {
+        roomType.put(this, type);
     }
 
     public boolean containsItem(String string) {
-        for (Item item : this.getArrayInventory()) {
+        for (Item item : this.getInventory()) {
             if (item.getName().equalsIgnoreCase(string)) {
                 return true;
             }
@@ -521,10 +517,11 @@ public class Room {
     }
 
     public Room[] getAdjacentRooms() {
-        return Arrays.stream(this.getExits())  // Assuming getExits() returns String[] or Exit[].
-                     .map(this::getExitByName) // Assuming getExitByName() retrieves a Room.
-                     .toArray(Room[]::new);
+        return Arrays.stream(this.getExits()) // Assuming getExits() returns String[] or Exit[].
+                .map(this::getExitByName) // Assuming getExitByName() retrieves a Room.
+                .toArray(Room[]::new);
     }
+
     public NPC randomNPC(boolean b) {
         if (this.npcs.isEmpty()) {
             if (!b) {
@@ -541,20 +538,20 @@ public class Room {
             }
             return randomNPC(b);
         } else {
-        Random rand = new Random();
-        return this.getNpcs().get(rand.nextInt(this.getNpcs().size()));
+            Random rand = new Random();
+            return this.getNpcs().get(rand.nextInt(this.getNpcs().size()));
         }
     }
+
     public Room[] getExitsArray() {
         Room[] exits1 = new Room[this.exits.size()];
         int i = 0;
         for (Room room : this.exits.values()) {
             GameHandler.getGui().display(room.getName(), "Black");
-            GameHandler.getGui().display(room.getType().toString(), "Black");
             exits1[i] = room;
             i++;
         }
         return exits1;
     }
-    
+
 }

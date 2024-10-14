@@ -1,7 +1,5 @@
 package Redux2;
 
-import Redux2.Achievements.NPCStatus;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
-
 
 public class GameHandler {
 
@@ -40,8 +37,8 @@ public class GameHandler {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private Container box,foodTray;
-    
+    private Container box, foodTray;
+
     public Room recoveryRoom, kitchen, mainRoom,
             dorms, bathroom, hallway, stairs, basement,
             attic, garage, garden, driveway, frontYard,
@@ -51,7 +48,7 @@ public class GameHandler {
             treeHouse, storyBookVillage, pillowPile,
             snackArea, greenHall, blueHall, redHall,
             peddleToys, lemonaidStand, toolShed, TRSRoom,
-            janitorialRoom, foyer, pantry, roof, demoRoom, cogLabs,classRoom;
+            janitorialRoom, foyer, pantry, roof, demoRoom, cogLabs, classRoom;
 
     private Equipment trainingPants, diaper, thickDiapers, backPack, underPants, uniformTop, uniformBottom, uniformHat, uniformShoes, uniBackPack;
 
@@ -61,212 +58,148 @@ public class GameHandler {
             binoculars, camera, videoCamera, tapeRecorder, radio, television,
             computer, tablet, phone, speaker, headphones, microphone, keyboard,
             mouse, monitor, printer, scanner, projector, whiteboard, chalkboard,
-            smartboard, globe, map, calendar, compass, protractor, canvas, snackShop,pickapaw,pawFigure,limitedEditionPaw;
+            smartboard, globe, map, calendar, compass, protractor, canvas, snackShop, pickapaw, pawFigure, limitedEditionPaw;
     private static Item foodTrayDispenser;
 
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
             jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
-
 
     public void createItems() {
         foodTray = new Container("Food Tray", "A tray for you to eat food on.", "Food Tray", true);
         items.put("Food Tray", foodTray);
         foodTrayDispenser = new Item("Food Tray Dispenser", "A machine that dispenses food trays.", "Machine/Interactable", false);
         items.put("Food Tray Dispenser", foodTrayDispenser);
-        foodTrayDispenser.getConditions().put(ItemCondition.TAKEABLE, false);
-        foodTrayDispenser.getConditions().put(ItemCondition.INTERACTABLE, true);
-        foodTrayDispenser.getConditions().put(ItemCondition.DISPENCER, true);
+        foodTrayDispenser.getTypes().put(ItemType.TAKEABLE, false);
+        foodTrayDispenser.getTypes().put(ItemType.INTERACTABLE, true);
+        foodTrayDispenser.getTypes().put(ItemType.DISPENCER, true);
         pickapaw = new Shops("Pick a Paw", "A shop where you can buy Paws and Paw and Prowess cards.");
         items.put("Pick a Paw", pickapaw);
-        pickapaw.setType("Shop/Trading/Interactable");
         pawFigure = new PawFigure();
         items.put("Paw Figure", pawFigure);
-        pawFigure.setType("Paw");
+
         limitedEditionPaw = new Item("Limited Edition Paw", "A limited edition paw.", "Paw", false);
         items.put("Limited Edition Paw", limitedEditionPaw);
-        limitedEditionPaw.setType("Paw");
         snackShop = new Shops("Snack Shop", "A shop where you can buy snacks.");
         items.put("Snack Shop", snackShop);
-        snackShop.setType("Shop/parkour/interactable");
         backPack = new Equipment("Back Pack", "A back pack for you to carry things in.", "Equipment");
         items.put("Back Pack", backPack);
-        backPack.setType("Equipment/Storage");
         toy = new Item("Toy", "A toy for you to play with.", "Toy", false);
         items.put("Toy", toy);
-        toy.setType("Toy");
         coloringBook = new Item("Coloring Book", "A coloring book for you to color in.", "Crafts", true);
         items.put("Coloring Book", coloringBook);
-        coloringBook.setType("Crafting/Stationary");
         crayons = new Item("Crayons", "Crayons for you to color with.", "Crafts", true);
         items.put("Crayons", crayons);
-        crayons.setType("Crafting/Supplies");
         markers = new Item("Markers", "Markers for you to color with.", "Crafts", true);
         items.put("Markers", markers);
-        markers.setType("Crafting/Supplies");
         paint = new Item("Paint", "Paint for you to paint with.", "Crafts", true);
         items.put("Paint", paint);
-        paint.setType("Crafting/Supplies");
         canvas = new Item("Canvas", "A canvas for you to paint on.", "Crafts", true);
         items.put("Canvas", canvas);
-        canvas.setType("Crafting/Stationary");
         paintBrush = new Item("Paint Brush", "A paint brush for you to paint with.", "Crafts", true);
         items.put("Paint Brush", paintBrush);
-        paintBrush.setType("Craft/Tool");
         glue = new Item("Glue", "Glue for you to glue with.", "Crafts", true);
         items.put("Glue", glue);
-        glue.setType("Crafting/Supplies");
         scissors = new Item("Scissors", "Scissors for you to cut with.", "Crafts", true);
         items.put("Scissors", scissors);
-        scissors.setType("Crafting/Tool");
         paper = new Item("Paper", "Paper for you to write on.", "Crafts", true);
         items.put("Paper", paper);
-        paper.setType("Crafting/Stationary");
         pencil = new Item("Pencil", "A pencil for you to write with.", "Crafts", true);
         items.put("Pencil", pencil);
-        pencil.setType("Crafting/Supplies");
         eraser = new Item("Eraser", "An eraser for you to erase with.", "Crafts", true);
         items.put("Eraser", eraser);
-        eraser.setType("Crafting/Supplies");
         calculator = new Item("Calculator", "A calculator for you to calculate with.", "Crafts", true);
         items.put("Calculator", calculator);
-        calculator.setType("Educational/Tool");
         ruler = new Item("Ruler", "A ruler for you to measure with.", "Crafts", true);
         items.put("Ruler", ruler);
-        ruler.setType("Crafting/Tool/Educational");
         scale = new Item("Scale", "A scale for you to weigh with.", "Crafts", true);
         items.put("Scale", scale);
-        scale.setType("Cooking/Tool/Educational");
         thermometer = new Item("Thermometer", "A thermometer for you to measure temperature with.", "Crafts", true);
         items.put("Thermometer", thermometer);
-        thermometer.setType("Cooking/Tool/Educational");
         magnifyingGlass = new Item("Magnifying Glass", "A magnifying glass for you to magnify with.", "Crafts", true);
         items.put("Magnifying Glass", magnifyingGlass);
-        magnifyingGlass.setType("Crafting/Science/Tool");
         telescope = new Item("Telescope", "A telescope for you to see far away with.", "Crafts", true);
         items.put("Telescope", telescope);
-        telescope.setType("Science/Tool");
         microscope = new Item("Microscope", "A microscope for you to see small things with.", "Crafts", true);
         items.put("Microscope", microscope);
-        microscope.setType("Science/Tool");
         binoculars = new Item("Binoculars", "Binoculars for you to see far away with.", "Crafts", true);
         items.put("Binoculars", binoculars);
-        binoculars.setType("Exploration/Tool/Educational");
         camera = new Item("Camera", "A camera for you to take pictures with.", "Crafts", true);
         items.put("Camera", camera);
-        camera.setType("Tool/Social/Entertainment");
         videoCamera = new Item("Video Camera", "A video camera for you to take videos with.", "Crafts", true);
         items.put("Video Camera", videoCamera);
-        videoCamera.setType("Tech/Tool/Entertainment");
         tapeRecorder = new Item("Tape Recorder", "A tape recorder for you to record with.", "Crafts", true);
         items.put("Tape Recorder", tapeRecorder);
-        tapeRecorder.setType("Tech/Tool/Entertainment");
         radio = new Item("Radio", "A radio for you to listen to music with.", "Crafts", true);
         items.put("Radio", radio);
-        radio.setType("Music/Educational/Entertainment");
         television = new Item("Television", "A television for you to watch TV with.", "Crafts", true);
         items.put("Television", television);
-        television.setType("Entertainment/Educational");
         computer = new Item("Computer", "A computer for you to use.", "Crafts", true);
         items.put("Computer", computer);
-        computer.setType("Tool/Educational/Entertainment");
         tablet = new Item("Tablet", "A tablet for you to use.", "Crafts", true);
         items.put("Tablet", tablet);
-        tablet.setType("Tool/Educational/Entertainment");
         phone = new Item("Phone", "A phone for you to use.", "Crafts", true);
         items.put("Phone", phone);
-        phone.setType("Tool/Communication/Entertainment");
         speaker = new Item("Speaker", "A speaker for you to listen to music with.", "Crafts", true);
         items.put("Speaker", speaker);
-        speaker.setType("Music/Furniture");
         headphones = new Item("Headphones", "Headphones for you to listen to music with.", "Crafts", true);
         items.put("Headphones", headphones);
-        headphones.setType("Music/Equipment");
         microphone = new Item("Microphone", "A microphone for you to record with.", "Crafts", true);
         items.put("Microphone", microphone);
-        microphone.setType("Music/Equipment");
         keyboard = new Item("Keyboard", "A keyboard for you to type with.", "Crafts", true);
         items.put("Keyboard", keyboard);
-        keyboard.setType("Tool/Tech");
         mouse = new Item("Mouse", "A mouse for you to click with.", "Crafts", true);
         items.put("Mouse", mouse);
-        mouse.setType("Tool/Tech");
         monitor = new Item("Monitor", "A monitor for you to see with.", "Crafts", true);
         items.put("Monitor", monitor);
-        monitor.setType("Furniture/Tech");
         printer = new Item("Printer", "A printer for you to print with.", "Crafts", true);
         items.put("Printer", printer);
-        printer.setType("Furniture/Tech");
         scanner = new Item("Scanner", "A scanner for you to scan with.", "Crafts", true);
         items.put("Scanner", scanner);
-        scanner.setType("Furniture/Tech");
         projector = new Item("Projector", "A projector for you to project with.", "Crafts", true);
         items.put("Projector", projector);
-        projector.setType("Tech/Furniture/Entertainment");
         whiteboard = new Item("Whiteboard", "A whiteboard for you to write on.", "Crafts", true);
         items.put("Whiteboard", whiteboard);
-        whiteboard.setType("Educational/Furniture/Crafting");
         chalkboard = new Item("Chalkboard", "A chalkboard for you to write on.", "Crafts", true);
         items.put("Chalkboard", chalkboard);
-        chalkboard.setType("Educational/Furniture/Crafting");
         smartboard = new Item("Smartboard", "A smartboard for you to write on.", "Crafts", true);
         items.put("Smartboard", smartboard);
-        smartboard.setType("Educational/Tech/Crafting");
         globe = new Item("Globe", "A globe for you to learn about the world.", "Crafts", true);
         items.put("Globe", globe);
-        globe.setType("Educational/Science");
         map = new Item("Map", "A map for you to learn about the world.", "Crafts", true);
         items.put("Map", map);
-        map.setType("Crafts");
         calendar = new Item("Calendar", "A calendar for you to keep track of time.", "Crafts", true);
         items.put("Calendar", calendar);
-        calendar.setType("Educational/Tool");
         compass = new Item("Compass", "A compass for you to find your way.", "Crafts", true);
         items.put("Compass", compass);
-        compass.setType("Educational/Tool/Exploration");
         protractor = new Item("Protractor", "A protractor for you to measure angles with.", "Crafts", true);
         items.put("Protractor", protractor);
-        protractor.setType("Science/Tool/Educational");
-
         modelingClay = new Item("Modeling Clay", "Modeling clay for you to play with.", "Crafts", true);
         items.put("Modeling Clay", modelingClay);
-        modelingClay.setType("Crafting Supplies");
         trash = new Item("Trash", "Trash that needs to be thrown away.", "Trash", true);
         items.put("Trash", trash);
-        trash.setType("Trash");
         diaper = new Equipment("Diaper", "A diaper for you, a baby :P.", "Underpants");
         items.put("Diaper", diaper);
-        diaper.setType("Equipment");
         thickDiapers = new Equipment("Thick Diapers", "A diaper for you, a baby.", "Underpants");
         items.put("Thick Diapers", thickDiapers);
-        thickDiapers.setType("Equipment");
         book = new Item("Book", "A book for you to read.", "Book", true);
         items.put("Book", book);
-        book.setType("Book");
         trainingPants = new Equipment("Training Pants", "Training Pants, for you, a big kid", "Underpants");
         items.put("Training Pants", trainingPants);
-        trainingPants.setType("Equipment");
         box = new Container("Box", "A simple cardboard box for storing items", "Furniture", false);
-        box.setType("Furniture");
         box.setContraband(true);
         items.put("Box", box);
         underPants = new Equipment("Underpants", "Underpants, for you, a big kid", "Underpants");
         items.put("Underpants", underPants);
-        underPants.setType("Equipment");
         uniformTop = new Equipment("Uniform Top", "A top for your uniform", "Top");
         items.put("Uniform Top", uniformTop);
-        uniformTop.setType("Equipment");
         uniformBottom = new Equipment("Uniform Bottom", "A bottom for your uniform", "Bottom");
         items.put("Uniform Bottom", uniformBottom);
-        uniformBottom.setType("Equipment");
         uniformHat = new Equipment("Uniform Hat", "A hat for your uniform", "Hat");
         items.put("Uniform Hat", uniformHat);
-        uniformHat.setType("Equipment");
         uniformShoes = new Equipment("Uniform Shoes", "Shoes for your uniform", "Shoes");
         items.put("Uniform Shoes", uniformShoes);
-        uniformShoes.setType("Equipment");
         uniBackPack = new Equipment("Uniform Back Pack", "A back pack for your uniform", "Back Pack");
         items.put("Uniform Back Pack", uniBackPack);
-        uniBackPack.setType("Equipment");
         uniBackPack.setSlot("Back");
         uniformBottom.setSlot("Bottom");
         uniformTop.setSlot("Top");
@@ -311,6 +244,7 @@ public class GameHandler {
         jessief = new NPC("Jessie", "This is jessie, sister to Jessie. Strangly for being brother and sister they hardly are ever seen together.", foyer, "child");
         npcs.put("Jessie", jessief);
     }
+
     public void createAchievements() {
         Achievements explorer = new Achievements("Exsplore", "Exsplore all the rooms in the house", 10);
         explorer.addRequiredPlace(foyer);
@@ -351,15 +285,16 @@ public class GameHandler {
         meetEveryone.addRequiredNPC(jimthejanitor, NPCStatus.SPOKEN_TO);
         meetEveryone.addRequiredNPC(joy, NPCStatus.SPOKEN_TO);
         meetEveryone.addRequiredNPC(jessief, NPCStatus.SPOKEN_TO);
-            // Add all the achievements to the list
-            achievements.add(explorer);
-            achievements.add(snappyDresser);
-            achievements.add(collector);
-            achievements.add(socialite);
-            achievements.add(bookWorm);
-            achievements.add(meetEveryone);
-            achievements.add(nemisis);
+        // Add all the achievements to the list
+        achievements.add(explorer);
+        achievements.add(snappyDresser);
+        achievements.add(collector);
+        achievements.add(socialite);
+        achievements.add(bookWorm);
+        achievements.add(meetEveryone);
+        achievements.add(nemisis);
     }
+
     public void createRoutine() {
         final RoutineManager routineManager1 = new RoutineManager();
         this.routineManager = routineManager1;
@@ -367,7 +302,8 @@ public class GameHandler {
 
     public RoutineManager getRoutineManager() {
         return this.routineManager;
-    } 
+    }
+
     public static void updateAchievementsForNPC(NPC npc, NPCStatus status) {
         for (Achievements achievement : achievements) {
             if (achievement.getRequiredNPC().containsKey(npc)) {
@@ -377,139 +313,167 @@ public class GameHandler {
         }
 
     }
-    public void buildRooms() {
-        kitchen = new Room("Kitchen", "A room where you can cook food.", Room.ROOMTYPE.KITCHEN);
-        rooms.put("Kitchen", kitchen);
 
-        classRoom = new Room("Class_Room", "A room where you can learn.", Room.ROOMTYPE.SCHOOL);
+    public void buildRooms() {
+        kitchen = new Room("Kitchen", "A room where you can cook food.");
+        rooms.put("Kitchen", kitchen);
+        kitchen.setType(RoomType.GREEN);
+
+        classRoom = new Room("Class_Room", "A room where you can learn.");
         rooms.put("Class_Room", classRoom);
-        
-        mainRoom = new Room("Main_Room", "The main room of the daycare.", Room.ROOMTYPE.GREEN);
+        classRoom.setType(RoomType.BLUE);
+
+        mainRoom = new Room("Main_Room", "The main room of the daycare.");
         rooms.put("Main_Room", mainRoom);
-        
-        dorms = new Room("Dorms", "A room where you can sleep.", Room.ROOMTYPE.GREEN);
+        mainRoom.setType(RoomType.GREEN);
+
+        dorms = new Room("Dorms", "A room where you can sleep.");
         rooms.put("Dorms", dorms);
-        
-        bathroom = new Room("Bathroom", "A room where you can clean yourself.", Room.ROOMTYPE.BATHROOM);
+        dorms.setType(RoomType.GREEN);
+
+        bathroom = new Room("Bathroom", "A room where you can clean yourself.");
         rooms.put("Bathroom", bathroom);
-        
-        hallway = new Room("Hallway", "A hallway that connects the rooms.", Room.ROOMTYPE.INDOOR);
+        bathroom.setType(RoomType.GREEN);
+
+        hallway = new Room("Hallway", "A hallway that connects the rooms.");
         rooms.put("Hallway", hallway);
-        
-        stairs = new Room("Stairs", "A staircase that leads to the basement and attic.", Room.ROOMTYPE.INDOOR);
+        hallway.setType(RoomType.RED);
+
+        stairs = new Room("Stairs", "A staircase that leads to the basement and attic.");
         rooms.put("Stairs", stairs);
-        
-        basement = new Room("Basement", "A room where you can store things.", Room.ROOMTYPE.INDOOR);
+        stairs.setType(RoomType.RED);
+
+        basement = new Room("Basement", "A room where you can store things.");
         rooms.put("Basement", basement);
-        
-        attic = new Room("Attic", "A room where you can store things.", Room.ROOMTYPE.INDOOR);
+        basement.setType(RoomType.RED);
+
+        attic = new Room("Attic", "A room where you can store things.");
         rooms.put("Attic", attic);
-        
-        garage = new Room("Garage", "A room where you can store vehicles.", Room.ROOMTYPE.INDOOR);
+        attic.setType(RoomType.RED);
+
+        garage = new Room("Garage", "A room where you can store vehicles.");
         rooms.put("Garage", garage);
-        
-        garden = new Room("Garden", "A room where you can grow plants.", Room.ROOMTYPE.OUTDOOR);
+        garage.setType(RoomType.RED);
+
+        garden = new Room("Garden", "A room where you can grow plants.");
         rooms.put("Garden", garden);
-        
-        driveway = new Room("Driveway", "A driveway that leads to the street.", Room.ROOMTYPE.OUTDOOR);
+        garden.setType(RoomType.BLUE);
+
+        driveway = new Room("Driveway", "A driveway that leads to the street.");
         rooms.put("Driveway", driveway);
-        
-        frontYard = new Room("Front_Yard", "The front yard of the daycare.", Room.ROOMTYPE.OUTDOOR);
+        driveway.setType(RoomType.RED);
+
+        frontYard = new Room("Front_Yard", "The front yard of the daycare.");
         rooms.put("Front_Yard", frontYard);
-        
-        backYard = new Room("Back_Yard", "The back yard of the daycare.", Room.ROOMTYPE.OUTDOOR);
+        frontYard.setType(RoomType.BLUE);
+
+        backYard = new Room("Back_Yard", "The back yard of the daycare.");
         rooms.put("Back_Yard", backYard);
-        
-        cogLabs = new Room("cogLabs", "A room with a sign that says \"Please do not take the box\"", Room.ROOMTYPE.LABORATORY);
+
+        cogLabs = new Room("cogLabs", "A room with a sign that says \"Please do not take the box\"");
         rooms.put("cogLabs", cogLabs);
-        
-        pool = new Room("Pool", "A pool where you can swim.", Room.ROOMTYPE.OUTDOOR);
+
+        pool = new Room("Pool", "A pool where you can swim.");
         rooms.put("Pool", pool);
-        
-        patio = new Room("Patio", "A patio where you can relax.", Room.ROOMTYPE.OUTDOOR);
+
+        patio = new Room("Patio", "A patio where you can relax.");
         rooms.put("Patio", patio);
-        
-        deck = new Room("Deck", "A deck where you can relax.", Room.ROOMTYPE.OUTDOOR);
+
+        deck = new Room("Deck", "A deck where you can relax.");
         rooms.put("Deck", deck);
-        
-        porch = new Room("Porch", "A porch where you can relax.", Room.ROOMTYPE.OUTDOOR);
+
+        porch = new Room("Porch", "A porch where you can relax.");
         rooms.put("Porch", porch);
-        
-        balcony = new Room("Balcony", "A balcony where you can relax.", Room.ROOMTYPE.OUTDOOR);
+
+        balcony = new Room("Balcony", "A balcony where you can relax.");
         rooms.put("Balcony", balcony);
-        
-        roof = new Room("Roof", "A roof where you can relax.", Room.ROOMTYPE.OUTDOOR);
+
+        roof = new Room("Roof", "A roof where you can relax.");
         rooms.put("Roof", roof);
-        
-        cubbies = new Room("Cubbies", "A room where you can store your things.", Room.ROOMTYPE.GREEN);
+
+        cubbies = new Room("Cubbies", "A room where you can store your things.");
         rooms.put("Cubbies", cubbies);
-        
-        dramaArea = new Room("Drama_Area", "A room where you can act out plays.", Room.ROOMTYPE.GREEN);
+        cubbies.setType(RoomType.GREEN);
+
+        dramaArea = new Room("Drama_Area", "A room where you can act out plays.");
         rooms.put("Drama_Area", dramaArea);
-        
-        changingRoom = new Room("Changing_Room", "A room where you can change your clothes.", Room.ROOMTYPE.GREEN);
+        dramaArea.setType(RoomType.GREEN);
+
+        changingRoom = new Room("Changing_Room", "A room where you can change your clothes.");
         rooms.put("Changing_Room", changingRoom);
-        
-        floorPlay = new Room("Floor_Play", "A room where you can play on the floor.", Room.ROOMTYPE.GREEN);
+        changingRoom.setType(RoomType.GREEN);
+
+        floorPlay = new Room("Floor_Play", "A room where you can play on the floor.");
         rooms.put("Floor_Play", floorPlay);
-        
-        quietArea = new Room("Quiet_Area", "A room where you can relax.", Room.ROOMTYPE.GREEN);
+        floorPlay.setType(RoomType.GREEN);
+
+        quietArea = new Room("Quiet_Area", "A room where you can relax.");
         rooms.put("Quiet_Area", quietArea);
-        
-        homeWorkArea = new Room("Homework_Area", "A room where you can do your homework.", Room.ROOMTYPE.GREEN);
+        quietArea.setType(RoomType.GREEN);
+
+        homeWorkArea = new Room("Homework_Area", "A room where you can do your homework.");
         rooms.put("Homework_Area", homeWorkArea);
-        
-        playHouse = new Room("Play_House", "A room where you can play house.", Room.ROOMTYPE.GREEN);
+        homeWorkArea.setType(RoomType.GREEN);
+
+        playHouse = new Room("Play_House", "A room where you can play house.");
         rooms.put("Play_House", playHouse);
-        
-        treeHouse = new Room("Tree_House", "A room where you can play in a tree house.", Room.ROOMTYPE.GREEN);
+
+        treeHouse = new Room("Tree_House", "A room where you can play in a tree house.");
         rooms.put("Tree_House", treeHouse);
-        
-        storyBookVillage = new Room("Storybook_Village", "A room where you can read books.",    Room.ROOMTYPE.GREEN);
+
+        storyBookVillage = new Room("Storybook_Village", "A room where you can read books.");
         rooms.put("Storybook_Village", storyBookVillage);
-        
-        pillowPile = new Room("Pillow_Pile", "A room where you can relax on a pile of pillows.", Room.ROOMTYPE.GREEN);
+        storyBookVillage.setType(RoomType.GREEN);
+
+        pillowPile = new Room("Pillow_Pile", "A room where you can relax on a pile of pillows.");
         rooms.put("Pillow_Pile", pillowPile);
-        
-        snackArea = new Room("Snack_Area", "A room where you can eat snacks.", Room.ROOMTYPE.GREEN);
+        pillowPile.setType(RoomType.GREEN);
+
+        snackArea = new Room("Snack_Area", "A room where you can eat snacks.");
         rooms.put("Snack_Area", snackArea);
-        
-        greenHall = new Room("Green_Hall", "A hallway that connects the rooms.", Room.ROOMTYPE.GREEN);
+        snackArea.setType(RoomType.GREEN);
+
+        greenHall = new Room("Green_Hall", "A hallway that connects the rooms.");
         rooms.put("Green_Hall", greenHall);
-        
-        blueHall = new Room("Blue_Hall", "A hallway that connects the rooms.", Room.ROOMTYPE.GREEN);
+        greenHall.setType(RoomType.GREEN);
+
+        blueHall = new Room("Blue_Hall", "A hallway that connects the rooms.");
         rooms.put("Blue_Hall", blueHall);
-        
-        redHall = new Room("Red_Hall", "A hallway that connects the rooms.", Room.ROOMTYPE.GREEN);
+
+
+        redHall = new Room("Red_Hall", "A hallway that connects the rooms.");
         rooms.put("Red_Hall", redHall);
         
-        peddleToys = new Room("Peddle_Toys", "A room where you can play with peddle toys.", Room.ROOMTYPE.GREEN);
+
+        peddleToys = new Room("Peddle_Toys", "A room where you can play with peddle toys.");
         rooms.put("Peddle_Toys", peddleToys);
-        
-        lemonaidStand = new Room("Lemonaid_Stand", "A room where you can sell lemonaid.", Room.ROOMTYPE.GREEN);
+
+        lemonaidStand = new Room("Lemonaid_Stand", "A room where you can sell lemonaid.");
         rooms.put("Lemonaid_Stand", lemonaidStand);
-        
-        toolShed = new Room("Tool_Shed", "A shed where you can store tools.", Room.ROOMTYPE.GREEN);
+
+        toolShed = new Room("Tool_Shed", "A shed where you can store tools.");
         rooms.put("Tool_Shed", toolShed);
-        
-        TRSRoom = new Room("TRSRoom", "A room where you can relax.", Room.ROOMTYPE.GREEN);
+
+        TRSRoom = new Room("TRSRoom", "A room where you can relax.");
         rooms.put("TRSRoom", TRSRoom);
-        
-        janitorialRoom = new Room("Janitorial_Room", "A room where you can clean.", Room.ROOMTYPE.GREEN);
+
+        janitorialRoom = new Room("Janitorial_Room", "A room where you can clean.");
         rooms.put("Janitorial_Room", janitorialRoom);
-        
-        foyer = new Room("Foyer", "The foyer of the daycare.", Room.ROOMTYPE.BLUE);
+
+        foyer = new Room("Foyer", "The foyer of the daycare.");
         rooms.put("Foyer", foyer);
-        
-        pantry = new Room("Pantry", "A room where you can store food.", Room.ROOMTYPE.KITCHEN);
+       foyer.setType(RoomType.GREEN);
+
+        pantry = new Room("Pantry", "A room where you can store food.");
         rooms.put("Pantry", pantry);
-        
-        recoveryRoom = new Room("Recovery_Room", "A room where you can recover.", Room.ROOMTYPE.GREEN);
+
+        recoveryRoom = new Room("Recovery_Room", "A room where you can recover.");
         rooms.put("Recovery_Room", recoveryRoom);
-        
-        demoRoom = new Room("Demo_Room", "A room where you can play with toys.", Room.ROOMTYPE.BLUE);
+        recoveryRoom.setType(RoomType.GREEN);
+
+        demoRoom = new Room("Demo_Room", "A room where you can play with toys.");
         rooms.put("Demo_Room", demoRoom);
-        
+
         demoRoom.addItem(snackShop);
         snackArea.addItem(foodTrayDispenser);
         demoRoom.addItem(toy);
@@ -524,11 +488,14 @@ public class GameHandler {
         recoveryRoom.addItem(uniformHat);
         recoveryRoom.addItem(uniformShoes);
         recoveryRoom.addItem(uniBackPack);
+        recoveryRoom.addItem(box);
         mainRoom.addItem(pickapaw);
         Player.setRoom(recoveryRoom);
         fuzzy.setRoom(recoveryRoom);
         NPC.followPlayer(fuzzy);
+        drWhite.setRoom(foyer);
     }
+
     public void populateRooms() {
         //basement.addNPC();
         //attic.addNPC();
@@ -568,6 +535,7 @@ public class GameHandler {
         //pantry.addNPC();
         //demoRoom.addNPC();
     }
+
     public void buildExits() {
         //BackYard
         backYard.addExit(deck);
@@ -741,6 +709,7 @@ public class GameHandler {
         treeHouse.addExit(backYard);
 
     }
+
     public void playIntro() {
         readFile("intro1");
         getGui().waitForInput();
@@ -749,6 +718,7 @@ public class GameHandler {
         readFile("intro3");
         getGui().waitForInput();
     }
+
     public void setupPlayer() {
         Player.setMoney(9);
         //setCharacterBio();
@@ -756,6 +726,7 @@ public class GameHandler {
         Game.setRunning(true);
         getGui().unlockButtons();
     }
+
     public void giveItems() {
         drWhite.addItem(box);
         foyer.addItem(box);
@@ -773,6 +744,7 @@ public class GameHandler {
         backPack.setPockets(10);
         box.setPrice(6);
         box.setContraband(true);
+        box.setType(ItemType.FURNITURE);
         pickapaw.addItem(pawFigure);
         pickapaw.addItem(limitedEditionPaw);
         limitedEditionPaw.setPrice(50);
@@ -780,21 +752,27 @@ public class GameHandler {
         Player.addItem(pawFigure);
         Player.addItem(diaper);
     }
+
     public void playGame() {
         playTutorial();
     }
+
     public void endGame() {
         playOutro();
     }
+
     public static Room getRoomByName(String name) {
         return rooms.get(name);
     }
+
     public static GUI getGui() {
         return gui;
     }
+
     public static void updateStatus() {
         getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + FatherTime.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
     }
+
     public static Map<String, Room> getRooms() {
         return rooms;
     }
@@ -806,6 +784,7 @@ public class GameHandler {
     public static Map<String, Item> getItems() {
         return items;
     }
+
     public static void removeItemFromRoom(Item item) {
         List<Item> itemsI = Player.getRoom().getInventory();
         Iterator<Item> iterator = itemsI.iterator();
@@ -817,32 +796,23 @@ public class GameHandler {
             }
         }
     }
+
     public static NPC getNPCByName(String person) {
         return npcs.get(person);
     }
+
     public static String getFileSection2() {
         return fileSection2;
-    }
-
-    public static void setFileSection2(String fileSection2) {
-        fileSection2 = fileSection2;
     }
 
     public static String getFileSection3() {
         return fileSection3;
     }
 
-    public static void setFileSection3(String fileSection3) {
-        fileSection3 = fileSection3;
-    }
-
     public static String getFileSection4() {
         return fileSection4;
     }
 
-    public static void setFileSection4(String fileSection4) {
-        fileSection4 = fileSection4;
-    }
     public static PawFigure getFigureByName(String name) {
         for (Item item : items.values()) {
             if (item instanceof PawFigure figure) {
@@ -855,9 +825,11 @@ public class GameHandler {
         return null;
 
     }
+
     static Item getItemByName(String itemName) {
         return items.get(itemName);
     }
+
     static String readFile(String fileName) {
         File file = new File(fileName.concat(".txt"));
         if (file.exists()) {
@@ -918,6 +890,7 @@ public class GameHandler {
         }
         return null;
     }
+
     private void explainCharacterBio() {
         readFile("characterBio");
     }
@@ -930,6 +903,7 @@ public class GameHandler {
         readFile("outro");
 
     }
+
     public static void demo() {
         readFile("demo");
         String response;
@@ -970,90 +944,114 @@ public class GameHandler {
         }
 
     }
-    public void buildRoomTypes(){
-        Room.roomType.put(kitchen,Room.ROOMTYPE.KITCHEN);
-        Room.roomType.put(classRoom,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(mainRoom,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(dorms,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(bathroom,Room.ROOMTYPE.BATHROOM);
-        Room.roomType.put(hallway,Room.ROOMTYPE.RED);
-        Room.roomType.put(stairs,Room.ROOMTYPE.RED);
-        Room.roomType.put(basement,Room.ROOMTYPE.RED);
-        Room.roomType.put(attic,Room.ROOMTYPE.RED);
-        Room.roomType.put(garage,Room.ROOMTYPE.RED);
-        Room.roomType.put(garden,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(driveway,Room.ROOMTYPE.RED);
-        Room.roomType.put(frontYard,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(backYard,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(cogLabs,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(pool,Room.ROOMTYPE.RED);
-        Room.roomType.put(patio,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(deck,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(porch,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(balcony,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(roof,Room.ROOMTYPE.RED);
-        Room.roomType.put(cubbies,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(dramaArea,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(changingRoom,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(floorPlay,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(quietArea,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(homeWorkArea,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(playHouse,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(treeHouse,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(storyBookVillage,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(pillowPile,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(snackArea,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(greenHall,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(blueHall,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(redHall,Room.ROOMTYPE.RED);
-        Room.roomType.put(peddleToys,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(lemonaidStand,Room.ROOMTYPE.BLUE);
-        Room.roomType.put(toolShed,Room.ROOMTYPE.RED);
-        Room.roomType.put(TRSRoom,Room.ROOMTYPE.RED);
-        Room.roomType.put(janitorialRoom,Room.ROOMTYPE.RED);
-        Room.roomType.put(foyer,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(pantry,Room.ROOMTYPE.KITCHEN);
-        Room.roomType.put(recoveryRoom,Room.ROOMTYPE.GREEN);
-        Room.roomType.put(demoRoom,Room.ROOMTYPE.BLUE);
+
+    public void setNPCTypes() {
+        fuzzy.setType(NPCType.COMPANION);
+        msSagely.setType(NPCType.ADULT);
+        dawn.setType(NPCType.ADULT);
+        taliber.setType(NPCType.REJUVE);
+        susy.setType(NPCType.REJUVE);
+        farah.setType(NPCType.REJUVE);
+        drWhite.setType(NPCType.ADULT);
+        msWhite.setType(NPCType.ADULT);
+        aureus.setType(NPCType.REJUVE);
+        jessiem.setType(NPCType.REJUVE);
+        researchStudent1.setType(NPCType.REJUVE);
+        researchStudent2.setType(NPCType.REJUVE);
+        jimthejanitor.setType(NPCType.ADULT);
+        joy.setType(NPCType.ADULT);
+        jessief.setType(NPCType.REJUVE);
     }
+
+    public void buildRoomTypes() {
+        Room.roomType.put(kitchen, RoomType.KITCHEN);
+        Room.roomType.put(classRoom, RoomType.BLUE);
+        Room.roomType.put(mainRoom, RoomType.GREEN);
+        Room.roomType.put(dorms, RoomType.GREEN);
+        Room.roomType.put(bathroom, RoomType.BATHROOM);
+        Room.roomType.put(hallway, RoomType.RED);
+        Room.roomType.put(stairs, RoomType.RED);
+        Room.roomType.put(basement, RoomType.RED);
+        Room.roomType.put(attic, RoomType.RED);
+        Room.roomType.put(garage, RoomType.RED);
+        Room.roomType.put(garden, RoomType.BLUE);
+        Room.roomType.put(driveway, RoomType.RED);
+        Room.roomType.put(frontYard, RoomType.BLUE);
+        Room.roomType.put(backYard, RoomType.BLUE);
+        Room.roomType.put(cogLabs, RoomType.BLUE);
+        Room.roomType.put(pool, RoomType.RED);
+        Room.roomType.put(patio, RoomType.BLUE);
+        Room.roomType.put(deck, RoomType.BLUE);
+        Room.roomType.put(porch, RoomType.BLUE);
+        Room.roomType.put(balcony, RoomType.BLUE);
+        Room.roomType.put(roof, RoomType.RED);
+        Room.roomType.put(cubbies, RoomType.GREEN);
+        Room.roomType.put(dramaArea, RoomType.GREEN);
+        Room.roomType.put(changingRoom, RoomType.GREEN);
+        Room.roomType.put(floorPlay, RoomType.GREEN);
+        Room.roomType.put(quietArea, RoomType.GREEN);
+        Room.roomType.put(homeWorkArea, RoomType.GREEN);
+        Room.roomType.put(playHouse, RoomType.BLUE);
+        Room.roomType.put(treeHouse, RoomType.BLUE);
+        Room.roomType.put(storyBookVillage, RoomType.GREEN);
+        Room.roomType.put(pillowPile, RoomType.GREEN);
+        Room.roomType.put(snackArea, RoomType.GREEN);
+        Room.roomType.put(greenHall, RoomType.GREEN);
+        Room.roomType.put(blueHall, RoomType.BLUE);
+        Room.roomType.put(redHall, RoomType.RED);
+        Room.roomType.put(peddleToys, RoomType.BLUE);
+        Room.roomType.put(lemonaidStand, RoomType.BLUE);
+        Room.roomType.put(toolShed, RoomType.RED);
+        Room.roomType.put(TRSRoom, RoomType.RED);
+        Room.roomType.put(janitorialRoom, RoomType.RED);
+        Room.roomType.put(foyer, RoomType.GREEN);
+        Room.roomType.put(pantry, RoomType.KITCHEN);
+        Room.roomType.put(recoveryRoom, RoomType.GREEN);
+        Room.roomType.put(demoRoom, RoomType.BLUE);
+    }
+
     static void playerTimeOut(int i, String act, NPC npc) {
         boolean apology = false;
+        int attempts = 0;
         getGui().lockButtons();
         getGui().clearTextPane();
-        getGui().display("You were put in time out for " + i * 10 + " minutes.", "Black");
+        getGui().display("You were put in time out for " + i + " minutes.", "Black");
+    
         while (!apology) {
+            String response;
             String[] acts = {"stealing", "pranking", "Vandalism", "Skipped", "Trespassing", "Sneaking", "climbed", "I don't know"};
-            String response = (String) JOptionPane.showInputDialog(null,
+            response = (String) JOptionPane.showInputDialog(null,
                     "What did you do?",
                     "Choose", JOptionPane.QUESTION_MESSAGE,
                     null, acts, acts[0]);
+    
             if (response == null) {
                 getGui().display("You Will stay here until you give the correct answers.", "Red");
-                break;
+                attempts++;
+                i += 5;
+                continue;
             }
+    
             switch (response) {
                 case "stealing" -> {
                     if (!act.equalsIgnoreCase("stealing")) {
                         getGui().display("That's not what you did", "Red");
                         break;
                     }
-                    String[] reasons = {"Fun", "Profit",};
+                    String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
                             "Why did you steal?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "pranking" -> {
@@ -1066,18 +1064,15 @@ public class GameHandler {
                             "Why did you prank someone?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "Vandalism" -> {
@@ -1090,18 +1085,15 @@ public class GameHandler {
                             "Why did you vandalize?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "Pickedon" -> {
@@ -1114,18 +1106,15 @@ public class GameHandler {
                             "Why did you pick on someone?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "Skipped" -> {
@@ -1138,18 +1127,15 @@ public class GameHandler {
                             "Why did you skip?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "Trespassing" -> {
@@ -1162,18 +1148,15 @@ public class GameHandler {
                             "Why did you trespass?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "Sneaking" -> {
@@ -1186,18 +1169,15 @@ public class GameHandler {
                             "Why did you sneak?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "climbed" -> {
@@ -1210,37 +1190,36 @@ public class GameHandler {
                             "Why did you climb?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-
+    
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        break;
+                        attempts++;
+                        i += 5;
+                        continue;
                     }
-                    switch (response) {
-                        case "Fun" -> {
-                            apology = true;
-                        }
-                        case "Profit" -> {
-                            apology = true;
-                        }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
                     }
                 }
                 case "I don't know" -> {
                     getGui().display("You will stay here until you give the correct answers.", "Red");
-                    break;
+                    attempts++;
+                    i += 5;
                 }
             }
         }
+    
         if (apology) {
             getGui().display("You have been forgiven", "Green");
             getGui().unlockButtons();
-        } else {
-            getGui().display("You will stay here until you give the correct answers.", "Red");
+            FatherTime.getClock().moveTime(attempts + i + 2);
         }
     }
 
     private static ArrayList<Achievements> getAchievements() {
         return achievements;
     }
+
     public static Achievements getAchievementByName(String name) {
         for (Achievements achievement : achievements) {
             if (achievement.getName().equalsIgnoreCase(name)) {
@@ -1263,8 +1242,6 @@ public class GameHandler {
         return Player.getRoom();
     }
 
-    
-
     public void moveItem(Item item, Room room) {
         room.getInventory().add(item);
     }
@@ -1272,6 +1249,7 @@ public class GameHandler {
     public Game getGame() {
         return game;
     }
+
     public static void updateAchievementsForRoomVisit(Room room) {
         // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
         for (Achievements Achievement : getAchievements()) {
@@ -1281,6 +1259,7 @@ public class GameHandler {
             }
         }
     }
+
     public static void updateAchievementsForEquip(Equipment equipment) {
         // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
         for (Achievements Achievement : getAchievements()) {
@@ -1290,7 +1269,8 @@ public class GameHandler {
             }
         }
     }
-     public String[] getToyBuffs() {
+
+    public String[] getToyBuffs() {
         return toyBuffs;
     }
 
@@ -1312,63 +1292,62 @@ public class GameHandler {
 
     public static void makeFoodTray() {
         Container foodTray1 = (Container) getItems().get("Food Tray");
-                if (foodTray1 == null) {
-                    foodTray1 = new Container("Food Tray", "A plastic food tray", "Container", false);
-                    getItems().put("Food Tray", foodTray1); // Add it to game items
-                }
-    
-                Random rand = new Random();
-                int fruitIndex = rand.nextInt(EatingAndFood.fruitChoices.values().length);
-                int vegetableIndex = rand.nextInt(EatingAndFood.vegetableChoices.values().length);
-                int junkIndex = rand.nextInt(EatingAndFood.junkChoices.values().length);
-                int proteinIndex = rand.nextInt(EatingAndFood.proteinChoices.values().length);
-                int drinkIndex = rand.nextInt(EatingAndFood.drinkChoices.values().length);
-                // Create food items
-                Item drink = new EatingAndFood(EatingAndFood.drinkChoices.values()[drinkIndex].toString(), "A delicious " + EatingAndFood.drinkChoices.values()[drinkIndex].toString(), EatingAndFood.FoodType.DRINK, 5);
-                Item fruit = new EatingAndFood(EatingAndFood.fruitChoices.values()[fruitIndex].toString(), "A delicious " + EatingAndFood.fruitChoices.values()[fruitIndex].toString(), EatingAndFood.FoodType.FRUIT, 5);
-                Item veg = new EatingAndFood(EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), "A delicious " + EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), EatingAndFood.FoodType.VEGETABLE, 5);
-                Item junk = new EatingAndFood(EatingAndFood.junkChoices.values()[junkIndex].toString(), "A delicious " + EatingAndFood.junkChoices.values()[junkIndex].toString(), EatingAndFood.FoodType.JUNK, 5);
-                Item protein = new EatingAndFood(EatingAndFood.proteinChoices.values()[proteinIndex].toString(), "A delicious " + EatingAndFood.proteinChoices.values()[proteinIndex].toString(), EatingAndFood.FoodType.MEAL, 5);
-                drink.getConditions().put(ItemCondition.DRINK, true);
-                drink.setName(toSentenceCase(drink.getName()));
+        if (foodTray1 == null) {
+            foodTray1 = new Container("Food Tray", "A plastic food tray", "Container", false);
+            getItems().put("Food Tray", foodTray1); // Add it to game items
+        }
 
-                fruit.getConditions().put(ItemCondition.FOOD, true);
-                fruit.setName(toSentenceCase(fruit.getName()));
-                
-                veg.getConditions().put(ItemCondition.FOOD, true);
-                veg.setName(toSentenceCase(veg.getName()));
-                
-                junk.getConditions().put(ItemCondition.FOOD, true);
-                junk.setName(toSentenceCase(junk.getName()));
-                
-                protein.getConditions().put(ItemCondition.FOOD, true);
-                protein.setName(toSentenceCase(protein.getName()));
-                
-                fruit.setSaturation(7);
-                veg.setSaturation(10);
-                junk.setSaturation(3);
-                protein.setSaturation(15);
-                drink.setSaturation(5);
+        Random rand = new Random();
+        int fruitIndex = rand.nextInt(EatingAndFood.fruitChoices.values().length);
+        int vegetableIndex = rand.nextInt(EatingAndFood.vegetableChoices.values().length);
+        int junkIndex = rand.nextInt(EatingAndFood.junkChoices.values().length);
+        int proteinIndex = rand.nextInt(EatingAndFood.proteinChoices.values().length);
+        int drinkIndex = rand.nextInt(EatingAndFood.drinkChoices.values().length);
+        // Create food items
+        Item drink = new EatingAndFood(EatingAndFood.drinkChoices.values()[drinkIndex].toString(), "A delicious " + EatingAndFood.drinkChoices.values()[drinkIndex].toString(), EatingAndFood.FoodType.DRINK, 5);
+        Item fruit = new EatingAndFood(EatingAndFood.fruitChoices.values()[fruitIndex].toString(), "A delicious " + EatingAndFood.fruitChoices.values()[fruitIndex].toString(), EatingAndFood.FoodType.FRUIT, 5);
+        Item veg = new EatingAndFood(EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), "A delicious " + EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), EatingAndFood.FoodType.VEGETABLE, 5);
+        Item junk = new EatingAndFood(EatingAndFood.junkChoices.values()[junkIndex].toString(), "A delicious " + EatingAndFood.junkChoices.values()[junkIndex].toString(), EatingAndFood.FoodType.JUNK, 5);
+        Item protein = new EatingAndFood(EatingAndFood.proteinChoices.values()[proteinIndex].toString(), "A delicious " + EatingAndFood.proteinChoices.values()[proteinIndex].toString(), EatingAndFood.FoodType.MEAL, 5);
+        drink.getTypes().put(ItemType.DRINK, true);
+        drink.setName(toSentenceCase(drink.getName()));
 
-                foodTray1.getInventory().clear(); // Clear the food tray
-                foodTray1.addItem(fruit);
-                foodTray1.addItem(veg);
-                foodTray1.addItem(junk);
-                foodTray1.addItem(protein);
-                foodTray1.addItem(drink);
+        fruit.getTypes().put(ItemType.FOOD, true);
+        fruit.setName(toSentenceCase(fruit.getName()));
 
-                items.put(fruit.getName(), fruit);
-                items.put(veg.getName(), veg);
-                items.put(junk.getName(), junk);
-                items.put(protein.getName(), protein);
-                items.put(drink.getName(), drink);
+        veg.getTypes().put(ItemType.FOOD, true);
+        veg.setName(toSentenceCase(veg.getName()));
 
-    
-                // Display success message
-                getGui().display("You filled the food tray with delicious items!", "Red");
-                foodTrayDispenser.addItem(foodTray1);
-                foodTray1.displayInventory();
-                foodTrayDispenser.displayInventory();
+        junk.getTypes().put(ItemType.FOOD, true);
+        junk.setName(toSentenceCase(junk.getName()));
+
+        protein.getTypes().put(ItemType.FOOD, true);
+        protein.setName(toSentenceCase(protein.getName()));
+
+        fruit.setSaturation(7);
+        veg.setSaturation(10);
+        junk.setSaturation(3);
+        protein.setSaturation(15);
+        drink.setSaturation(5);
+
+        foodTray1.getInventory().clear(); // Clear the food tray
+        foodTray1.addItem(fruit);
+        foodTray1.addItem(veg);
+        foodTray1.addItem(junk);
+        foodTray1.addItem(protein);
+        foodTray1.addItem(drink);
+
+        items.put(fruit.getName(), fruit);
+        items.put(veg.getName(), veg);
+        items.put(junk.getName(), junk);
+        items.put(protein.getName(), protein);
+        items.put(drink.getName(), drink);
+
+        // Display success message
+        getGui().display("You filled the food tray with delicious items!", "Red");
+        foodTrayDispenser.addItem(foodTray1);
+        foodTray1.displayInventory();
+        foodTrayDispenser.displayInventory();
     }
 
 }

@@ -79,6 +79,6 @@ public class Equipment extends Item {
     }
 
     boolean needsChanged() {
-        return this.conditions.containsKey(ItemCondition.DIRTY)||this.conditions.containsKey(ItemCondition.DAMAGED)||this.conditions.containsKey(ItemCondition.BROKEN)||this.conditions.containsKey(ItemCondition.WET)||this.conditions.containsKey(ItemCondition.CONTRABAND);
+        return this.conditions.containsKey(ItemCondition.DIRTY)||this.conditions.containsKey(ItemCondition.DAMAGED)||this.conditions.containsKey(ItemCondition.BROKEN)||this.conditions.containsKey(ItemCondition.WET)||this.getTypes().containsKey(ItemType.CONTRABAND);
     }
 }

@@ -39,6 +39,7 @@ public class Game {
     public void beginGame(GameHandler gamehandler) {
         gameHandler.createItems();
         gameHandler.setUpNPCs();
+        gamehandler.setNPCTypes();
         gameHandler.createAchievements();
         FatherTime.setPhase(FatherTime.DayPhase.MORNING);
         gamehandler.createRoutine();

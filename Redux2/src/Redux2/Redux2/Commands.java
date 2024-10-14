@@ -1,10 +1,10 @@
 package Redux2;
 
-import Redux2.Room.ROOMTYPE;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 class Commands {
+    private static PawsAndProwess pawsAndProwess;
     private static String argument="";
     private static String command="";
     public static String getCommand() {
@@ -19,7 +19,6 @@ class Commands {
     public static void setArgument(String argument) {
         Commands.argument = argument;
     }
-    private static PawsAndProwess pawsAndProwess;
     public static PawsAndProwess getPawsAndProwess() {
         return pawsAndProwess;
     }
@@ -111,7 +110,7 @@ class Commands {
                     Player.getRoom().randomNPC(true).guidePlayer(Events.STORY_TIME);
                 }
                 case "wander" -> {
-                    GameHandler.getNPCByName("Fuzzy").wander(ROOMTYPE.GREEN);
+                    //GameHandler.getNPCByName("Fuzzy").wander(ROOMTYPE.GREEN);
                 }
                 default ->
                     GameHandler.getGui().display("Invalid command", "Black");
