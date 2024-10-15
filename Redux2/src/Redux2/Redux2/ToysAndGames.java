@@ -15,6 +15,10 @@ public class ToysAndGames {
     public ToysAndGames() {}
 
     public void hideAndSeek(ArrayList<NPC> playingNpcs) {
+        PlayersOut.clear();
+        for(NPC npc : playingNpcs){
+            PlayersIn.add(npc);
+        }
         NPC seeker;
         GameHandler.getGui().display("You are playing hide and seek with your friends", "Black");
         
@@ -51,16 +55,17 @@ public class ToysAndGames {
     
     private void triggerHiderWander(NPC npc) {
         // Create a new Timer
-        Timer timer = new Timer();
-        this.timer = timer;
+        Timer wanderTimer = new Timer();
+        Timer checkTimer = new Timer();
+        this.timer = wanderTimer;
     
         // Define a TimerTask to start wandering immediately
         TimerTask wanderTask = new TimerTask() {
             @Override
             public void run() {
                 if (gameOver) {
-                    npc.setRoom(GameHandler.getRoomByName("Main_Room"));
-                    timer.cancel();
+                    wanderTimer.cancel();
+                    checkTimer.cancel();
                     return;
                 }
     
@@ -71,33 +76,56 @@ public class ToysAndGames {
         };
     
         // Start the wandering task every 5 seconds
-        timer.schedule(wanderTask, 0, 5000);
+        wanderTimer.schedule(wanderTask, 0, 5000);
     
         // Schedule a task to stop wandering after 30 seconds
         TimerTask stopWanderingTask = new TimerTask() {
             @Override
             public void run() {
-                timer.cancel();  // Cancel the wander timer to stop movement
+                wanderTimer.cancel();  // Cancel the wander timer to stop movement
                 GameHandler.getGui().display(npc.getName() + " has finished hiding!", "Black");
-                if (npc.getRoom() == Player.getRoom()) {
-                    foundYou(npc);  // Handle the logic when the NPC is found
-                }
             }
         };
     
         // Stop the wandering after 30 seconds (30000 ms)
-        timer.schedule(stopWanderingTask, 30000);
+        wanderTimer.schedule(stopWanderingTask, 15000);
+    
+        // Define a TimerTask to check if the player is in the same room as the NPC
+        TimerTask checkFoundTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (npc.getRoom() == Player.getRoom()) {
+                    foundYou(npc);
+                    PlayersOut.add(npc);
+                    PlayersIn.remove(npc);
+                    if (allPlayersOut()) {
+                        checkTimer.cancel();  // Stop checking if all players are "out"
+                    }
+                }
+            }
+        };
+    
+        // Start the checking task every second (1000 ms)
+        checkTimer.scheduleAtFixedRate(checkFoundTask, 0, 1000);
+    }
+    
+    // Method to check if all players are "out"
+    private boolean allPlayersOut() {
+        if(PlayersIn.isEmpty()){
+            endGame();
+            return true;
+
+        } else {
+            return false;
+        }
     }
     
     protected void foundYou(NPC npc) {
-        this.PlayersOut.add(npc);
-        this.PlayersIn.remove(npc);
         GameHandler.getGui().display(npc.getName() + " has been found!", "Black");
         
         // End game if all NPCs have been found
-        if (PlayersIn.size() == 0) {
+        if (PlayersIn.isEmpty()) {
             GameHandler.getGui().display("Everyone has been found!", "Black");
-            endGame();
         }
     }
 
@@ -119,7 +147,6 @@ public class ToysAndGames {
                     @Override
                     public void run() {
                         if (gameOver) {
-                            seeker.setRoom(GameHandler.getRoomByName("Main_Room"));
                             timer.cancel();
                             return;
                         }
@@ -142,7 +169,7 @@ public class ToysAndGames {
                 };
     
                 // Start the wandering task every 5 seconds
-                timer.schedule(wanderTask, 0, 5000);
+                timer.schedule(wanderTask, 0, 1500);
             }
         };
         
@@ -170,19 +197,46 @@ public class ToysAndGames {
 
     public void endGame() {
         gameOver = true;
+        
         if (timer != null) {
             timer.cancel();  // Cancel any remaining timers
         }
+        
         GameHandler.getGui().display("The game has ended. Everyone is back in the main room.", "Black");
         
-        // Move all players and NPCs to the main room
+        // Get the main room reference
         Room mainRoom = GameHandler.getRoomByName("Main_Room");
+        
+        // Move the player to the main room
         Player.setRoom(mainRoom);
         
+        // Keep track of which NPCs have already been moved to avoid duplicates
+        ArrayList<NPC> movedNPCs = new ArrayList<>();
+        
+        // Remove NPCs from all other rooms and move them to the main room
         for (NPC npc : npcs) {
-            npc.setRoom(mainRoom);
+            if (!movedNPCs.contains(npc)) { // Ensure NPC hasn't already been moved
+                // Get the current room of the NPC
+                Room currentRoom = npc.getRoom();
+                
+                // Remove the NPC from the current room
+                if (currentRoom != null) {
+                    currentRoom.removeNPC(npc);
+                }
+                
+                // Move the NPC to the main room and add only once
+                npc.setRoom(mainRoom);
+                
+                // Add the NPC to the moved list
+                movedNPCs.add(npc);
+            }
         }
+        
+        // Clear the player lists for the next game
+        PlayersIn.clear();
+        PlayersOut.clear();
     }
+    
     public void playTag(ArrayList<NPC> playingNpcs) {
         GameHandler.getGui().display("You are playing tag with your friends","Black");
         int eenyMeenyMinyMoe = rand.nextInt(playingNpcs.size());
@@ -216,10 +270,6 @@ public class ToysAndGames {
                     public void run() {
                         // Make "it" wander
                         it.wander(RoomType.GREEN); // Chasing only in "GREEN" rooms
-                        if(gameOver == true){
-                            it.setRoom(GameHandler.getRoomByName("Main_Room"));
-                            return;
-                        }
                         if (it.getRoom() == Player.getRoom()) {
                             GameHandler.getGui().display(it.getName() + " saw you, quick run!!", "Black");
                             // Determine if "it" catches the player using skill levels and RNG

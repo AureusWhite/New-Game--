@@ -492,6 +492,7 @@ public class GameHandler {
         mainRoom.addItem(pickapaw);
         Player.setRoom(recoveryRoom);
         fuzzy.setRoom(recoveryRoom);
+        farah.setRoom(recoveryRoom);
         NPC.followPlayer(fuzzy);
         drWhite.setRoom(foyer);
     }

@@ -234,7 +234,6 @@ public class NPC extends Character {
     public void setRoom(Room room) {
         room.addNPC(this);
         this.room = room;
-
     }
     public int getSkillLevel(Skill skill) {
         return skillLevels.get(skill);
