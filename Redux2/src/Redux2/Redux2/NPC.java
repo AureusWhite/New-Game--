@@ -34,7 +34,7 @@ public class NPC extends Character {
     private String alignment;
     boolean follower;
     private final HashMap<NPCType, Boolean> types = new HashMap<>();
-    private final HashMap<NPCType, Boolean> npcStatus = new HashMap<>();
+    private final HashMap<NPCStatus, Boolean> npcStatus = new HashMap<>();
 
     public NPC(String name, String description, Room room, String type) {
         super(name, description, room);
@@ -52,20 +52,13 @@ public class NPC extends Character {
     public void wander(RoomType roomType) {
         // Get the current room of the NPC
         Room currentRoom = this.getRoom();
-        GameHandler.getGui().display(this.getRoom().getName(), "black");
-
         // Create a list to store valid rooms of the specified type (GREEN in this case)
         List<Room> validRooms = new ArrayList<>();
-        GameHandler.getGui().display("Array Created", "black");
-
         // Iterate through all exits (which are room names) and resolve the actual Room objects
         for (String exitName : currentRoom.getExits()) {
-            GameHandler.getGui().display(exitName, "black");
             Room adjacentRoom = GameHandler.getRoomByName(exitName);  // Resolve the Room object from the name
-            GameHandler.getGui().display(adjacentRoom.getName(), "black");
             if (adjacentRoom.getType() == roomType) {
                 validRooms.add(adjacentRoom);  // Add to the valid rooms list if it matches the roomType
-                GameHandler.getGui().display(adjacentRoom.getName() + "Room Added", "black");
             }
         }
 
@@ -75,12 +68,11 @@ public class NPC extends Character {
             Random random = new Random();
             int roomNumber = random.nextInt(validRooms.size());
             Room destination = validRooms.get(roomNumber);
-            GameHandler.getGui().display("picked room number #" + roomNumber + " " + destination.getName(), "black");
 
             // Move the NPC to the chosen room
             this.setRoom(destination);
-            System.out.println("Wandering to: " + destination.getName());  // Optional: log for debugging
             currentRoom.removeNPC(this);
+            System.out.println(this.getName() + " has wandered to " + destination.getName());
         } else {
             // No valid rooms found
             System.out.println("No adjacent rooms of the specified type.");
@@ -921,13 +913,13 @@ public class NPC extends Character {
         }
     }
 
-    private void displayInventory() {
+    void displayInventory() {
         for (Item item : this.getInventory()) {
             GameHandler.getGui().display(item.getName(), "black");
         }
     }
 
-    public HashMap<NPCType, Boolean> getStatus() {
+    public HashMap<NPCStatus, Boolean> getStatus() {
         return this.npcStatus;
     }
 }

@@ -25,6 +25,7 @@ public class GameHandler {
     public static String fileSection3 = "";
     public static String fileSection4 = "";
     private final static ArrayList<Achievements> achievements = new ArrayList<>();
+    static Random rand = new Random();
 
     private static String toSentenceCase(String name) {
         name = name.toLowerCase();
@@ -58,13 +59,20 @@ public class GameHandler {
             binoculars, camera, videoCamera, tapeRecorder, radio, television,
             computer, tablet, phone, speaker, headphones, microphone, keyboard,
             mouse, monitor, printer, scanner, projector, whiteboard, chalkboard,
-            smartboard, globe, map, calendar, compass, protractor, canvas, snackShop, pickapaw, pawFigure, limitedEditionPaw;
+            smartboard, globe, map, calendar, compass, protractor, nulearPotato, canvas, snackShop, pickapaw, pawFigure, limitedEditionPaw;
     private static Item foodTrayDispenser;
 
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
             jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
 
     public void createItems() {
+        nulearPotato = new Item("Nuclear Potato", "A potato that has been exposed to radiation.", "Toy", true);
+        items.put("Nuclear Potato", nulearPotato);
+        nulearPotato.getTypes().put(ItemType.TAKEABLE, true);
+        nulearPotato.getTypes().put(ItemType.TOY, true);
+
+        
+
         foodTray = new Container("Food Tray", "A tray for you to eat food on.", "Food Tray", true);
         items.put("Food Tray", foodTray);
         foodTrayDispenser = new Item("Food Tray Dispenser", "A machine that dispenses food trays.", "Machine/Interactable", false);
@@ -479,22 +487,12 @@ public class GameHandler {
         demoRoom.addItem(toy);
         demoRoom.addItem(book);
         foyer.addItem(snackShop);
-        recoveryRoom.addItem(trainingPants);
-        recoveryRoom.addItem(diaper);
-        recoveryRoom.addItem(backPack);
-        recoveryRoom.addItem(underPants);
-        recoveryRoom.addItem(uniformTop);
-        recoveryRoom.addItem(uniformBottom);
-        recoveryRoom.addItem(uniformHat);
-        recoveryRoom.addItem(uniformShoes);
-        recoveryRoom.addItem(uniBackPack);
-        recoveryRoom.addItem(box);
         mainRoom.addItem(pickapaw);
-        Player.setRoom(recoveryRoom);
-        fuzzy.setRoom(recoveryRoom);
-        farah.setRoom(recoveryRoom);
+        Player.setRoom(mainRoom);
+        fuzzy.setRoom(mainRoom);
+        farah.setRoom(mainRoom);
+        fuzzy.addItem(nulearPotato);
         NPC.followPlayer(fuzzy);
-        drWhite.setRoom(foyer);
     }
 
     public void populateRooms() {
@@ -721,11 +719,30 @@ public class GameHandler {
     }
 
     public void setupPlayer() {
+        dressPlayer();
         Player.setMoney(9);
         //setCharacterBio();
         updateStatus();
         Game.setRunning(true);
         getGui().unlockButtons();
+    }
+
+    private void dressPlayer() {
+            if(!Player.getEquipment().containsKey("Underpants")){
+                Player.equip(new Equipment("Underwear", "Clean Underwear", "underpants"), "Underpants");
+            }
+            if(!Player.getEquipment().containsKey("Top")){
+                Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
+            }
+            if(!Player.getEquipment().containsKey("Bottom")){
+                Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
+            }
+            if(!Player.getEquipment().containsKey("Socks")){
+                Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
+            }
+            if(!Player.getEquipment().containsKey("Shoes")){
+                Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
+            }
     }
 
     public void giveItems() {
@@ -1297,8 +1314,6 @@ public class GameHandler {
             foodTray1 = new Container("Food Tray", "A plastic food tray", "Container", false);
             getItems().put("Food Tray", foodTray1); // Add it to game items
         }
-
-        Random rand = new Random();
         int fruitIndex = rand.nextInt(EatingAndFood.fruitChoices.values().length);
         int vegetableIndex = rand.nextInt(EatingAndFood.vegetableChoices.values().length);
         int junkIndex = rand.nextInt(EatingAndFood.junkChoices.values().length);
@@ -1351,4 +1366,11 @@ public class GameHandler {
         foodTrayDispenser.displayInventory();
     }
 
+	public static Room getRandomRoom(RoomType green) {
+        rand.nextInt(rooms.size());
+        List<String> keys = new ArrayList<>(rooms.keySet());
+        Room randRoom = rooms.get(keys.get(rand.nextInt(keys.size())));
+        return randRoom;
+	}
+    
 }

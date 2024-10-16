@@ -757,13 +757,6 @@ public class Player {
         return Player.age;
     }
 
-    static void removeItem(Item item) {
-        if (item == null) {
-            GameHandler.getGui().display("Item does not exsist?", "Black");
-        }
-        locateItem(item).remove(item);
-    }
-
     static void addItem(Item item) {
         String[] options = {"Pockets", "Backpack", "Hands", "Equip", "Eat"};
         int choice = JOptionPane.showOptionDialog(null, "Where would you like to put the " + item.getName() + "?", "Choose a location", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
@@ -977,18 +970,39 @@ public class Player {
         return pocketSize;
     }
 
+    static void removeItem(Item item) {
+        if (item == null) {
+            GameHandler.getGui().display("Item does not exist?", "Black");
+            return;
+        }
+    
+        ArrayList<Item> itemLocation = locateItem(item);
+        if (itemLocation != null) {
+            itemLocation.remove(item);
+            GameHandler.getGui().display("You successfully removed " + item.getName() + " from your inventory", "Black");
+        } else {
+            GameHandler.getGui().display("Error: The item was not found in any inventory.", "Red");
+        }
+    }
+    
     private static ArrayList<Item> locateItem(Item item) {
         if (pockets.contains(item)) {
+            GameHandler.getGui().display("Item found in pockets", "Black");
             return pockets;
         }
         if (backpack.contains(item)) {
+            GameHandler.getGui().display("Item found in backpack", "Black");
             return backpack;
         }
         if (hands.contains(item)) {
+            GameHandler.getGui().display("Item found in hands", "Black");
             return hands;
         }
+    
+        GameHandler.getGui().display("Item not found in any inventory", "Red");
         return null;
     }
+    
 
     public static String[] getEquipmentChoices() {
         int i = 0;

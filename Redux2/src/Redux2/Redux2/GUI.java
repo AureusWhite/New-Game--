@@ -698,6 +698,7 @@ public class GUI extends JFrame {
                                     NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
                                     Item item = GameHandler.getItemByName(selectedItem);
                                     npc.reciveItem(item);
+                                    npc.displayInventory();
                                 } else {
                                     notify();
                                 }
@@ -833,7 +834,7 @@ public class GUI extends JFrame {
                                 if (selectedNPC != null) {
                                     String[] toyChoises = Player.getRoom().getToyChoices();
                                     if (toyChoises == null) {
-                                        String[] toyless = {"Tag", "Hide and Seek", "Simon Says", "Duck Duck Goose"};
+                                        String[] toyless = {"Hide and Seek","Nuked Potato", "Mystery Box","Pass the Parcel","Object Hunt","Dice Dare","Tag" };
                                         String selectedToyless = (String) JOptionPane.showInputDialog(
                                                 null,
                                                 "What do you want to play?",
@@ -844,20 +845,23 @@ public class GUI extends JFrame {
                                                 toyless[0]);
                                         switch (selectedToyless) {
                                             case "Tag" -> {
-                                                GameHandler.getGui().display("You play tag with " + selectedNPC, "Black");
-                                                ToysAndGames tag = new ToysAndGames();
-                                                tag.playTag(tag.getPlayers());
-                                            }
+                                                }
                                             case "Hide and Seek" -> {
-                                                GameHandler.getGui().display("You play hide and seek with " + selectedNPC, "Black");
-                                                ToysAndGames hideAndSeek = new ToysAndGames();
-                                                hideAndSeek.hideAndSeek(hideAndSeek.getPlayers());
+                                                ToysAndGames.hideAndSeek();
+                                                }
+                                            case "Nuked Potato" -> {
+                                                ToysAndGames.nukedPotato();
+                                                }
+                                            case "Mystery Box" -> {
+                                                }
+                                            case "Pass the Parcel" -> {
+
                                             }
-                                            case "Simon Says" -> {
-                                                GameHandler.getGui().display("You play Simon Says with " + selectedNPC, "Black");
+                                            case "Object Hunt" -> {
+  
                                             }
-                                            case "Duck Duck Goose" -> {
-                                                GameHandler.getGui().display("You play Duck Duck Goose with " + selectedNPC, "Black");
+                                            case "Dice Dare" -> {
+
                                             }
                                         }
 

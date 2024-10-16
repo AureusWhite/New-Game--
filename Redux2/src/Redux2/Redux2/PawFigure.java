@@ -8,7 +8,6 @@ public class PawFigure extends Item {
     PawsColor color;
     PawsAbility ability;
     PawsRarity rarity;
-    String description;
 
     // Constructor
     public PawFigure() {
