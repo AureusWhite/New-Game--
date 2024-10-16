@@ -985,7 +985,7 @@ public class Player {
         }
     }
     
-    private static ArrayList<Item> locateItem(Item item) {
+    static ArrayList<Item> locateItem(Item item) {
         if (pockets.contains(item)) {
             GameHandler.getGui().display("Item found in pockets", "Black");
             return pockets;

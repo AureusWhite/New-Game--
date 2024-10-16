@@ -35,6 +35,7 @@ public class NPC extends Character {
     boolean follower;
     private final HashMap<NPCType, Boolean> types = new HashMap<>();
     private final HashMap<NPCStatus, Boolean> npcStatus = new HashMap<>();
+    private Quest currentQuest;
 
     public NPC(String name, String description, Room room, String type) {
         super(name, description, room);
@@ -47,6 +48,19 @@ public class NPC extends Character {
 
     public int getNpcAge() {
         return npcAge;
+    }
+    public void turnInQuest() {
+        if (Player.getHands().contains(getCurrentQuest().requiredItem())) {
+            currentQuest.removeRequiredItem(getCurrentQuest().requiredItem());
+        } else {
+            GameHandler.getGui().display("You do not have the required item", "black");
+        }
+    }
+
+
+    private Quest getCurrentQuest() {
+        return this.currentQuest;
+
     }
 
     public void wander(RoomType roomType) {
@@ -148,8 +162,13 @@ public class NPC extends Character {
 
     public void reciveItem(Item item) {
         this.addItem(item);
-        Player.removeItem(item);
+        if (this.getCurrentQuest().requiredItem().equals(item)) {
+            this.getCurrentQuest().removeRequiredItem(item);
+        } else {
+            GameHandler.getGui().display("You have given " + this.getName() + " an item", "black");
+        }
     }
+
 
     public void giveItemToPlayer(Item item) {
         Player.addItem(item);

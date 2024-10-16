@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.naming.RefAddr;
 
 public class ToysAndGames {
 
@@ -331,7 +330,6 @@ public class ToysAndGames {
         }
         ArrayList<NPC> playingNpcs = getPlayers();
         final ArrayList<NPC> passingNpcs = new ArrayList<>(playingNpcs);
-        final ArrayList<NPC> hadTurn = new ArrayList<>();
         GameHandler.getGui().display("You are playing nuked potato with your friends", "Black");
         GameHandler.getGui().display("You have 20 seconds till the potato explodes!", "Black");
         GameHandler.getGui().display("The potato timer gets a little longer each time it is passed", "Black");
@@ -374,41 +372,34 @@ public class ToysAndGames {
                 }
             }
         };
-
         // Schedule the potato to be passed every 3 seconds
         timer.schedule(potatoTask, 0, 300);
-        
         // Start the timer to explode the potato
-            TimerTask explodeTask = new TimerTask() {
-                @Override
-                public void run() {
-                    ArrayList<NPC> toRemoveFromGame = new ArrayList<>();  // List to collect NPCs to be removed
-
-                    // Use an iterator to safely modify the list while iterating over it
-                    Iterator<NPC> iterator = playingNpcs.iterator();
-                    while (iterator.hasNext()) {
-                        NPC npc = iterator.next();
-                        if (npc.getInventory().contains(nuclearPotato)) {
-                            GameHandler.getGui().display(npc.getName() + " exploded!", "Black");
-                            GameHandler.getGui().display(npc.getName() + " has been eliminated", "Black");
-                            toRemoveFromGame.add(npc);  // Mark the NPC for removal
-                        }
-
+        TimerTask explodeTask = new TimerTask() {
+            @Override
+            public void run() {
+                ArrayList<NPC> toRemoveFromGame = new ArrayList<>();  // List to collect NPCs to be removed
+                // Use an iterator to safely modify the list while iterating over it
+                Iterator<NPC> iterator = playingNpcs.iterator();
+                while (iterator.hasNext()) {
+                    NPC npc = iterator.next();
+                    if (npc.getInventory().contains(nuclearPotato)) {
+                        GameHandler.getGui().display(npc.getName() + " exploded!", "Black");
+                        GameHandler.getGui().display(npc.getName() + " has been eliminated", "Black");
+                        toRemoveFromGame.add(npc);  // Mark the NPC for removal
                     }
-
-                    // Remove NPCs after iteration to avoid ConcurrentModificationException
-                    playersIn.removeAll(toRemoveFromGame);
-                    playersOut.addAll(toRemoveFromGame);
-
-                    if (playersIn.size() == 1) {
-                        GameHandler.getGui().display(playersIn.get(0).getName() + " wins!", "Black");
-                        timer.cancel();  // Stop the timer once all players are out
-                    }
-
                 }
-            };
+                // Remove NPCs after iteration to avoid ConcurrentModificationException
+                playersIn.removeAll(toRemoveFromGame);
+                playersOut.addAll(toRemoveFromGame);
+                if (playersIn.size() == 1) {
+                    GameHandler.getGui().display(playersIn.get(0).getName() + " wins!", "Black");
+                    timer.cancel();  // Stop the timer once all players are out
+                }
 
-            // Schedule the potato to explode after 20 seconds
-            timer.scheduleAtFixedRate(explodeTask, 2000, 2000);
-        }
+            }
+        };
+        // Schedule the potato to explode after 20 seconds
+        timer.scheduleAtFixedRate(explodeTask, 2000, 2000);
     }
+}

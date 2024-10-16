@@ -699,6 +699,7 @@ public class GUI extends JFrame {
                                     Item item = GameHandler.getItemByName(selectedItem);
                                     npc.reciveItem(item);
                                     npc.displayInventory();
+                                    Player.removeItem(item);
                                 } else {
                                     notify();
                                 }

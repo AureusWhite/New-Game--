@@ -554,4 +554,19 @@ public class Room {
         return exits1;
     }
 
+    public static boolean isClean(Room room) {
+        return room.getInventory().isEmpty();
+    }
+
+    public boolean checkRequiredConditon(Quest quest) {
+        String condition = quest.getRequiredConditions().keySet().iterator().next();
+        return switch (condition) {
+            case "clean" -> isClean(this);
+            case "npc" -> this.getNpcs().contains(quest.getRequiredNPCs().get(0));
+            case "item" -> this.getInventory().contains(quest.getRequiredItems().get(0));
+            case "room" -> this.getRooms().contains(quest.getRequiredRooms().get(0));
+            default -> false;
+        };
+    }
+
 }

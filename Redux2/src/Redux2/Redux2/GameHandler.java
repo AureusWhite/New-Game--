@@ -17,7 +17,17 @@ public class GameHandler {
     private static final Map<String, Room> rooms = new HashMap<>();
     static final Map<String, NPC> npcs = new HashMap<>();
     static final Map<String, Item> items = new HashMap<>();
-    //private static final ArrayList<Quest> quests = new ArrayList<>();
+    private static final ArrayList<Quest> quests = new ArrayList<>();
+    private final ArrayList<Room> requiredRooms = new ArrayList<>();
+
+    public ArrayList<Room> getRequiredRooms() {
+        return requiredRooms;
+    }
+    private ArrayList<Item> requiredItems = new ArrayList<>();
+
+    public void setRequiredItems(ArrayList<Item> requiredItems) {
+        this.requiredItems = requiredItems;
+    }
     public static Room room;
     private static GUI gui;
     private static Game game;
@@ -38,6 +48,42 @@ public class GameHandler {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public static ArrayList<Quest> getQuests() {
+        return quests;
+    }
+
+    public void createQuests() {
+        Quest tidyUp = new Quest("Tidy Up", "Escort Jim to help clean up the trash in the cogLabs",1);
+        quests.add(tidyUp);
+        tidyUp.addRequiredRoom(cogLabs);
+        tidyUp.addRequiredNPC(jimthejanitor);
+        tidyUp.addRequiredItem(trash);
+        tidyUp.addReward(toy);
+        tidyUp.addReward(book);
+        tidyUp.addRequiredConditon("trash", true);
+
+        Quest playTime = new Quest("Play Time", "Play with Fuzzy",1);
+        quests.add(playTime);
+        playTime.addRequiredNPC(fuzzy);
+        playTime.addReward(toy);
+        playTime.addReward(book);
+        playTime.addRequiredConditon("npc", true);
+        playTime.addRequiredItem(toy);
+        playTime.addRequiredRoom(mainRoom);
+
+        Quest snackTime = new Quest("Snack Time", "Get a snack from the Snack Shop",1);
+        quests.add(snackTime);
+        snackTime.addRequiredRoom(mainRoom);
+        snackTime.addRequiredItem(snackShop);
+        snackTime.addReward(toy);
+        snackTime.addReward(book);
+        snackTime.addRequiredConditon("item", true);
+        
+
+        
+
+
+    }
     private Container box, foodTray;
 
     public Room recoveryRoom, kitchen, mainRoom,
@@ -64,14 +110,13 @@ public class GameHandler {
 
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
             jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
+    private Item mcguffin;
 
     public void createItems() {
         nulearPotato = new Item("Nuclear Potato", "A potato that has been exposed to radiation.", "Toy", true);
         items.put("Nuclear Potato", nulearPotato);
         nulearPotato.getTypes().put(ItemType.TAKEABLE, true);
         nulearPotato.getTypes().put(ItemType.TOY, true);
-
-        
 
         foodTray = new Container("Food Tray", "A tray for you to eat food on.", "Food Tray", true);
         items.put("Food Tray", foodTray);
@@ -448,10 +493,8 @@ public class GameHandler {
         blueHall = new Room("Blue_Hall", "A hallway that connects the rooms.");
         rooms.put("Blue_Hall", blueHall);
 
-
         redHall = new Room("Red_Hall", "A hallway that connects the rooms.");
         rooms.put("Red_Hall", redHall);
-        
 
         peddleToys = new Room("Peddle_Toys", "A room where you can play with peddle toys.");
         rooms.put("Peddle_Toys", peddleToys);
@@ -470,7 +513,7 @@ public class GameHandler {
 
         foyer = new Room("Foyer", "The foyer of the daycare.");
         rooms.put("Foyer", foyer);
-       foyer.setType(RoomType.GREEN);
+        foyer.setType(RoomType.GREEN);
 
         pantry = new Room("Pantry", "A room where you can store food.");
         rooms.put("Pantry", pantry);
@@ -489,10 +532,12 @@ public class GameHandler {
         foyer.addItem(snackShop);
         mainRoom.addItem(pickapaw);
         Player.setRoom(mainRoom);
+        Player.addItem(mcguffin);
         fuzzy.setRoom(mainRoom);
         farah.setRoom(mainRoom);
         fuzzy.addItem(nulearPotato);
         NPC.followPlayer(fuzzy);
+
     }
 
     public void populateRooms() {
@@ -728,21 +773,21 @@ public class GameHandler {
     }
 
     private void dressPlayer() {
-            if(!Player.getEquipment().containsKey("Underpants")){
-                Player.equip(new Equipment("Underwear", "Clean Underwear", "underpants"), "Underpants");
-            }
-            if(!Player.getEquipment().containsKey("Top")){
-                Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
-            }
-            if(!Player.getEquipment().containsKey("Bottom")){
-                Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
-            }
-            if(!Player.getEquipment().containsKey("Socks")){
-                Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
-            }
-            if(!Player.getEquipment().containsKey("Shoes")){
-                Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
-            }
+        if (!Player.getEquipment().containsKey("Underpants")) {
+            Player.equip(new Equipment("Underwear", "Clean Underwear", "underpants"), "Underpants");
+        }
+        if (!Player.getEquipment().containsKey("Top")) {
+            Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
+        }
+        if (!Player.getEquipment().containsKey("Bottom")) {
+            Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
+        }
+        if (!Player.getEquipment().containsKey("Socks")) {
+            Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
+        }
+        if (!Player.getEquipment().containsKey("Shoes")) {
+            Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
+        }
     }
 
     public void giveItems() {
@@ -1034,7 +1079,7 @@ public class GameHandler {
         getGui().lockButtons();
         getGui().clearTextPane();
         getGui().display("You were put in time out for " + i + " minutes.", "Black");
-    
+
         while (!apology) {
             String response;
             String[] acts = {"stealing", "pranking", "Vandalism", "Skipped", "Trespassing", "Sneaking", "climbed", "I don't know"};
@@ -1042,14 +1087,14 @@ public class GameHandler {
                     "What did you do?",
                     "Choose", JOptionPane.QUESTION_MESSAGE,
                     null, acts, acts[0]);
-    
+
             if (response == null) {
                 getGui().display("You Will stay here until you give the correct answers.", "Red");
                 attempts++;
                 i += 5;
                 continue;
             }
-    
+
             switch (response) {
                 case "stealing" -> {
                     if (!act.equalsIgnoreCase("stealing")) {
@@ -1061,7 +1106,7 @@ public class GameHandler {
                             "Why did you steal?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1082,7 +1127,7 @@ public class GameHandler {
                             "Why did you prank someone?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1103,7 +1148,7 @@ public class GameHandler {
                             "Why did you vandalize?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1124,7 +1169,7 @@ public class GameHandler {
                             "Why did you pick on someone?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1145,7 +1190,7 @@ public class GameHandler {
                             "Why did you skip?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1166,7 +1211,7 @@ public class GameHandler {
                             "Why did you trespass?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1187,7 +1232,7 @@ public class GameHandler {
                             "Why did you sneak?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1208,7 +1253,7 @@ public class GameHandler {
                             "Why did you climb?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
-    
+
                     if (response == null) {
                         getGui().display("You Will stay here until you give the correct answers.", "Red");
                         attempts++;
@@ -1226,7 +1271,7 @@ public class GameHandler {
                 }
             }
         }
-    
+
         if (apology) {
             getGui().display("You have been forgiven", "Green");
             getGui().unlockButtons();
@@ -1366,11 +1411,15 @@ public class GameHandler {
         foodTrayDispenser.displayInventory();
     }
 
-	public static Room getRandomRoom(RoomType green) {
+    public static Room getRandomRoom(RoomType green) {
         rand.nextInt(rooms.size());
         List<String> keys = new ArrayList<>(rooms.keySet());
         Room randRoom = rooms.get(keys.get(rand.nextInt(keys.size())));
         return randRoom;
-	}
-    
+    }
+
+    public ArrayList<Item> getRequiredItems() {
+        return requiredItems;
+    }
+
 }
