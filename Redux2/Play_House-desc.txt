@@ -1,0 +1,13 @@
+<h1 style="text-align:center;"><strong>The Enchanted Tea House</strong></h1>
+
+<h2>🌲 A Storybook Retreat</h2>
+<p>
+This cozy, renovated garden shed has been transformed into a charming <strong>storybook-style cabin</strong> in the woods. At one end sits a nonfunctional fireplace, complete with carefully stacked wood logs that enhance the rustic ambiance. A large, inviting armchair rests nearby, beckoning you to sink into its cushions with a good book in hand.</p>
+
+<h2>🍵 A Touch of Practicality</h2>
+<p>
+The kitchenette, though small, features a working sink and a few neatly arranged dishes, adding a delightful touch of practicality to the space. In the center of the room, a small table is set with a delicate tea set, surrounding a chess board with the pieces lined up perfectly in their starting positions. The whole place exudes an air of quaintness and care, noticeably cleaner and more enclosed than the nearby treehouse. It feels well-kept and peaceful, like a little hideaway where time slows down.</p>
+
+<h2>✨ Treats and Brews</h2>
+<p>
+This charming tea house serves as a delightful host for those wishing to indulge in a unique experience. Shiny pennies can be exchanged for non-standard treats, some deliciously loaded with sugar, while a selection of <strong>decaf tea</strong>—both iced and warm—awaits your enjoyment. This special offering is not available anywhere else, making the Enchanted Tea House a truly magical spot to relax and savor every sip.</p>

@@ -1,0 +1,32 @@
+<div class="dialogue">
+  <p><em>They all turn to look at you, and in a sudden movement, Taliber shoves the others apart.</em></p>
+
+  <p><strong>Taliber:</strong><br>
+  "Right, I guess you should have a say in this. So what’s it gonna be? Want to enjoy yourself, or be a 'good little rejuve'?" <em>his voice drips with mocking sarcasm</em>. "This place is lenient, way more than anywhere else. Honestly, you hit the jackpot getting in here."</p>
+
+  <p><em>Susy, clearly irritated, shoves Taliber back and steps forward.</em></p>
+
+  <p><strong>Susy:</strong><br>
+  "Look, you wanna get back to your old life? Easiest way is to show you’re mature enough to handle some work. And yeah, sure, they don’t make you work if you don’t want to, but come on, everyone should pitch in. We all gotta eat, you know?"</p>
+
+  <p><em>Farah steps around Susy gracefully, her tone respectful but firm.</em></p>
+
+  <p><strong>Farah:</strong><br>
+  "They’re both kind of right, you know. This place is good—one of the best, actually. You’re lucky to be here, so why not pay it forward and help out? Some rejuves didn’t end up as fortunate... the process is unpredictable. It’s not their fault they ended up as drooling babies. <em>pauses, softens</em> And hey, if dishes or caring for others isn’t your thing, just don’t listen to Taliber."</p>
+
+  <p><em>Susy and Farah share a look, and then together, they step in front of you, blocking Taliber from getting closer.</em></p>
+
+  <p><strong>Susy and Farah:</strong><br>
+  "He’s bad news."</p>
+
+  <p><em>With an exaggerated eye roll, Taliber squeezes between them, refusing to be left out.</em></p>
+
+  <p><strong>Taliber:</strong><br>
+  "Fine, be a goody-goody if you want, but just remember: this is your new childhood. Might as well try to enjoy it." <em>mutters under his breath</em> "I’m not that bad, you know. I did earn the prefect title, after all."</p>
+</div>
+#
+This should be section 2
+#
+this should be section 3
+#
+section 4 is here.

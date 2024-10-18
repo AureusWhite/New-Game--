@@ -1,0 +1,38 @@
+    <pre class="ascii-art"><strong>
+                 .----------------. .----------------. .----------------. .----------------. 
+                | .--------------. | .--------------. | .--------------. | .--------------. |
+                | |  _______     | | |      __      | | | _____  _____ | | |  _______     | |
+                | | |_   __ \    | | |     /  \     | | ||_   _||_   _|| | | |_   __ \    | |
+                | |   | |__) |   | | |    / /\ \    | | |  | | /\ | |  | | |   | |__) |   | |
+                | |   |  __ /    | | |   / ____ \   | | |  | |/  \| |  | | |   |  __ /    | |
+                | |  _| |  \ \_  | | | _/ /    \ \_ | | |  |   /\   |  | | |  _| |  \ \_  | |
+                | | |____| |___| | | ||____|  |____|| | |  |__/  \__|  | | | |____| |___| | |
+                | |              | | |              | | |              | | |              | |
+                | '--------------' | '--------------' | '--------------' | '--------------' |
+                 '----------------' '----------------' '----------------' '----------------'
+    <h1>A Text Adventure Game by JackalFac:E Games</h1>
+<h2>Introduction and Prologue</h2>
+<p>
+    In the near future, humanity made an incredible discovery: a way to make old cells young again, giving people the ability to live much longer. But this amazing science wasn’t available to everyone at first. Many people were upset because only the richest could afford it, leaving everyone else to grow old and pass away. To fix this, countries around the world worked together to make the treatment free for everyone, so no one would be left out.
+</p>
+<p>
+    Scientists were the first to try it, making sure that smart, young minds could keep improving the process. Soon, under the <strong>United Nations of Earth (UNE)</strong>, anyone could get the rejuvenation treatment. It seemed like a dream come true, but living forever brought some problems no one expected.
+</p>
+<p>
+    One of the biggest challenges was what to do with people who broke the law. In the old days, taking away time from someone’s life was a big punishment. But when people stopped aging, jail didn’t work the same way. So, a new solution was created: instead of prison, people were turned back into children, shrinking down and becoming easier to manage. These people became known as <strong>rejuves</strong>.
+</p>
+<p>
+    But this idea caused even more problems. The world became crowded with rejuves, and hardly any new children were being born. To manage this, the UNE changed the rejuvenation process so people couldn’t grow up again until they were ready to take on adult responsibilities. Now, society looked to the rejuves as their source of youth.
+</p>
+<p>
+    Still, it wasn’t perfect. People argued about whether rejuves should be allowed to grow up again. Even though they kept their adult memories, they didn’t always act like grown-ups. Many thought their old memories made them wise, but their young bodies often made them behave like children, leading to lots of confusion.
+</p>
+
+<h2>The Impact of Rejuvenation</h2>
+<p>
+    Rejuvenation changed everything. It gave people the chance to live much longer lives, almost like immortality. People still died, but it became very rare. The aging process stopped as cells were turned back into young ones, making old bodies new again.
+</p>
+<p>
+    But there was a downside. The cells in a rejuve’s body were young, but they skipped over some important parts of growing up. While rejuves kept most of their memories, their smaller bodies and younger brains made things harder. They had to relearn many simple things, like moving or talking, and at first, rejuves were almost like babies, needing lots of help until they could figure things out again.
+</p>
+<h3>Press enter in the text field to continue</h3>

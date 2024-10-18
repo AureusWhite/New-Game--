@@ -1,0 +1,41 @@
+<div class="dialogue">
+  <p><strong>Taliber:</strong></p>
+  <p><em>leans in with a sly smile</em><br>
+  "Hey there, new kid. Come over here for a second... I’m Taliber, your prefect. Now, I could use someone like you. You’re new, fresh-faced, and no one will suspect a thing if you do a couple of small errands for me. Easy stuff, really."</p>
+
+  <p><em>Before you can respond, the door swings open, and two other rejuves stride in, clearly noticing the exchange. They exchange a glance, and then hurry over, their expressions a mix of frustration and determination.</em></p>
+
+  <p><strong>Susy:</strong></p>
+  <p><em>with a sharp tone</em><br>
+  "Tali, seriously? Back off for once, will ya? This one’s mine. I need help in the kitchen—dishes are piling up. The last two I had quit after throwing tantrums, and I’m sick of it. <br> 
+  <em>turns to you</em> So, what do you say, newbie? Fancy a bit of dish duty? It’s honest work, and I won’t tolerate any whining."</p>
+
+  <p><strong>Farah:</strong></p>
+  <p><em>calm but firm, stepping closer</em><br>
+  "No, no. Let’s be real here. According to my data pad, they’re not even assigned a prefect yet. <em>looks at you</em> Listen, newbie, don’t let these two sway you. I could use your help keeping the peace around here. It’s about more than just work—it’s about maintaining order and balance. Trust me, you don’t want to get involved in whatever nonsense they’re scheming."</p>
+
+  <p><strong>Taliber:</strong></p>
+  <p><em>scoffs, folding his arms with a grin</em><br>
+  "Girls, girls... As if scrubbing dishes or babysitting the younger ones is some grand adventure. Let the kid breathe a little before you throw them into the grind. Working with me? Now that’s where the real fun’s at. It’s ten times more interesting, trust me."</p>
+
+  <p><strong>Susy:</strong></p>
+  <p><em>her voice dripping with irritation</em><br>
+  "Fun? Fun won’t get you anywhere here, Taliber. You’ll get them in trouble or worse—held back, or even recycled. Around here, hard work is everything. Busy beavers, remember? <em>turns to you</em> Washing dishes is way better than wiping snotty noses or playing spoiled princess like some others do."</p>
+
+  <p><strong>Farah:</strong></p>
+  <p><em>mocking laughter</em><br>
+  "Oh, dishes, how glamorous! And you really think caring for the younger ones is just ‘wiping butts’? It’s actually rewarding. They learn from you, and it’s far more fulfilling than scrubbing greasy plates or catering to your so-called ‘fun,’ Tali."</p>
+
+  <p><strong>Taliber:</strong></p>
+  <p><em>chuckling, shaking his head</em><br>
+  "Please. We don’t even know if the newbie’s old enough to handle any of that yet. Maybe let them have a little fun before you sentence them to a life of dish soap and diapers. Seriously, lighten up."</p>
+
+  <p><em>Susy and Farah, clearly fed up, exchange heated glances before turning back to Taliber. The tension in the air thickens, and soon the three are bickering with increasing intensity. Their voices overlap, each one trying to drown out the other. Their words become a cacophony of arguments, insults, and frustrations, so muddled that you can barely make sense of the chaos.</em></p>
+</div>
+#
+blargh
+#
+flargh
+#
+glargh
+

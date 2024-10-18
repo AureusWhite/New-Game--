@@ -1,0 +1,16 @@
+<h1 style="text-align:center;"><strong>The Storybook Castle</strong></h1>
+
+<h2>📖 A Literary Wonderland</h2>
+<p>
+You step into a <strong>giant castle</strong>, but this isn’t just any castle—it's crafted to resemble a fantastical world made of <strong>books</strong>. Enchanting chairs and decorations bring your favorite stories to life! Look closely, and you’ll spot <em>Alice's mushrooms</em>, a <em>web from Charlotte's Web</em>, and even the <em>carousel horses</em> from The Very Hungry Caterpillar. All these magical pieces circle around a big, sturdy <strong>tree stump</strong> at the center of the room. The tree stump boasts a <strong>comfy-looking seat</strong> on top, which swivels to allow the reader to turn and share the book with everyone, especially when too many rejuves are gathered to sit right in front.
+</p>
+
+<h2>📚 Reach for the Stars</h2>
+<p>
+Along the edges of the room, a special <strong>barrier</strong> made of <strong>shelves and tiny step stools</strong> ensures that even the smallest rejuve can reach the highest books. No need to ask for help—just grab what you want, climb up, and dive into the stories waiting to be explored!
+</p>
+
+<h2>🗓️ Story Time Awaits</h2>
+<p>
+At the back wall, a <strong>big board</strong> displays the schedule for <strong>story time</strong>, complete with the names of the teachers ready to read each enchanting tale. The entire room radiates a whimsical, colorful atmosphere, as if it leaped straight from the pages of a fairytale, filled with surprises and joy just waiting to be discovered!
+</p>

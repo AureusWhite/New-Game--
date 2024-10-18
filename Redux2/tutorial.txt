@@ -1,0 +1,39 @@
+<h1>Welcome to the Rejuvenation Care Home Tutorial</h1>
+
+<p>Welcome to a magical world where you can explore your inner child! Here at the Rejuvenation Care Home, amazing rejuvenation technology allows you to experience life as a child once again. During your two-week stay, you’ll be in a cozy and cheerful environment. Don’t worry—there’s no test to pass! The friendly staff will just be checking on how you grow and how mature you seem.</p>
+
+<p>If you need a bit more time to work on some skills, that's okay! Your stay might be extended by a week, so take your time and enjoy every adventure that awaits!</p>
+
+<h2>What You Can Do</h2>
+
+<p>While you’re here, you can learn new skills to tackle fun challenges, solve exciting puzzles, make new friends, and even help other rejuves reach their goals! What you want to pursue is all up to you—make your own choices and have fun!</p>
+
+<h2>Easy Commands</h2>
+
+<p>You’ll find handy buttons below to help you with common actions in the game, making navigation a breeze! But if you prefer, you can always type commands into the text box just below. This is also where you’ll enter your name and create any special abilities for yourself!</p>
+
+<h2>Exploring the World</h2>
+
+<p>Don’t forget to explore every room at different times of the day! Depending on when you visit, you might meet new friends, discover different activities, or even stumble upon special events! The day is divided into three colorful sections:</p>
+
+<ul>
+    <li><strong>Green:</strong> During green times, feel free to roam the green areas of the campus, like the outdoors, the main room, dormitories, and hallways. Enjoy the freedom to explore!</li>
+    <li><strong>Blue:</strong> During blue times, you can enter blue spaces like classrooms and laboratories. This is the perfect time to attend classes and practice your skills, helping you graduate faster (plus, you’ll earn double experience points!).</li>
+    <li><strong>Red:</strong> During red times, it’s best to stay in the main room or your dorm. You can stay awake in the main room if you want, but if you fall asleep, someone will gently take you back to your dorm until red time is over. No sneaking out!</li>
+</ul>
+
+<h2>Mischief and Misbehavior</h2>
+
+<p>Exploring is fun, but be careful not to get into trouble! If you wander into off-limits areas or sneak into classrooms or laboratories when you shouldn’t, you’ll be caught for <strong>trespassing</strong> and asked to leave. You might also get a warning!</p>
+
+<p>Here are some other things that might land you in hot water:</p>
+
+<ul>
+    <li>Littering</li>
+    <li>Using bad words</li>
+    <li>Hitting or biting</li>
+    <li>Being dishonest</li>
+    <li>And other not-so-nice behaviors</li>
+</ul>
+
+<p>If you find yourself in trouble often, you might lose some privileges or even have to take extra lessons in <strong>morality and ethics</strong> to help you learn from your mistakes. So, remember to be mindful and try to behave—at least most of the time!</p>
