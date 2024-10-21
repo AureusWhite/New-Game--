@@ -583,7 +583,7 @@ public class GUI extends JFrame {
             if (!locked) {
                 synchronized (this) {
                     notify();
-                    String[] topics = {"Story Time", "Arts & Crafts (CLOSED DO TO VANDALIZEM)", "Educational Games (CLOSED,SAME REASON)", "Language CLOSED (YOU KNOW WHAT THEY DID)", "Puzzles(CLOSED, YOU KNOW WHY, STOP ASKING)"};
+                    String[] topics = {"Read","Story Time", "Arts & Crafts (CLOSED DO TO VANDALIZEM)", "Educational Games (CLOSED,SAME REASON)", "Language CLOSED (YOU KNOW WHAT THEY DID)", "Puzzles"};
                     String selectedTopic = (String) JOptionPane.showInputDialog(
                             null,
                             "What do you want to study?",
@@ -594,6 +594,30 @@ public class GUI extends JFrame {
                             topics[0]);
                     if (selectedTopic != null) {
                         switch (selectedTopic) {
+                            case "Read" -> {
+                                String[] books = Player.getRoom().getBookChoices();
+                                if (books.length == 0) {
+                                    GameHandler.getGui().display("There are no books in this room", "Black");
+                                    return;
+                                }
+                                for (int i = 0; i < books.length; i++) {
+                                    books[i] = books[i].replace("_", " ");
+                                }
+                                String selectedBook = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to read?",
+                                        "Books",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        books,
+                                        books[0]);
+                                if (selectedBook != null) {
+                                    Book book = GameHandler.getBookByName(selectedBook);
+                                    GameHandler.getGui().display(book.Read(), "Black");
+                                } else {
+                                    notify();
+                                }
+                            }
                             case "Story Time" -> {
                                 GameHandler.storyTime();
                             }
@@ -606,7 +630,29 @@ public class GUI extends JFrame {
                             case "Language CLOSED (YOU KNOW WHAT THEY DID)" -> {
                                 GameHandler.getGui().display("Language is closed due to vandalism", "Black");
                             }
-                            case "Puzzles(CLOSED, YOU KNOW WHY, STOP ASKING)" -> {
+                            case "Puzzles" -> {
+                                String[] puzzles = Player.getRoom().getPuzzleChoices();
+                                if (puzzles.length == 0) {
+                                    GameHandler.getGui().display("There are no puzzles in this room", "Black");
+                                    return;
+                                }
+                                for (int i = 0; i < puzzles.length; i++) {
+                                    puzzles[i] = puzzles[i].replace("_", " ");
+                                }
+                                String selectedPuzzle = (String) JOptionPane.showInputDialog(
+                                        null,
+                                        "What do you want to do?",
+                                        "Puzzles",
+                                        JOptionPane.QUESTION_MESSAGE,
+                                        null,
+                                        puzzles,
+                                        puzzles[0]);
+                                if (selectedPuzzle != null) {
+                                    Puzzle puzzle = GameHandler.getPuzzleByName(selectedPuzzle);
+                                    GameHandler.getGui().display(puzzle.solve(), "Black");
+                                } else {
+                                    notify();
+                                }
                                 GameHandler.getGui().display("Puzzles is closed due to vandalism", "Black");
                             }
 

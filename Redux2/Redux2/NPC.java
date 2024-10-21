@@ -1040,14 +1040,14 @@ public class NPC extends Character {
                         }
                     }
                     case "pirate" -> {
-                        if (true) {
+                        if (Player.getSkillLevel(Skill.IMAGINATION) > 2) {
                             GameHandler.getGui().display("Ms. Sagely: Wow, " + Player.getName() + "! You really got into the role. Your creativity is shining!", "black");
                         } else {
                             GameHandler.getGui().display("Ms. Sagely: You're doing great, " + Player.getName() + "! Keep working on that imagination.", "black");
                         }
                     }
                     case "puzzle" -> {
-                        if (true) {
+                        if (Player.getSkillLevel(Skill.PROBLEM_SOLVING) > 2) {
                             GameHandler.getGui().display("Ms. Sagely: Well done, " + Player.getName() + "! Your problem-solving skills are really improving.", "black");
                         } else {
                             GameHandler.getGui().display("Ms. Sagely: You're on the right track, " + Player.getName() + "! Keep practicing.", "black");
@@ -1072,14 +1072,14 @@ public class NPC extends Character {
                         }
                     }
                     case "pirate" -> {
-                        if (true) {
+                        if (Player.getSkillLevel(Skill.IMAGINATION) > 2) {
                             GameHandler.getGui().display("Dawn: Yar, " + Player.getName() + "! You've got some real imagination. You might be the next great pirate... or just the next rejuve to think so!", "black");
                         } else {
                             GameHandler.getGui().display("Dawn: Not bad, " + Player.getName() + ". Creativity takes practice, and you’re getting there.", "black");
                         }
                     }
                     case "puzzle" -> {
-                        if (true) {
+                        if (Player.getSkillLevel(Skill.PROBLEM_SOLVING) > 2) {
                             GameHandler.getGui().display("Dawn: Nicely done, " + Player.getName() + "! You're sharpening those problem-solving skills, even if it feels like we’re growing up all over again.", "black");
                         } else {
                             GameHandler.getGui().display("Dawn: Good effort, " + Player.getName() + ". You’re improving, and patience is key.", "black");

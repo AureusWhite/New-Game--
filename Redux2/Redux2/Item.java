@@ -73,6 +73,11 @@ public class Item {
     }
 
     public void use() {
+        if (this.types.containsKey(ItemType.BOOK)) {
+            GameHandler.getGui().display("You read the " + this.getName(), "Black");
+            GameHandler.getGui().display(((Book) this).Read(), "Black");
+
+        }
         if (this.getClass().equals(Container.class)) {
             String[] choices = this.getItemChoices();
             String choice = JOptionPane.showInputDialog(null, "Choose an item to take", "Dispencer", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]).toString();
@@ -255,54 +260,55 @@ public class Item {
                     GameHandler.getGui().display("You read the quest board", "Black");
                     String[] options = {"Turn in", "View Quests"};
                     String option = JOptionPane.showInputDialog(null, "What do you want to do?", "Quest Board", JOptionPane.QUESTION_MESSAGE, null, options, options[0]).toString();
-                switch (option) {
-                    case "Turn in" -> {
-                        if (Player.getQuests().isEmpty()) {
-                            GameHandler.getGui().display("You have no quests to turn in", "Black");
-                            return;
+                    switch (option) {
+                        case "Turn in" -> {
+                            if (Player.getQuests().isEmpty()) {
+                                GameHandler.getGui().display("You have no quests to turn in", "Black");
+                                return;
+                            }
+                            String[] whichQuest = new String[Player.getQuests().size()];
+                            for (int i = 0; i < Player.getQuests().size(); i++) {
+                                whichQuest[i] = Player.getQuests().get(i).getName();
+                            }
+                            String quest = JOptionPane.showInputDialog(null, "Which quest do you want to turn in?", "Quest Board", JOptionPane.QUESTION_MESSAGE, null, whichQuest, whichQuest[0]).toString();
+                            for (Quest q : Player.getQuests()) {
+                                if (q.getName().equals(quest)) {
+                                    if (q.checkCompleted()) {
+                                        GameHandler.getGui().display("You completed the quest", "Black");
+                                        Player.addXP(q.getDifficulty() + 5);
+                                        this.removeQuest(q);
+                                        toRemove.add(q);
+                                    } else {
+                                        GameHandler.getGui().display("You did not complete the quest", "Black");
+                                    }
+                                }
+                            }
+                            Player.getQuests().removeAll(toRemove);
                         }
-                        String[] whichQuest = new String[Player.getQuests().size()];
-                        for (int i = 0; i < Player.getQuests().size(); i++) {
-                            whichQuest[i] = Player.getQuests().get(i).getName();
-                        }
-                        String quest = JOptionPane.showInputDialog(null, "Which quest do you want to turn in?", "Quest Board", JOptionPane.QUESTION_MESSAGE, null, whichQuest, whichQuest[0]).toString();
-                        for (Quest q : Player.getQuests()) {
-                            if (q.getName().equals(quest)) {
-                                if (q.checkCompleted()) {
-                                    GameHandler.getGui().display("You completed the quest", "Black");
-                                    Player.addXP(q.getDifficulty()+5);
-                                    this.removeQuest(q);
-                                    toRemove.add(q);
+                        case "View Quests" -> {
+                            if (this.getQuests().isEmpty()) {
+                                GameHandler.generateRandomQuests(this);
+                            }
+                            for (Quest avalableQuests : this.getQuests()) {
+                                GameHandler.getGui().display(avalableQuests.getName() + ": " + avalableQuests.getDescription(), "Black");
+
+                                String[] answer = {"Yes", "No", "Close"};
+                                String answer1 = JOptionPane.showInputDialog(null, "Do you want to accept the quest?", "Quest Board", JOptionPane.QUESTION_MESSAGE, null, answer, answer[0]).toString();
+                                if (answer1.equals("Yes")) {
+                                    Player.addQuest(avalableQuests);
                                 } else {
-                                    GameHandler.getGui().display("You did not complete the quest", "Black");
+                                    GameHandler.getGui().display("You did not accept the quest", "Black");
                                 }
                             }
                         }
-                        Player.getQuests().removeAll(toRemove);
+                        default ->
+                            GameHandler.getGui().display("You use the " + this.getName(), "Black");
                     }
-                    case "View Quests" -> {
-                        if(this.getQuests().isEmpty()){
-                            GameHandler.generateRandomQuests(this);
-                        }
-                        for (Quest avalableQuests : this.getQuests()) {
-                            GameHandler.getGui().display(avalableQuests.getName()+": "+avalableQuests.getDescription(), "Black");
-                        
-                            String[] answer = {"Yes", "No", "Close"};
-                            String answer1 = JOptionPane.showInputDialog(null, "Do you want to accept the quest?", "Quest Board", JOptionPane.QUESTION_MESSAGE, null, answer, answer[0]).toString();
-                            if (answer1.equals("Yes")) {
-                                Player.addQuest(avalableQuests);
-                            } else {
-                                GameHandler.getGui().display("You did not accept the quest", "Black");
-                            }
-                        }
-                    }
-                    default -> GameHandler.getGui().display("You use the " + this.getName(), "Black");
-                }
                 }
             }
         }
     }
-    
+
     public void removeItem(Item item) {
         if (!item.isTypeMet(ItemType.UNREMOVABLE)) {
             this.inventory.remove(item);

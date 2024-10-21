@@ -46,8 +46,6 @@ public class Game {
         gamehandler.buildRooms();
         
         gamehandler.buildExits();
-        //GameHandler.createQuests();
-        gamehandler.playIntro();
         Player.initualizeSkills();
         gamehandler.setupPlayer();
         GameHandler.getGui().unlockButtons();

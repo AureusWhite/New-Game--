@@ -11,15 +11,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import javax.swing.JOptionPane;
-
-public class GameHandler {
+public class GameHandler2 {
 
     private static final Map<String, Room> rooms = new HashMap<>();
     static final Map<String, NPC> npcs = new HashMap<>();
     static final Map<String, Item> items = new HashMap<>();
     private static final ArrayList<Quest> quests = new ArrayList<>();
-
     public static Room room;
     private static GUI gui;
     private static Game game;
@@ -28,21 +25,6 @@ public class GameHandler {
     public static String fileSection4 = "";
     private final static ArrayList<Achievements> achievements = new ArrayList<>();
     static Random rand = new Random();
-
-    private static String toSentenceCase(String name) {
-        name = name.toLowerCase();
-        name = name.replace("_", " ");
-        name = name.substring(0, 1).toUpperCase() + name.substring(1);
-        return name;
-    }
-
-    static void storyTime() {
-    Events event = Events.STORY_TIME;
-    event.display();
-    }
-
-    private Container box, foodTray;
-
     public Room recoveryRoom, kitchen, mainRoom,
             dorms, bathroom, hallway, stairs, basement,
             attic, garage, garden, driveway, frontYard,
@@ -64,49 +46,51 @@ public class GameHandler {
             mouse, monitor, printer, scanner, projector, whiteboard, chalkboard,
             smartboard, globe, map, calendar, compass, protractor, nulearPotato,
             canvas, snackShop, pickapaw, pawFigure, limitedEditionPaw, questBoard,
-            mess, spill, puddle, mcGuffin, jukeBox,smashedDollOnAStick, cheese, stick, 
-            cheeseOnAStick,diaperOnAStick, rock, stickOnAStick, cheezeOnAStick, cheeseCoveredRock, 
-            diaperWithRock, diaperWithCheese, doll, dollWithCheese, dollWithDiaper, smashedDoll, 
+            mess, spill, puddle, mcGuffin, jukeBox, smashedDollOnAStick, cheese, stick,
+            cheeseOnAStick, diaperOnAStick, rock, stickOnAStick, cheezeOnAStick, cheeseCoveredRock,
+            diaperWithRock, diaperWithCheese, doll, dollWithCheese, dollWithDiaper, smashedDoll,
             smashedDollWithCheeze;
 
     private static Item foodTrayDispenser;
     private Puzzle jigSaw, crossword, shapes, colors;
 
+    private Container foodTray, box;
+
     private Book marytherejuve, theAdventuresOfFuzzy, theAdventuresOfFuzzy2, SoYoureARejuve, theAdventuresOfFuzzy3, careforrejuves;
 
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
             jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
+
+    private RoutineManager routineManager;
+
     public void createItems() {
 
-       jigSaw = new Puzzle("Jig Saw", "A puzzle that requires fine motor skills", 0, "Jigsaw");
+        jigSaw = new Puzzle("Jig Saw", "A puzzle that requires fine motor skills", 0, "Jigsaw");
         items.put("Jig Saw", jigSaw);
         jigSaw.getTypes().put(ItemType.TAKEABLE, true);
         jigSaw.getTypes().put(ItemType.PUZZLE, true);
         jigSaw.getTypes().put(ItemType.TOY, true);
 
-       crossword = new Puzzle("Crossword", "A puzzle that requires cognitive skills", 0, "Crossword");
+        crossword = new Puzzle("Crossword", "A puzzle that requires cognitive skills", 0, "Crossword");
         items.put("Crossword", crossword);
         crossword.getTypes().put(ItemType.TAKEABLE, true);
         crossword.getTypes().put(ItemType.PUZZLE, true);
         crossword.getTypes().put(ItemType.TOY, true);
 
-       shapes = new Puzzle("Shapes", "A puzzle that requires gross motor skills", 0, "Shapes");
+        shapes = new Puzzle("Shapes", "A puzzle that requires gross motor skills", 0, "Shapes");
         items.put("Shapes", shapes);
         shapes.getTypes().put(ItemType.TAKEABLE, true);
         shapes.getTypes().put(ItemType.PUZZLE, true);
         shapes.getTypes().put(ItemType.TOY, true);
 
-       colors = new Puzzle("Colors", "A puzzle that requires cognitive skills", 0, "Colors");
+        colors = new Puzzle("Colors", "A puzzle that requires cognitive skills", 0, "Colors");
         items.put("Colors", colors);
         colors.getTypes().put(ItemType.TAKEABLE, true);
         colors.getTypes().put(ItemType.PUZZLE, true);
         colors.getTypes().put(ItemType.TOY, true);
 
-
-        
         smashedDollOnAStick = new Item("Smashed Doll on a Stick", "A stick with a smashed doll on it", "Crafting", true);
         items.put("Smashed Doll on a Stick", smashedDollOnAStick);
-
 
         diaperOnAStick = new Item("Diaper on a Stick", "A stick with a diaper on it", "Crafting", true);
         items.put("Diaper on a Stick", diaperOnAStick);
@@ -365,45 +349,7 @@ public class GameHandler {
         underPants.setSlot("Underpants");
 
     }
-    static void generateRandomQuests(Item aThis) {
-        Room randomRoom = getRandomRoom(RoomType.GREEN);
-        NPC randomNPC = getRandomNPC(NPCType.REJUVE);
-        Quest eQuest = new EscortQuest("Escort Quest", "Escort " + randomNPC.getName() + " to the " + randomRoom.getName() + " ", 10, randomRoom, randomNPC);
-        aThis.getQuests().add(eQuest);
-        Quest cQuest = new Quest("Cleaning Quest", "Clean up " + randomRoom.getName(), 10);
-        aThis.getQuests().add(cQuest);
 
-    }
-
-    public static void addItem(Item item) {
-        items.put(item.getName(), item);
-        getGui().display("Added " + item.getName(), "black");
-    }
-
-    private static NPC getRandomNPC(NPCType npcType) {
-        int rando = rand.nextInt(npcs.size());
-        Iterator<NPC> iterator = npcs.values().iterator();
-        for (int i = 0; i < rando; i++) {
-            iterator.next();
-        }
-        NPC npc = iterator.next();
-        if (npc.getType().containsKey(NPCType.REJUVE)) {
-            return npc;
-        } else {
-            return getRandomNPC(npcType);
-        }
-    }
-    private final ArrayList<Room> requiredRooms = new ArrayList<>();
-
-    public ArrayList<Room> getRequiredRooms() {
-        return requiredRooms;
-    }
-    private ArrayList<Item> requiredItems = new ArrayList<>();
-
-    public void setRequiredItems(ArrayList<Item> requiredItems) {
-        this.requiredItems = requiredItems;
-    }
-    
     public void setUpNPCs() {
         fuzzy = new NPC("Fuzzy", "A large stuffed bear, he is always around and always seems to be watching.", foyer, "companion");
         npcs.put("Fuzzy", fuzzy);
@@ -435,6 +381,25 @@ public class GameHandler {
         npcs.put("Joy", joy);
         jessief = new NPC("Jessie", "This is jessie, sister to Jessie. Strangly for being brother and sister they hardly are ever seen together.", foyer, "child");
         npcs.put("Jessie", jessief);
+    }
+
+    public void setNPCTypes() {
+        fuzzy.setType(NPCType.COMPANION);
+        msSagely.setType(NPCType.ADULT);
+        dawn.setType(NPCType.ADULT);
+        taliber.setType(NPCType.REJUVE);
+        susy.setType(NPCType.REJUVE);
+        farah.setType(NPCType.REJUVE);
+        drWhite.setType(NPCType.ADULT);
+        msWhite.setType(NPCType.ADULT);
+        aureus.setType(NPCType.REJUVE);
+        aureus.setStatus(NPCStatus.BADMOOD, true);
+        jessiem.setType(NPCType.REJUVE);
+        researchStudent1.setType(NPCType.REJUVE);
+        researchStudent2.setType(NPCType.REJUVE);
+        jimthejanitor.setType(NPCType.ADULT);
+        joy.setType(NPCType.ADULT);
+        jessief.setType(NPCType.REJUVE);
     }
 
     public void createAchievements() {
@@ -495,20 +460,6 @@ public class GameHandler {
     public void createRoutine() {
         final RoutineManager routineManager1 = new RoutineManager();
         this.routineManager = routineManager1;
-    }
-
-    public RoutineManager getRoutineManager() {
-        return this.routineManager;
-    }
-
-    public static void updateAchievementsForNPC(NPC npc, NPCStatus status) {
-        for (Achievements achievement : achievements) {
-            if (achievement.getRequiredNPC().containsKey(npc)) {
-                achievement.getRequiredNPC().put(npc, status);
-                achievement.updateAchievement();
-            }
-        }
-
     }
 
     public void buildRooms() {
@@ -683,52 +634,6 @@ public class GameHandler {
         demoRoom.addItem(colors);
         demoRoom.addItem(shapes);
 
-    }
-
-    public void populateRooms() {
-        //basement.addNPC();
-        //attic.addNPC();
-        garage.addNPC(jim);
-        //garden.addNPC();
-        //driveway.addNPC();
-        //frontYard.addNPC();
-        //backYard.addNPC();
-        cogLabs.addNPC(researchStudent1);
-        cogLabs.addNPC(jimthejanitor);
-        //pool.addNPC();
-        //patio.addNPC();
-        //deck.addNPC();
-        //porch.addNPC();
-        //balcony.addNPC();
-        //roof.addNPC();
-        //cubbies.addNPC();
-        //dramaArea.addNPC();
-        //changingRoom.addNPC();
-        //floorPlay.addNPC();
-        //quietArea.addNPC();
-        //homeWorkArea.addNPC();
-        //playHouse.addNPC();
-        treeHouse.addNPC(taliber);
-        storyBookVillage.addNPC(joy);
-        //pillowPile.addNPC();
-        //snackArea.addNPC();
-        //greenHall.addNPC();
-        //blueHall.addNPC();
-        //redHall.addNPC();
-        //peddleToys.addNPC();
-        //lemonaidStand.addNPC();
-        //toolShed.addNPC();
-        //TRSRoom.addNPC();
-        janitorialRoom.addNPC(msSagely);
-        mainRoom.addNPC(dawn);
-        mainRoom.addNPC(jessief);
-        mainRoom.addNPC(jessiem);
-        mainRoom.addNPC(taliber);
-        mainRoom.addNPC(joy);
-        kitchen.addNPC(susy);
-        foyer.addNPC(aureus);
-        //pantry.addNPC();
-        //demoRoom.addNPC();
     }
 
     public void buildExits() {
@@ -913,13 +818,15 @@ public class GameHandler {
     }
 
     public void playIntro() {
-        //readFile("intro1");
-        //getGui().waitForInput();
-        //readFile("intro2");
-        //getGui().waitForInput();
-        //readFile("intro3");
-        //getGui().waitForInput();
-        createQuests();
+        // readFile("intro1");
+        // getGui().waitForInput();
+        // readFile("intro2");
+        // getGui().waitForInput();
+        // readFile("intro3");
+        // getGui().waitForInput();
+        // readFile("Activities");
+        // getGui().waitForInput();
+
     }
 
     public void setupPlayer() {
@@ -929,29 +836,11 @@ public class GameHandler {
         updateStatus();
         Game.setRunning(true);
         getGui().unlockButtons();
-    }
-
-    private void dressPlayer() {
-        if (!Player.getEquipment().containsKey("Underpants")) {
-            Player.equip(new Equipment("Underwear", "Clean Underwear", "underpants"), "Underpants");
-        }
-        if (!Player.getEquipment().containsKey("Top")) {
-            Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
-        }
-        if (!Player.getEquipment().containsKey("Bottom")) {
-            Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
-        }
-        if (!Player.getEquipment().containsKey("Socks")) {
-            Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
-        }
-        if (!Player.getEquipment().containsKey("Shoes")) {
-            Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
-        }
+        createQuests();
     }
 
     public void giveItems() {
         drWhite.addItem(box);
-
 
         foyer.addItem(box);
         foyer.addItem(trash);
@@ -979,82 +868,83 @@ public class GameHandler {
         foyer.addItem(theAdventuresOfFuzzy2);
     }
 
+    public void populateRooms() {
+        //basement.addNPC();
+        //attic.addNPC();
+        garage.addNPC(jim);
+        //garden.addNPC();
+        //driveway.addNPC();
+        //frontYard.addNPC();
+        //backYard.addNPC();
+        cogLabs.addNPC(researchStudent1);
+        cogLabs.addNPC(jimthejanitor);
+        //pool.addNPC();
+        //patio.addNPC();
+        //deck.addNPC();
+        //porch.addNPC();
+        //balcony.addNPC();
+        //roof.addNPC();
+        //cubbies.addNPC();
+        //dramaArea.addNPC();
+        //changingRoom.addNPC();
+        //floorPlay.addNPC();
+        //quietArea.addNPC();
+        //homeWorkArea.addNPC();
+        //playHouse.addNPC();
+        treeHouse.addNPC(taliber);
+        storyBookVillage.addNPC(joy);
+        //pillowPile.addNPC();
+        //snackArea.addNPC();
+        //greenHall.addNPC();
+        //blueHall.addNPC();
+        //redHall.addNPC();
+        //peddleToys.addNPC();
+        //lemonaidStand.addNPC();
+        //toolShed.addNPC();
+        //TRSRoom.addNPC();
+        janitorialRoom.addNPC(msSagely);
+        mainRoom.addNPC(dawn);
+        mainRoom.addNPC(jessief);
+        mainRoom.addNPC(jessiem);
+        mainRoom.addNPC(taliber);
+        mainRoom.addNPC(joy);
+        kitchen.addNPC(susy);
+        foyer.addNPC(aureus);
+        //pantry.addNPC();
+        //demoRoom.addNPC();
+    }
+
     public void playGame() {
         playTutorial();
+        readFile("Activities");
     }
 
     public void endGame() {
         playOutro();
     }
-
-    public static Room getRoomByName(String name) {
-        return rooms.get(name);
-    }
-
-    public static GUI getGui() {
-        return gui;
-    }
-
-    public static void updateStatus() {
-        getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + FatherTime.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
-    }
-
-    public static Map<String, Room> getRooms() {
-        return rooms;
-    }
-
-    public static Map<String, NPC> getNpcs() {
-        return npcs;
-    }
-
-    public static Map<String, Item> getItems() {
-        return items;
-    }
-
-    public static void removeItemFromRoom(Item item) {
-        ArrayList<Item> itemsI = Player.getRoom().getInventory();
-        Iterator<Item> iterator = itemsI.iterator();
-        while (iterator.hasNext()) {
-            Item currentItem = iterator.next();
-            if (currentItem.equals(item)) {
-                iterator.remove();
-                break;
-            }
+    private void dressPlayer() {
+        if (!Player.getEquipment().containsKey("Underpants")) {
+            Player.equip(new Equipment("Underwear", "Clean Underwear", "underpants"), "Underpants");
+        }
+        if (!Player.getEquipment().containsKey("Top")) {
+            Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
+        }
+        if (!Player.getEquipment().containsKey("Bottom")) {
+            Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
+        }
+        if (!Player.getEquipment().containsKey("Socks")) {
+            Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
+        }
+        if (!Player.getEquipment().containsKey("Shoes")) {
+            Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
         }
     }
-
-    public static NPC getNPCByName(String person) {
-        return npcs.get(person);
+    public void setCharacterBio() {
+        explainCharacterBio();
     }
-
-    public static String getFileSection2() {
-        return fileSection2;
+    private void explainCharacterBio() {
+        readFile("characterBio");
     }
-
-    public static String getFileSection3() {
-        return fileSection3;
-    }
-
-    public static String getFileSection4() {
-        return fileSection4;
-    }
-
-    public static PawFigure getFigureByName(String name) {
-        for (Item item : items.values()) {
-            if (item instanceof PawFigure figure) {
-                if (figure.getName().equalsIgnoreCase(name)) {
-                    getGui().display("This happened!", "Black");
-                    return figure;
-                }
-            }
-        }
-        return null;
-    }
-
-    static Item getItemByName(String itemName) {
-        return items.get(itemName);
-    }
-
     static String readFile(String fileName) {
         // Use Paths to get a relative path to the 'resources' directory
         File file = Paths.get(fileName.concat(".txt")).toFile();
@@ -1117,491 +1007,23 @@ public class GameHandler {
         }
         return null;
     }
-
-    private void explainCharacterBio() {
-        readFile("characterBio");
+    public static void writeFile(String concat, String text) {
+        try {
+            FileWriter writer = new FileWriter(concat + ".txt");
+            writer.write(text);
+            writer.close();
+        } catch (IOException e) {
+            getGui().display("Error writing file.", "Red");
+        }
     }
-
     private void playTutorial() {
         readFile("tutorial");
     }
-
-    private void playOutro() {
-        readFile("outro");
-
+    public static void updateStatus() {
+        getGui().getStatsLabel().setText("Player: " + Player.getName() + "    | |    Experience: " + Player.getExperience() + "    | |    Shiny Pennies: " + Player.getMoney() + "    | |    Resilience: " + Player.getResilience() + "    | |    Time: " + FatherTime.getClock().getTimeOfDay() + "    | |    Hunger/Thirst: " + Player.getHungerThirst() + "    | |    Alignment: " + Player.getAlignment());
     }
-
-    public static void demo() {
-        readFile("demo");
-        String response;
-        String[] dialogOptions = {"Don't I get a say?", "I belong to no one, I just got here", "I only woke up a few hours ago", "I don't know what's going on."};
-        response = (String) JOptionPane.showInputDialog(null,
-                "What do you do?",
-                "Choose", JOptionPane.QUESTION_MESSAGE,
-                null, dialogOptions, dialogOptions[0]);
-        switch (response) {
-            case "Don't I get a say?" ->
-                getGui().display(fileSection2, "Black");
-            case "I belong to no one, I just got here" ->
-                getGui().display(fileSection3, "Black");
-            case "I only woke up a few hours ago" ->
-                getGui().display(fileSection4, "Black");
-            case "I don't know what's going on." ->
-                getGui().display(fileSection2, "Black");
-            default -> {
-            }
-        }
-        dialogOptions = new String[]{"I'm with Taliber!", "I kinda like Dishes.", "I'm with Farah.", "I don't want to deside yet."};
-        response = (String) JOptionPane.showInputDialog(null,
-                "What do you do?",
-                "Choose", JOptionPane.QUESTION_MESSAGE,
-                null, dialogOptions, dialogOptions[0]);
-        switch (response) {
-            case "I'm with Taliber!" ->
-                readFile("demo3");
-            case "I kinda like Dishes." ->
-                readFile("demo3");
-            case "I'm with Farah." ->
-                readFile("demo3");
-            case "I don't want to deside yet." ->
-                readFile("demo3");
-            default -> {
-                break;
-            }
-        }
-
-    }
-
-    public void setNPCTypes() {
-        fuzzy.setType(NPCType.COMPANION);
-        msSagely.setType(NPCType.ADULT);
-        dawn.setType(NPCType.ADULT);
-        taliber.setType(NPCType.REJUVE);
-        susy.setType(NPCType.REJUVE);
-        farah.setType(NPCType.REJUVE);
-        drWhite.setType(NPCType.ADULT);
-        msWhite.setType(NPCType.ADULT);
-        aureus.setType(NPCType.REJUVE);
-        aureus.setStatus(NPCStatus.BADMOOD, true);
-        jessiem.setType(NPCType.REJUVE);
-        researchStudent1.setType(NPCType.REJUVE);
-        researchStudent2.setType(NPCType.REJUVE);
-        jimthejanitor.setType(NPCType.ADULT);
-        joy.setType(NPCType.ADULT);
-        jessief.setType(NPCType.REJUVE);
-    }
-
-    public void buildRoomTypes() {
-        Room.roomType.put(kitchen, RoomType.KITCHEN);
-        Room.roomType.put(classRoom, RoomType.BLUE);
-        Room.roomType.put(mainRoom, RoomType.GREEN);
-        Room.roomType.put(dorms, RoomType.GREEN);
-        Room.roomType.put(bathroom, RoomType.BATHROOM);
-        Room.roomType.put(hallway, RoomType.RED);
-        Room.roomType.put(stairs, RoomType.RED);
-        Room.roomType.put(basement, RoomType.RED);
-        Room.roomType.put(attic, RoomType.RED);
-        Room.roomType.put(garage, RoomType.RED);
-        Room.roomType.put(garden, RoomType.BLUE);
-        Room.roomType.put(driveway, RoomType.RED);
-        Room.roomType.put(frontYard, RoomType.BLUE);
-        Room.roomType.put(backYard, RoomType.BLUE);
-        Room.roomType.put(cogLabs, RoomType.BLUE);
-        Room.roomType.put(pool, RoomType.RED);
-        Room.roomType.put(patio, RoomType.BLUE);
-        Room.roomType.put(deck, RoomType.BLUE);
-        Room.roomType.put(porch, RoomType.BLUE);
-        Room.roomType.put(balcony, RoomType.BLUE);
-        Room.roomType.put(roof, RoomType.RED);
-        Room.roomType.put(cubbies, RoomType.GREEN);
-        Room.roomType.put(dramaArea, RoomType.GREEN);
-        Room.roomType.put(changingRoom, RoomType.GREEN);
-        Room.roomType.put(floorPlay, RoomType.GREEN);
-        Room.roomType.put(quietArea, RoomType.GREEN);
-        Room.roomType.put(homeWorkArea, RoomType.GREEN);
-        Room.roomType.put(playHouse, RoomType.BLUE);
-        Room.roomType.put(treeHouse, RoomType.BLUE);
-        Room.roomType.put(storyBookVillage, RoomType.GREEN);
-        Room.roomType.put(pillowPile, RoomType.GREEN);
-        Room.roomType.put(snackArea, RoomType.GREEN);
-        Room.roomType.put(greenHall, RoomType.GREEN);
-        Room.roomType.put(blueHall, RoomType.BLUE);
-        Room.roomType.put(redHall, RoomType.RED);
-        Room.roomType.put(peddleToys, RoomType.BLUE);
-        Room.roomType.put(lemonaidStand, RoomType.BLUE);
-        Room.roomType.put(toolShed, RoomType.RED);
-        Room.roomType.put(TRSRoom, RoomType.RED);
-        Room.roomType.put(janitorialRoom, RoomType.RED);
-        Room.roomType.put(foyer, RoomType.GREEN);
-        Room.roomType.put(pantry, RoomType.KITCHEN);
-        Room.roomType.put(recoveryRoom, RoomType.GREEN);
-        Room.roomType.put(demoRoom, RoomType.BLUE);
-    }
-
-    static void playerTimeOut(int i, String act, NPC npc) {
-        boolean apology = false;
-        int attempts = 0;
-        //getGui().lockButtons();
-        getGui().clearTextPane();
-        getGui().display("You were put in time out for " + i + " minutes.", "Black");
-
-        while (!apology) {
-            String response;
-            String[] acts = {"stealing", "pranking", "Vandalism", "Skipped", "Trespassing", "Sneaking", "climbed", "I don't know"};
-            response = (String) JOptionPane.showInputDialog(null,
-                    "What did you do?",
-                    "Choose", JOptionPane.QUESTION_MESSAGE,
-                    null, acts, acts[0]);
-
-            if (response == null) {
-                getGui().display("You Will stay here until you give the correct answers.", "Red");
-                attempts++;
-                i += 5;
-                continue;
-            }
-
-            switch (response) {
-                case "stealing" -> {
-                    if (!act.equalsIgnoreCase("stealing")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you steal?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "pranking" -> {
-                    if (!act.equalsIgnoreCase("pranking")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you prank someone?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "Vandalism" -> {
-                    if (!act.equalsIgnoreCase("Vandalism")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you vandalize?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "Pickedon" -> {
-                    if (!act.equalsIgnoreCase("Pickedon")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you pick on someone?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "Skipped" -> {
-                    if (!act.equalsIgnoreCase("Skipped")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you skip?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "Trespassing" -> {
-                    if (!act.equalsIgnoreCase("Trespassing")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you trespass?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "Sneaking" -> {
-                    if (!act.equalsIgnoreCase("Sneaking")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you sneak?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "climbed" -> {
-                    if (!act.equalsIgnoreCase("climbed")) {
-                        getGui().display("That's not what you did", "Red");
-                        break;
-                    }
-                    String[] reasons = {"Fun", "Profit"};
-                    response = (String) JOptionPane.showInputDialog(null,
-                            "Why did you climb?",
-                            "Choose", JOptionPane.QUESTION_MESSAGE,
-                            null, reasons, reasons[0]);
-
-                    if (response == null) {
-                        getGui().display("You Will stay here until you give the correct answers.", "Red");
-                        attempts++;
-                        i += 5;
-                        continue;
-                    }
-                    if (response.equals("Fun") || response.equals("Profit")) {
-                        apology = true;
-                    }
-                }
-                case "I don't know" -> {
-                    getGui().display("You will stay here until you give the correct answers.", "Red");
-                    attempts++;
-                    i += 5;
-                }
-            }
-        }
-
-        if (apology) {
-            getGui().display("You have been forgiven", "Green");
-            getGui().unlockButtons();
-            FatherTime.getClock().moveTime(attempts + i + 2);
-        }
-    }
-
-    private static ArrayList<Achievements> getAchievements() {
-        return achievements;
-    }
-
-    public static Achievements getAchievementByName(String name) {
-        for (Achievements achievement : achievements) {
-            if (achievement.getName().equalsIgnoreCase(name)) {
-                return achievement;
-            }
-        }
-        return null;
-    }
-    private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
-    private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
-    private RoutineManager routineManager;
-
-    public GameHandler(GUI gui1, Game game1) {
-        game = game1;
-        gui = gui1;
-    }
-
-    public Room movePlayer(Room room) {
-        Player.setRoom(room);
-        return Player.getRoom();
-    }
-
-    public void moveItem(Item item, Room room) {
-        room.getInventory().add(item);
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public static void updateAchievementsForRoomVisit(Room room) {
-        // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
-        for (Achievements Achievement : getAchievements()) {
-            // Check if the achievement involves visiting rooms
-            if (Achievement.getRequiredPlaces().containsKey(room)) {
-                Achievement.markRoomVisited(room); // Mark the room as visited for the achievement
-            }
-        }
-    }
-
-    public static void updateAchievementsForEquip(Equipment equipment) {
-        // Assuming you have a list of achievements somewhere in the game, like a GameHandler or AchievementManager
-        for (Achievements Achievement : getAchievements()) {
-            // Check if the achievement involves equipping items
-            if (Achievement.getRequiredEquipment().containsKey(equipment)) {
-                Achievement.markEquipmentEquipped(equipment); // Mark the equipment as equipped for the achievement
-            }
-        }
-    }
-
-    public String[] getToyBuffs() {
-        return toyBuffs;
-    }
-
-    public void setToyBuffs(String[] toyBuffs) {
-        this.toyBuffs = toyBuffs;
-    }
-
-    public String[] getStuffyBuffs() {
-        return stuffyBuffs;
-    }
-
-    public void setStuffyBuffs(String[] stuffyBuffs) {
-        this.stuffyBuffs = stuffyBuffs;
-    }
-
-    public void setCharacterBio() {
-        explainCharacterBio();
-        askBasicQuestions();
-    }
-
-    public static void makeFoodTray() {
-        Container foodTray1 = (Container) getItems().get("Food Tray");
-        if (foodTray1 == null) {
-            foodTray1 = new Container("Food Tray", "A plastic food tray", "Container", false);
-            getItems().put("Food Tray", foodTray1); // Add it to game items
-        }
-        int fruitIndex = rand.nextInt(EatingAndFood.fruitChoices.values().length);
-        int vegetableIndex = rand.nextInt(EatingAndFood.vegetableChoices.values().length);
-        int junkIndex = rand.nextInt(EatingAndFood.junkChoices.values().length);
-        int proteinIndex = rand.nextInt(EatingAndFood.proteinChoices.values().length);
-        int drinkIndex = rand.nextInt(EatingAndFood.drinkChoices.values().length);
-        // Create food items
-        Item drink = new EatingAndFood(EatingAndFood.drinkChoices.values()[drinkIndex].toString(), "A delicious " + EatingAndFood.drinkChoices.values()[drinkIndex].toString(), EatingAndFood.FoodType.DRINK, 5);
-        Item fruit = new EatingAndFood(EatingAndFood.fruitChoices.values()[fruitIndex].toString(), "A delicious " + EatingAndFood.fruitChoices.values()[fruitIndex].toString(), EatingAndFood.FoodType.FRUIT, 5);
-        Item veg = new EatingAndFood(EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), "A delicious " + EatingAndFood.vegetableChoices.values()[vegetableIndex].toString(), EatingAndFood.FoodType.VEGETABLE, 5);
-        Item junk = new EatingAndFood(EatingAndFood.junkChoices.values()[junkIndex].toString(), "A delicious " + EatingAndFood.junkChoices.values()[junkIndex].toString(), EatingAndFood.FoodType.JUNK, 5);
-        Item protein = new EatingAndFood(EatingAndFood.proteinChoices.values()[proteinIndex].toString(), "A delicious " + EatingAndFood.proteinChoices.values()[proteinIndex].toString(), EatingAndFood.FoodType.MEAL, 5);
-        drink.getTypes().put(ItemType.DRINK, true);
-        drink.setName(toSentenceCase(drink.getName()));
-
-        fruit.getTypes().put(ItemType.FOOD, true);
-        fruit.setName(toSentenceCase(fruit.getName()));
-
-        veg.getTypes().put(ItemType.FOOD, true);
-        veg.setName(toSentenceCase(veg.getName()));
-
-        junk.getTypes().put(ItemType.FOOD, true);
-        junk.setName(toSentenceCase(junk.getName()));
-
-        protein.getTypes().put(ItemType.FOOD, true);
-        protein.setName(toSentenceCase(protein.getName()));
-
-        fruit.setSaturation(7);
-        veg.setSaturation(10);
-        junk.setSaturation(3);
-        protein.setSaturation(15);
-        drink.setSaturation(5);
-
-        foodTray1.getInventory().clear(); // Clear the food tray
-        foodTray1.addItem(fruit);
-        foodTray1.addItem(veg);
-        foodTray1.addItem(junk);
-        foodTray1.addItem(protein);
-        foodTray1.addItem(drink);
-
-        items.put(fruit.getName(), fruit);
-        items.put(veg.getName(), veg);
-        items.put(junk.getName(), junk);
-        items.put(protein.getName(), protein);
-        items.put(drink.getName(), drink);
-
-        // Display success message
-        getGui().display("You filled the food tray with delicious items!", "Red");
-        foodTrayDispenser.addItem(foodTray1);
-        foodTray1.displayInventory();
-        foodTrayDispenser.displayInventory();
-    }
-
-    public static Room getRandomRoom(RoomType type) {
-        rand.nextInt(rooms.size());
-        ArrayList<String> keys = new ArrayList<>(rooms.keySet());
-        Room randRoom = rooms.get(keys.get(rand.nextInt(keys.size())));
-        if (randRoom.getType() != type) {
-            return getRandomRoom(type);
-        }
-        return randRoom;
-    }
-
-    public ArrayList<Item> getRequiredItems() {
-        return requiredItems;
-    }
-
-    public static Quest getQuestByName(String string) {
-        for (Quest quest : quests) {
-            if (quest.getName().equalsIgnoreCase(string)) {
-                return quest;
-            }
-        }
-        return null;
-    }
-
-    public static ArrayList<Quest> getQuests() {
-        return quests;
+    public static GUI getGui() {
+        return gui;
     }
 
     public void createQuests() {
@@ -1613,17 +1035,6 @@ public class GameHandler {
         quests.add(goToBed);
         questBoard.addQuest(goToBed);
     }
-
-    public static void writeFile(String concat, String text) {
-        try {
-            FileWriter writer = new FileWriter(concat + ".txt");
-            writer.write(text);
-            writer.close();
-        } catch (IOException e) {
-            getGui().display("Error writing file.", "Red");
-        }
-    }
-
     public static Book getBookByName(String selectedBook) {
         for (Item item : items.values()) {
             if (item instanceof Book book) {
@@ -1634,7 +1045,6 @@ public class GameHandler {
         }
         return null;
     }
-
     public static Puzzle getPuzzleByName(String selectedPuzzle) {
         for (Item item : items.values()) {
             if (item instanceof Puzzle puzzle) {
@@ -1645,18 +1055,55 @@ public class GameHandler {
         }
         return null;
     }
-
-    private void askBasicQuestions() {
-        Game.getGui().display("What is your name?", "Black");
-        String name = JOptionPane.showInputDialog(null, "What is your name?");
-        Player.setName(name);
-        Game.getGui().display("How old are you?", "Black");
-        int age = Integer.parseInt(JOptionPane.showInputDialog(null, "How old are you?"));
-        Player.setAge(age);
-        Game.getGui().display("what are your pronouns?", "Black");
-        Player.setPronouns();
-        Player.setSkills(age);
-        Player.setProficiencies(age);       
+    public static Room getRoomByName(String name) {
+        return rooms.get(name);
     }
+    public static NPC getNPCByName(String person) {
+        return npcs.get(person);
+    }
+    public static PawFigure getFigureByName(String name) {
+        for (Item item : items.values()) {
+            if (item instanceof PawFigure figure) {
+                if (figure.getName().equalsIgnoreCase(name)) {
+                    getGui().display("This happened!", "Black");
+                    return figure;
+                }
+            }
+        }
+        return null;
+    }
+
+    static Item getItemByName(String itemName) {
+        return items.get(itemName);
+    }
+    public static ArrayList<Quest> getQuests() {
+        return quests;
+    }
+    public static Quest getQuestByName(String string) {
+        for (Quest quest : quests) {
+            if (quest.getName().equalsIgnoreCase(string)) {
+                return quest;
+            }
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

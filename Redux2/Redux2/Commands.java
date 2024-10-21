@@ -48,7 +48,28 @@ class Commands {
                 case "cry" -> {
 
                 }
-                case "point" -> {
+                case "craft" -> {
+                    String[] items = Player.getRoom().getItemChoices();
+                    String choice1 = (String) JOptionPane.showInputDialog(null, "First Item?", "Crafting", JOptionPane.QUESTION_MESSAGE, null, items, items[0]);
+                    String choice2 = (String) JOptionPane.showInputDialog(null, "Second Item?", "Crafting", JOptionPane.QUESTION_MESSAGE, null, items, items[0]);
+                    Item item1 = GameHandler.getItemByName(choice1);
+                    Item item2 = GameHandler.getItemByName(choice2);
+                    if (item1 == null || item2 == null) {
+                        GameHandler.getGui().display("Invalid item", "Black");
+                        return;
+                    }
+                    if (item1.getName().equals(item2.getName())) {
+                        GameHandler.getGui().display("You can't craft the same item", "Black");
+                        return;
+                    }
+                    Crafting crafting = new Crafting("Crafting");
+                    crafting.createRecipes();
+                    Item result = crafting.Craft(item1, item2);
+                    if (result.getName().equals("Mess")) {
+                        Player.getRoom().addItem(result);
+                    } else {
+                        Player.getRoom().addItem(result);
+                    }
 
                 }
                 case "play" -> {
@@ -91,16 +112,19 @@ class Commands {
                     }
                 }
 
-                case "quit" ->
-                    GameHandler.getGui().display("You quit the game", "Black");
+                case "buff" -> {
+                    Player.displaySkills();
+                    Buffs.createBuffs();
+                    Buffs.applyRandomBuff();
+                    Player.displaySkills();
+                }
                 case "quests" -> {
                     GameHandler.getGui().display("You checked your quests", "Black");
                     for (Quest quest : Player.getQuests()) {
                         GameHandler.getGui().display(quest.getName(), "Black");
                     }
-    
+
                 }
-                    
 
                 case "time" -> {
                     FatherTime.getClock().moveTime(25);

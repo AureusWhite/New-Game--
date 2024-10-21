@@ -575,4 +575,24 @@ public class Room {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public String[] getBookChoices() {
+        List<String> filteredItems = new ArrayList<>();
+        for (Item item : this.getInventory()) {
+            if (item.getTypes().containsKey(ItemType.BOOK)) {
+                filteredItems.add(item.getName());
+            }
+        }
+        return filteredItems.toArray(String[]::new);
+    }
+
+    public String[] getPuzzleChoices() {
+        List<String> filteredItems = new ArrayList<>();
+        for (Item item : this.getInventory()) {
+            if (item.getTypes().containsKey(ItemType.PUZZLE)) {
+                filteredItems.add(item.getName());
+            }
+        }
+        return filteredItems.toArray(String[]::new);
+    }
+
 }

@@ -1,3 +1,4 @@
+
 package Redux2;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import javax.swing.JOptionPane;
+
 
 public class Player {
 
@@ -40,9 +42,55 @@ public class Player {
     public static ArrayList<Item> getHands() {
         return hands;
     }
+
+    static void setSkills(int age) {
+        Random rand = new Random();
+        for (Skill skill : Skill.values()) {
+            skillLevels.put(skill, rand.nextInt(age) + 1);
+        }
+    }
+
+    static void setProficiencies(int age) {
+           if(age>0){
+                proficiencies.add(Proficiencies.PLAY);
+                proficiencies.add(Proficiencies.STANDUP);
+                proficiencies.add(Proficiencies.SITUP);
+                proficiencies.add(Proficiencies.TODDLE);
+                
+            }
+            if(age>3){
+                proficiencies.add(Proficiencies.WALK);
+                proficiencies.add(Proficiencies.RUN);
+                proficiencies.add(Proficiencies.CLIMB);
+                proficiencies.add(Proficiencies.JUMP);
+                proficiencies.add(Proficiencies.READ);
+                proficiencies.add(Proficiencies.TOILETBYSELF);
+
+            }
+            if(age>6){
+                proficiencies.add(Proficiencies.BATHE);
+                proficiencies.add(Proficiencies.DRESS);
+                proficiencies.add(Proficiencies.EATBYSELF);
+                proficiencies.add(Proficiencies.BRUSH);
+                proficiencies.add(Proficiencies.LISTEN);
+                proficiencies.add(Proficiencies.PAYATTENTION);
+            }
+            if(age>9){
+                proficiencies.add(Proficiencies.LOCK);
+                proficiencies.add(Proficiencies.UNLOCK);
+                proficiencies.add(Proficiencies.READALOUD);
+                proficiencies.add(Proficiencies.WRITE);
+                proficiencies.add(Proficiencies.SWIM);
+                proficiencies.add(Proficiencies.BIKE);
+            }
+
+        }
+
+
     public boolean getLeader() {
         return leader;
     }
+
     public static boolean hasFigure(boolean b) {
         for (Item item : hands) {
             if (item.getName().equals("Paw Figure")) {
@@ -59,6 +107,8 @@ public class Player {
         skillLevels.put(Skill.EMOTIONAL, 1);
         skillLevels.put(Skill.IMAGINATION, 1);
         skillLevels.put(Skill.LEARNING, 1);
+        skillLevels.put(Skill.PROBLEM_SOLVING, 1);
+        skillLevels.put(Skill.COGNITIVE, 1);
     }
 
     public static ArrayList<Paw> getPaws() {
@@ -253,23 +303,8 @@ public class Player {
         return Player.room;
     }
 
-    public static void setAge(String input) {
-        GameHandler.getGui().display("Please enter your age.", "Black");
-        while (!input.matches("[2-9]+")) {
-            GameHandler.getGui().waitForInput();
-            input = GameHandler.getGui().getInput();
-        }
-        GUI.getJTextField().setText("");
-        if (ageSet) {
-            GameHandler.getGui().display("You have already set your age.", "Black");
-        } else {
-            age = Integer.parseInt(input);
-            ageSet = true;
-        }
-        GameHandler.getGui().display("You are " + age + " years old.", "Black");
-        setUpStats();
-        setStats(age);
-
+    public static void setAge(int age2) {
+        age = age2;
     }
 
     public static void equip(Equipment equipment1, String slot) {
@@ -343,10 +378,6 @@ public class Player {
             getRoom().attractAttention("Crying");
         }
         thirst = thirst1;
-    }
-
-    public static void setAge(int age1) {
-        age = age1;
     }
 
     public static void setAbilitiesSet(boolean abilitiesSet1) {
@@ -640,9 +671,9 @@ public class Player {
                 if (outcome > 18) {
                     GameHandler.getGui().display("They must have been on their phone or something because no one noticed that, and now they can't see you. Proboblu still know you're there though.", "Black");
                     PlayerStatus.HIDDEN.activate();
-                } else if (outcome == 17||outcome == 18) {
-                    levelUpSkill(Skill.FINE_MOTOR); 
-                }else {
+                } else if (outcome == 17 || outcome == 18) {
+                    levelUpSkill(Skill.FINE_MOTOR);
+                } else {
                     GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " noticed you and smirked with a laugh.", "Black");
                 }
             }
@@ -652,12 +683,12 @@ public class Player {
                 if (outcome > 16) {
                     GameHandler.getGui().display("Somehow you manage to get out of sight unnoticed. Try not to giggle when they look for you, not like last time.", "Black");
                     PlayerStatus.HIDDEN.activate();
-                }else if (outcome == 15||outcome == 16) {
-                    levelUpSkill(Skill.FINE_MOTOR); 
-                }else {
+                } else if (outcome == 15 || outcome == 16) {
+                    levelUpSkill(Skill.FINE_MOTOR);
+                } else {
                     GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " noticed you and smirked with a laugh.", "Black");
                 }
-                GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + ": Hello, "+Player.getName()+" are you a bank robber? I can see you.", "Black");
+                GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + ": Hello, " + Player.getName() + " are you a bank robber? I can see you.", "Black");
             }
             case 3 -> {
                 GameHandler.getGui().display("Giggles in check and serious faced you pretend to be a ninja, even though they are also not allowed at school, a ninja is queit about their mischeif", "Black");
@@ -665,10 +696,10 @@ public class Player {
                 if (outcome > 14) {
                     GameHandler.getGui().display("You cannot be seen, the paper ninja stars however may be.", "Black");
                     PlayerStatus.HIDDEN.activate();
-                }else if (outcome == 13||outcome == 14) {
-                    levelUpSkill(Skill.FINE_MOTOR); 
+                } else if (outcome == 13 || outcome == 14) {
+                    levelUpSkill(Skill.FINE_MOTOR);
                 } else {
-                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + ": I see you, "+Player.getName()+", you are not a ninja.", "Black");
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + ": I see you, " + Player.getName() + ", you are not a ninja.", "Black");
                 }
             }
             case 4 -> {
@@ -677,10 +708,10 @@ public class Player {
                 if (outcome > 12) {
                     GameHandler.getGui().display("Wow, people notice less if do not beaning them in the eye with a paper shuruken. Good to know", "Black");
                     PlayerStatus.HIDDEN.activate();
-                }else if (outcome == 11||outcome == 12) {
-                    levelUpSkill(Skill.FINE_MOTOR); 
+                } else if (outcome == 11 || outcome == 12) {
+                    levelUpSkill(Skill.FINE_MOTOR);
                 } else {
-                 GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " *clears their throat* It's obvious they can see you sneaking off.", "Black");
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " *clears their throat* It's obvious they can see you sneaking off.", "Black");
                 }
             }
             case 5 -> {
@@ -689,9 +720,9 @@ public class Player {
                 if (outcome > 10) {
                     GameHandler.getGui().display("you slip away into hiding keeping out of sight.", "Black");
                     PlayerStatus.HIDDEN.activate();
-                }else if (outcome == 9||outcome == 10) {
-                    levelUpSkill(Skill.FINE_MOTOR); 
-                }else {
+                } else if (outcome == 9 || outcome == 10) {
+                    levelUpSkill(Skill.FINE_MOTOR);
+                } else {
                     GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " *clears their throat* It's obvious they can see you sneaking off.", "Black");
                 }
             }
@@ -701,11 +732,10 @@ public class Player {
                 if (outcome > 8) {
                     GameHandler.getGui().display("You easily duck into cover, quick reflexes keeping you hidden", "Black");
                     PlayerStatus.HIDDEN.activate();
-                }else if (outcome == 7||outcome == 8) {
-                    levelUpSkill(Skill.FINE_MOTOR); 
-                }
-                else{
-                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " : "+Player.getName()+" what are you up to?, I barely saw you out of the corner of my eye.", "Black");
+                } else if (outcome == 7 || outcome == 8) {
+                    levelUpSkill(Skill.FINE_MOTOR);
+                } else {
+                    GameHandler.getGui().display(Player.getRoom().randomNPC(false).getName() + " : " + Player.getName() + " what are you up to?, I barely saw you out of the corner of my eye.", "Black");
                 }
             }
             case 7, 8, 9, 10 -> {
@@ -901,47 +931,6 @@ public class Player {
         return thirst;
     }
 
-    private static void setStats(int age) {
-        int totalStats = 0;
-
-        do {
-            for (int i = 0; i < 5; i++) {
-                Random random = new Random();
-                switch (i) {
-                    case 0 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Social", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 1 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Motor", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 2 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Imagenation", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 3 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Learning", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 4 -> {
-                        int tempStat = random.nextInt(age) + 3;
-                        stats.put("Emotional", tempStat);
-                        totalStats += tempStat;
-                    }
-                    default -> {
-                    }
-                }
-
-            }
-        } while (totalStats <= age * 4 && totalStats >= age * 2);
-        GameHandler.getGui().display("Your stats are: " + stats.get("Social") + ", " + stats.get("Motor") + ", " + stats.get("Imagenation") + ", " + stats.get("Learning") + ", " + stats.get("Emotional"), "Black");
-    }
-
     private static void setUpStats() {
         for (int i = 0; i < 5; i++) {
             stats.put("Social", 0);
@@ -975,7 +964,7 @@ public class Player {
             GameHandler.getGui().display("Item does not exist?", "Black");
             return;
         }
-    
+
         ArrayList<Item> itemLocation = locateItem(item);
         if (itemLocation != null) {
             itemLocation.remove(item);
@@ -984,7 +973,7 @@ public class Player {
             GameHandler.getGui().display("Error: The item was not found in any inventory.", "Red");
         }
     }
-    
+
     static ArrayList<Item> locateItem(Item item) {
         if (pockets.contains(item)) {
             GameHandler.getGui().display("Item found in pockets", "Black");
@@ -998,11 +987,10 @@ public class Player {
             GameHandler.getGui().display("Item found in hands", "Black");
             return hands;
         }
-    
+
         GameHandler.getGui().display("Item not found in any inventory", "Red");
         return null;
     }
-    
 
     public static String[] getEquipmentChoices() {
         int i = 0;
@@ -1022,26 +1010,26 @@ public class Player {
     public static int getMaturity() {
         maturity = 1;
         for (int i : stats.values()) {
-            if(getSkillLevel(Skill.SELF_CARE) >= 2){
-            maturity += i * 1.3;
-        } else if(getSkillLevel(Skill.EMOTIONAL) >= 3){
-            maturity += i * 1;
-        } else if(getSkillLevel(Skill.GROSS_MOTOR) >= 2){
-            maturity += i * 1;
-        } else if(getSkillLevel(Skill.LEARNING) >= 3){
-            maturity += i * 1;
-        } else if(getSkillLevel(Skill.SOCIAL) >= 2){
-            maturity += i * 1.1;
-        } else if(getSkillLevel(Skill.FINE_MOTOR) > 2){
-            maturity += i * 1.2;
-        } else if(getSkillLevel(Skill.IMAGINATION) > 3){
-            maturity += i * 1.2;
-        } else {
-            maturity += i * 1;
+            if (getSkillLevel(Skill.SELF_CARE) >= 2) {
+                maturity += i * 1.3;
+            } else if (getSkillLevel(Skill.EMOTIONAL) >= 3) {
+                maturity += i * 1;
+            } else if (getSkillLevel(Skill.GROSS_MOTOR) >= 2) {
+                maturity += i * 1;
+            } else if (getSkillLevel(Skill.LEARNING) >= 3) {
+                maturity += i * 1;
+            } else if (getSkillLevel(Skill.SOCIAL) >= 2) {
+                maturity += i * 1.1;
+            } else if (getSkillLevel(Skill.FINE_MOTOR) > 2) {
+                maturity += i * 1.2;
+            } else if (getSkillLevel(Skill.IMAGINATION) > 3) {
+                maturity += i * 1.2;
+            } else {
+                maturity += i * 1;
+            }
         }
-    }
         return maturity;
-}
+    }
 
     private static void addMaturity(int i) {
         maturity += i;
@@ -1084,7 +1072,7 @@ public class Player {
         skillLevels.put(skill, skillLevels.get(skill) - 1);
     }
 
-    public void setSkillLevel(Skill skill, int level) {
+    public static void setSkillLevel(Skill skill, int level) {
         skillLevels.put(skill, level);
     }
 
@@ -1105,13 +1093,9 @@ public class Player {
     }
 
     public static void dropItem(Item item) {
-        if (((Equipment) item).isEquipped()) {
-            GameHandler.getGui().display("You may not drop an equipped item.", "Black");
-        } else {
-            GameHandler.getGui().display("You drop the " + item.getName() + ".", "Black");
-            getRoom().addItem(item);
-            removeItem(item);
-        }
+        GameHandler.getGui().display("You drop the " + item.getName() + ".", "Black");
+        getRoom().addItem(item);
+        removeItem(item);
     }
 
     private static void accident() {
@@ -1195,5 +1179,15 @@ public class Player {
         }
         return choice;
 
+    }
+
+    public static void addSkillLevel(Skill skill, Integer integer) {
+        setSkillLevel(skill, getSkillLevel(skill) + integer);
+    }
+
+    public static void displaySkills() {
+        for (Skill skill : skillLevels.keySet()) {
+            GameHandler.getGui().display(skill + ": " + skillLevels.get(skill), "Black");
+        }
     }
 }

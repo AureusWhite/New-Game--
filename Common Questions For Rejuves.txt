@@ -1,0 +1,15 @@
+<body>
+    <h1>WTF Happened?</h1>
+    <p>The rejuvenation process is a series of psychological and surgical measures designed to restore your body to a healthy, youthful state. You volunteered to undergo this procedure. Your memory will gradually return—this could happen quickly or slowly, as every rejuve’s experience is unique.</p>
+    
+    <h2>How Does That Work?</h2>
+    <p>Rejuvenation restores your body to an underdeveloped state. Using nanosurgery, healthy cells are reset to a 'stem cell' state by restoring the telomeres on your DNA, reversing cellular aging. However, not all cells can be transformed or repaired. The neurons and track patterns in your brain are preserved with great effort, which is why your adult memories remain intact.</p>
+    
+    <h2>Why Do I Feel So Small?</h2>
+    <p>Your body has been reduced to a smaller, childlike form, but you have retained much of your explicit memory (which is why you can read this pamphlet). However, procedural memory—things like using the toilet or tying your shoes—may take up to six months to fully return. Please share this information with your designated caretaker for additional assistance during this transition.</p>
+    
+    <h2>Am I A Child Again?</h2>
+    <p>No, you are not a child. You are a child-sized adult with the physiological brain of a child. This distinction is important. While you may have fewer protections under welfare systems, your safety is more strictly guaranteed. However, your freedoms may be limited due to the unpredictability of immature minds.</p>
+    
+    <p>By understanding these changes, you’ll be better equipped to navigate life as a rejuve. If you have further questions, your caretakers and staff are here to assist you.</p>
+</body>
