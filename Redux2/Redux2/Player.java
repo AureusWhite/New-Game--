@@ -1,4 +1,3 @@
-
 package Redux2;
 
 import java.util.ArrayList;
@@ -9,8 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
-
 public class Player {
+    static Random rand = new Random();
 
     //primitives
     static String[] pronouns;
@@ -24,7 +23,6 @@ public class Player {
     public final static HashMap<String, Equipment> equipment = new HashMap<>();
     public final static ArrayList<Quest> quests = new ArrayList<>();
     public final static HashMap<String, Integer> stats = new HashMap<>();
-    public final static HashMap<String, Boolean> perks = new HashMap<>();
     public final static HashMap<Activities, Proficiencies> activities = new HashMap<>();
 
     //objects
@@ -42,50 +40,6 @@ public class Player {
     public static ArrayList<Item> getHands() {
         return hands;
     }
-
-    static void setSkills(int age) {
-        Random rand = new Random();
-        for (Skill skill : Skill.values()) {
-            skillLevels.put(skill, rand.nextInt(age) + 1);
-        }
-    }
-
-    static void setProficiencies(int age) {
-           if(age>0){
-                proficiencies.add(Proficiencies.PLAY);
-                proficiencies.add(Proficiencies.STANDUP);
-                proficiencies.add(Proficiencies.SITUP);
-                proficiencies.add(Proficiencies.TODDLE);
-                
-            }
-            if(age>3){
-                proficiencies.add(Proficiencies.WALK);
-                proficiencies.add(Proficiencies.RUN);
-                proficiencies.add(Proficiencies.CLIMB);
-                proficiencies.add(Proficiencies.JUMP);
-                proficiencies.add(Proficiencies.READ);
-                proficiencies.add(Proficiencies.TOILETBYSELF);
-
-            }
-            if(age>6){
-                proficiencies.add(Proficiencies.BATHE);
-                proficiencies.add(Proficiencies.DRESS);
-                proficiencies.add(Proficiencies.EATBYSELF);
-                proficiencies.add(Proficiencies.BRUSH);
-                proficiencies.add(Proficiencies.LISTEN);
-                proficiencies.add(Proficiencies.PAYATTENTION);
-            }
-            if(age>9){
-                proficiencies.add(Proficiencies.LOCK);
-                proficiencies.add(Proficiencies.UNLOCK);
-                proficiencies.add(Proficiencies.READALOUD);
-                proficiencies.add(Proficiencies.WRITE);
-                proficiencies.add(Proficiencies.SWIM);
-                proficiencies.add(Proficiencies.BIKE);
-            }
-
-        }
-
 
     public boolean getLeader() {
         return leader;
@@ -221,6 +175,11 @@ public class Player {
     }
 
     public static int getSkillLevel(Skill skill) {
+        Integer level = skillLevels.get(skill);
+        if (level == null) {
+            level = rand.nextInt(age+3);
+            setSkillLevel(skill, level);
+        }
         return skillLevels.get(skill);
     }
 
@@ -303,8 +262,14 @@ public class Player {
         return Player.room;
     }
 
-    public static void setAge(int age2) {
-        age = age2;
+    public static void setAge() {
+        GameHandler.getGui().display("Please enter your age.", "Black");
+        GameHandler.getGui().waitForInput();
+        String input = GameHandler.getGui().getInput();
+        GUI.getJTextField().setText("");
+        GameHandler.getGui().display("You are " + input + " years old.", "Black");
+        age = Integer.parseInt(input);
+        ageSet = true;
     }
 
     public static void equip(Equipment equipment1, String slot) {
@@ -378,6 +343,10 @@ public class Player {
             getRoom().attractAttention("Crying");
         }
         thirst = thirst1;
+    }
+
+    public static void setAge(int age1) {
+        age = age1;
     }
 
     public static void setAbilitiesSet(boolean abilitiesSet1) {
@@ -536,30 +505,6 @@ public class Player {
 
     public static void addXP(int reward) {
         experience += reward;
-    }
-
-    public static void setUpPerks() {
-        perks.put("Social", false);
-        perks.put("Motor", false);
-        perks.put("Imagenation", false);
-        perks.put("Learning", false);
-        perks.put("Emotional", false);
-    }
-
-    public static boolean playerHasPerk(String perk) {
-        return perks.get(perk);
-    }
-
-    public static void addPerk(String perk) {
-        perks.put(perk, false);
-    }
-
-    public static void removePerk(String perk) {
-        perks.remove(perk);
-    }
-
-    public static void setPerk(String perk) {
-        perks.put(perk, true);
     }
 
     public static void removeXP(int reward) {
@@ -758,10 +703,6 @@ public class Player {
         return stats;
     }
 
-    public static HashMap<String, Boolean> getPerks() {
-        return perks;
-    }
-
     public static boolean isAgeSet() {
         return ageSet;
     }
@@ -931,14 +872,203 @@ public class Player {
         return thirst;
     }
 
-    private static void setUpStats() {
-        for (int i = 0; i < 5; i++) {
-            stats.put("Social", 0);
-            stats.put("Motor", 0);
-            stats.put("Imagenation", 0);
-            stats.put("Learning", 0);
-            stats.put("Emotional", 0);
+    public static void setProficiencies() {
+        if (getSkillLevel(Skill.SOCIAL) >= 2) {
+            getProficiencies().add(Proficiencies.SIMPLE_INSTRUCTIONS);
+            getProficiencies().add(Proficiencies.PARALLEL_PLAY);
         }
+        if (getSkillLevel(Skill.FINE_MOTOR) >= 2) {
+            getProficiencies().add(Proficiencies.DRAW);
+            getProficiencies().add(Proficiencies.CRAFT);
+        }
+        if (getSkillLevel(Skill.GROSS_MOTOR) >= 2) {
+            getProficiencies().add(Proficiencies.TODDLE);
+            getProficiencies().add(Proficiencies.CRAWL);
+        }
+        if (getSkillLevel(Skill.IMAGINATION) >= 2) {
+            getProficiencies().add(Proficiencies.PRETEND);
+            getProficiencies().add(Proficiencies.PERFORM);
+        }
+        if (getSkillLevel(Skill.LEARNING) >= 2) {
+            getProficiencies().add(Proficiencies.READ);
+            getProficiencies().add(Proficiencies.LISTEN);
+        }
+        if (getSkillLevel(Skill.EMOTIONAL) >= 2) {
+            getProficiencies().add(Proficiencies.EMPATHIZE);
+            getProficiencies().add(Proficiencies.EXPRESS_DISTRESS);
+        }
+        if (getSkillLevel(Skill.SELF_CARE) >= 2) {
+            getProficiencies().add(Proficiencies.NAP);
+            getProficiencies().add(Proficiencies.EAT_HELPED);
+        }
+        if (getSkillLevel(Skill.COGNITIVE) >= 2) {
+            getProficiencies().add(Proficiencies.SOLVE);
+            getProficiencies().add(Proficiencies.MEMORIZE);
+        }
+        if (getSkillLevel(Skill.COMMUNICATION) >= 2) {
+            getProficiencies().add(Proficiencies.SPEAK);
+            getProficiencies().add(Proficiencies.PAYATTENTION);
+        }
+        if (getSkillLevel(Skill.SOCIAL) >= 4) {
+            getProficiencies().add(Proficiencies.BEFRIEND);
+            getProficiencies().add(Proficiencies.SHARE);
+        }
+        if (getSkillLevel(Skill.FINE_MOTOR) >= 4) {
+            getProficiencies().add(Proficiencies.DRESS);
+            getProficiencies().add(Proficiencies.OPEN);
+        }
+        if (getSkillLevel(Skill.GROSS_MOTOR) >= 4) {
+            getProficiencies().add(Proficiencies.WALK);
+            getProficiencies().add(Proficiencies.CLIMB);
+        }
+        if (getSkillLevel(Skill.IMAGINATION) >= 4) {
+            getProficiencies().add(Proficiencies.DIRECT);
+            getProficiencies().add(Proficiencies.CREATE);
+        }
+        if (getSkillLevel(Skill.LEARNING) >= 4) {
+            getProficiencies().add(Proficiencies.READALOUD);
+            getProficiencies().add(Proficiencies.WRITE);
+        }
+        if (getSkillLevel(Skill.EMOTIONAL) >= 4) {
+            getProficiencies().add(Proficiencies.SOOTHE_SELF);
+            getProficiencies().add(Proficiencies.EXPRESS_NEEDS);
+        }
+        if (getSkillLevel(Skill.SELF_CARE) >= 4) {
+            getProficiencies().add(Proficiencies.BATHE_SELF);
+            getProficiencies().add(Proficiencies.BRUSH_SELF);
+        }
+        if (getSkillLevel(Skill.COGNITIVE) >= 4) {
+            getProficiencies().add(Proficiencies.SOLVE_MEDIUM);
+            getProficiencies().add(Proficiencies.COMPLEX_INSTRUCTIONS);
+        }
+        if (getSkillLevel(Skill.COMMUNICATION) >= 4) {
+            getProficiencies().add(Proficiencies.PUBLIC_SPEAK);
+            getProficiencies().add(Proficiencies.LISTEN);
+        }
+        if (getSkillLevel(Skill.SOCIAL) >= 6) {
+            getProficiencies().add(Proficiencies.LEADER);
+            getProficiencies().add(Proficiencies.CLIQUE);
+        }
+        if (getSkillLevel(Skill.FINE_MOTOR) >= 6) {
+            getProficiencies().add(Proficiencies.DRAW_WELL);
+            getProficiencies().add(Proficiencies.CRAFT_LVL2);
+        }
+        if (getSkillLevel(Skill.GROSS_MOTOR) >= 6) {
+            getProficiencies().add(Proficiencies.RUN);
+            getProficiencies().add(Proficiencies.JUMP);
+        }
+        if (getSkillLevel(Skill.IMAGINATION) >= 6) {
+            getProficiencies().add(Proficiencies.BRAVO);
+            getProficiencies().add(Proficiencies.COSTUMEDESIGN);
+        }
+        if (getSkillLevel(Skill.LEARNING) >= 6) {
+            getProficiencies().add(Proficiencies.TUTOR);
+            getProficiencies().add(Proficiencies.WRITE_WELL);
+        }
+        if (getSkillLevel(Skill.EMOTIONAL) >= 6) {
+            getProficiencies().add(Proficiencies.SOOTH_OTHERS);
+            getProficiencies().add(Proficiencies.SHARE_LVL2);
+        }
+        if (getSkillLevel(Skill.SELF_CARE) >= 6) {
+            getProficiencies().add(Proficiencies.DRESS_SELF);
+            getProficiencies().add(Proficiencies.KEEP_CLEAN);
+        }
+        if (getSkillLevel(Skill.COGNITIVE) >= 6) {
+            getProficiencies().add(Proficiencies.SOLVE_COMPLEX);
+            getProficiencies().add(Proficiencies.MEMORIZE_MORE);
+        }
+        if (getSkillLevel(Skill.COMMUNICATION) >= 6) {
+            getProficiencies().add(Proficiencies.SPEAK_CLEARLY);
+            getProficiencies().add(Proficiencies.LISTEN_CAREFULLY);
+        }
+        if (getSkillLevel(Skill.SOCIAL) >= 8) {
+            getProficiencies().add(Proficiencies.POPULAR);
+            getProficiencies().add(Proficiencies.CHARISMATIC);
+        }
+        if (getSkillLevel(Skill.FINE_MOTOR) >= 8) {
+            getProficiencies().add(Proficiencies.DRAW_EXPERT);
+            getProficiencies().add(Proficiencies.CRAFT_LVL3);
+        }
+        if (getSkillLevel(Skill.GROSS_MOTOR) >= 8) {
+            getProficiencies().add(Proficiencies.DODGE);
+            getProficiencies().add(Proficiencies.BALANCE);
+        }
+        if (getSkillLevel(Skill.IMAGINATION) >= 8) {
+            getProficiencies().add(Proficiencies.DIRECT_LVL2);
+            getProficiencies().add(Proficiencies.CREATE_LVL2);
+        }
+        if (getSkillLevel(Skill.LEARNING) >= 8) {
+            getProficiencies().add(Proficiencies.TUTOR_LVL2);
+            getProficiencies().add(Proficiencies.WRITE_EXPERT);
+        }
+        if (getSkillLevel(Skill.EMOTIONAL) >= 8) {
+            getProficiencies().add(Proficiencies.SOOTH_LVL2);
+            getProficiencies().add(Proficiencies.SHARE_LVL3);
+        }
+        if (getSkillLevel(Skill.SELF_CARE) >= 8) {
+            getProficiencies().add(Proficiencies.DRESS_WELL);
+            getProficiencies().add(Proficiencies.KEEP_CLEAN_LVL2);
+        }
+        if (getSkillLevel(Skill.COGNITIVE) >= 8) {
+            getProficiencies().add(Proficiencies.SOLVE_EXPERT);
+            getProficiencies().add(Proficiencies.MEMORIZE_EXPERT);
+        }
+        if (getSkillLevel(Skill.COMMUNICATION) >= 8) {
+            getProficiencies().add(Proficiencies.FOLLOW_CONVERSATION);
+            getProficiencies().add(Proficiencies.LISTEN_CAREFULLY_LVL2);
+        }
+        displayProficiencies();
+
+    }
+
+    private static void displayProficiencies() {
+        if (proficiencies.isEmpty()) {
+            GameHandler.getGui().display("You have no proficiencies.", "Black");
+        }
+        for (Proficiencies proficiency : proficiencies) {
+            GameHandler.getGui().display(proficiency.getName(), "Black");
+        }
+    }
+
+    public static void setStats(int age) {
+        int totalStats = 0;
+
+        do {
+            for (int i = 0; i < 5; i++) {
+                Random random = new Random();
+                switch (i) {
+                    case 0 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Social", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 1 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Motor", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 2 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Imagenation", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 3 -> {
+                        int tempStat = random.nextInt(age + 3) + 3;
+                        stats.put("Learning", tempStat);
+                        totalStats += tempStat;
+                    }
+                    case 4 -> {
+                        int tempStat = random.nextInt(age) + 3;
+                        stats.put("Emotional", tempStat);
+                        totalStats += tempStat;
+                    }
+                    default -> {
+                    }
+                }
+
+            }
+        } while (totalStats <= age * 4 && totalStats >= age * 2);
+        GameHandler.getGui().display("Your stats are: " + stats.get("Social") + ", " + stats.get("Motor") + ", " + stats.get("Imagenation") + ", " + stats.get("Learning") + ", " + stats.get("Emotional"), "Black");
     }
 
     public static void setHidden(boolean b) {

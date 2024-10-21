@@ -417,8 +417,10 @@ public class Room {
                 }
             }
         }
+        if(Game.running){
         this.setDescription(GameHandler.readFile(this.getName().concat("-desc")));
     }
+}
 
     public String[] getContraband() {
         ArrayList<Item> contraband = new ArrayList<>();

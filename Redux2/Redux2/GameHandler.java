@@ -29,7 +29,7 @@ public class GameHandler {
     private final static ArrayList<Achievements> achievements = new ArrayList<>();
     static Random rand = new Random();
 
-    private static String toSentenceCase(String name) {
+    public static String toSentenceCase(String name) {
         name = name.toLowerCase();
         name = name.replace("_", " ");
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -913,12 +913,12 @@ public class GameHandler {
     }
 
     public void playIntro() {
-        //readFile("intro1");
-        //getGui().waitForInput();
-        //readFile("intro2");
-        //getGui().waitForInput();
-        //readFile("intro3");
-        //getGui().waitForInput();
+        readFile("intro1");
+        getGui().waitForInput();
+        readFile("intro2");
+        getGui().waitForInput();
+        readFile("intro3");
+        getGui().waitForInput();
         createQuests();
     }
 
@@ -1516,7 +1516,7 @@ public class GameHandler {
 
     public void setCharacterBio() {
         explainCharacterBio();
-        askBasicQuestions();
+        setupPlayerBio();
     }
 
     public static void makeFoodTray() {
@@ -1646,17 +1646,22 @@ public class GameHandler {
         return null;
     }
 
-    private void askBasicQuestions() {
-        Game.getGui().display("What is your name?", "Black");
-        String name = JOptionPane.showInputDialog(null, "What is your name?");
-        Player.setName(name);
-        Game.getGui().display("How old are you?", "Black");
-        int age = Integer.parseInt(JOptionPane.showInputDialog(null, "How old are you?"));
-        Player.setAge(age);
-        Game.getGui().display("what are your pronouns?", "Black");
-        Player.setPronouns();
-        Player.setSkills(age);
-        Player.setProficiencies(age);       
-    }
+    private void setupPlayerBio() {
+    // ask name
+    Player.setName("Little One");
+    
+    //ask age
+    Player.setAge();
+    
+    // ask pronouns
+    Player.setPronouns();
 
+    // set stats
+    Player.setStats(Player.getAge());
+
+    // set profeciencies
+    Player.initualizeSkills();
+    Player.getMaturity();
+    Player.setProficiencies();
+    }
 }
