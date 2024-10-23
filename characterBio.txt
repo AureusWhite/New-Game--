@@ -24,3 +24,24 @@
   <li>You have the most freedom, but you also have the most responsibilities, like helping care for younger rejuves.</li>
   <li>You’ll need to be smart with your time, and good social skills are key to getting things done.</li>
 </ul>
+
+    <div class="container">
+        <h1>Pronouns in the Game</h1>
+        <p>In this game, you'll choose pronouns for your character. Pronouns are the words we use when we talk about someone without using their name. There are three main forms of pronouns:</p>
+        <ul>
+            <li><strong>Subjective</strong>: These pronouns are used when the character is the subject of a sentence (the one doing the action). Example: <em>They</em> are playing.</li>
+            <li><strong>Objective</strong>: These pronouns are used when the character is the object of a sentence (the one receiving the action). Example: The teacher called <em>them</em>.</li>
+            <li><strong>Possessive</strong>: These pronouns show ownership. Example: This is <em>their</em> book.</li>
+        </ul>
+        <p>Once you set your character's pronouns, the NPCs (non-player characters) will use them when interacting with or talking about you.</p>
+        <p>You can choose any pronouns you like! For example, some common pronouns are:</p>
+        <ul>
+            <li><strong>They/Them/Their</strong></li>
+            <li><strong>He/Him/His</strong></li>
+            <li><strong>She/Her/Hers</strong></li>
+            <li>Or you can create your own unique pronouns!</li>
+        </ul>
+
+        <h2>Term of Endearment</h2>
+        <p>After you pick pronouns, you'll also choose a <strong>term of endearment</strong>. This is a special, affectionate nickname that the NPCs will use for you. It can be anything you like—such as "Little Champ," "Princess," "Buddy," or something else personal and fun!</p>
+    </div>

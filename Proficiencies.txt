@@ -1,0 +1,223 @@
+
+
+<section>
+<p>Proficiencies are Skills you have mastered to a degree suitable for your rejuve age and stage of delelopment. You practiced there and now you won't fail nearly so often. Failure is a natural part growth. and proficiency is earned more quickly on the rebound. Some Proficiencies are granted on the bases of age, These are the more basic activities you will need access to in order to practice more complex skills.</p>
+
+    <h2>SOCIAL</h2>
+    <ul>
+        <li><strong>SIMPLE_INSTRUCTIONS</strong> - Follow simple instructions like "Go here," "Get that," or "Come back." Any more than that, and you might forget as tasks become more complex.</li>
+        <li><strong>PARALLEL_PLAY</strong> - Play near, but not with others. Engaged in the same activity but not in cooperation. Social play demonstrates a higher return in achievement here at Busy Beavers.</li>
+    </ul>
+
+    <h2>FINE_MOTOR</h2>
+    <ul>
+        <li><strong>DRAW</strong> - Draw simple pictures. An adult might be able to discern the object in question. This artwork might be valuable to the right person.</li>
+        <li><strong>CRAFT</strong> - Make simple craft projects like macaroni artwork and gift cards. Handwritten ones are the best.</li>
+    </ul>
+
+    <h2>GROSS_MOTOR</h2>
+    <ul>
+        <li><strong>TODDLE</strong> - Locomotion is important for navigating the facility. Most rejuves will have this skill, but some may choose not to always walk on their own.</li>
+        <li><strong>CRAWL</strong> - A less accident-prone mode of movement. Crawling or booty-scooting can train muscles that may later be used to walk or run.</li>
+    </ul>
+
+    <h2>IMAGINATION</h2>
+    <ul>
+        <li><strong>PRETEND</strong> - Pretend play is key to relearning adult skills lost in the transition or not yet restored. The brain is primed to improve these skills.</li>
+        <li><strong>PERFORM</strong> - Acting out a play or behaving well sometimes requires a performance mindset. Think less about score and more about faking it until you make it.</li>
+    </ul>
+
+    <h2>LEARNING</h2>
+    <ul>
+        <li><strong>READ</strong> - You likely can already read, but retention of this information is fleeting. Keep texts short, as two pages are more than enough.</li>
+        <li><strong>LISTEN</strong> - Listening helps improve cognitive and social skills, though it can be just as fleeting as reading.</li>
+    </ul>
+
+    <h2>EMOTIONAL</h2>
+    <ul>
+        <li><strong>EMPATHIZE</strong> - Sense distress in others and act accordingly. Not having this skill can limit the social interactions available to you.</li>
+        <li><strong>EXPRESS_DISTRESS</strong> - Express the need for care or aid when in discomfort. Crying when hurt or identifying emotions is important here.</li>
+    </ul>
+
+    <h2>SELF_CARE</h2>
+    <ul>
+        <li><strong>NAP</strong> - Take naps to restore energy, demonstrating a mature approach to self-care and avoiding frustration while restoring resilience.</li>
+        <li><strong>EAT_HELPED</strong> - You should eat in the snack area. If you need help eating to avoid making a mess, please ask for assistance.</li>
+    </ul>
+
+    <h2>COGNITIVE</h2>
+    <ul>
+        <li><strong>SOLVE</strong> - Solve problems by knowing what to do and then putting the plan into action, combining commitment and motor functions.</li>
+        <li><strong>MEMORIZE</strong> - Remember more and forget less. This proficiency is helpful for completing more complex tasks.</li>
+    </ul>
+
+    <h2>COMMUNICATION</h2>
+    <ul>
+        <li><strong>SPEAK</strong> - Use your voice for more than just screeching or giggling. Clear communication is key for success.</li>
+        <li><strong>PAYATTENTION</strong> - In conjunction with memory and listening, your ability to pay attention is crucial for daily activities.</li>
+    </ul>
+</section>
+
+<section>
+    <h3>Higher Core Skill Levels (4+)</h3>
+
+    <h4>SOCIAL</h4>
+    <ul>
+        <li><strong>BEFRIEND</strong> - Transition from playing beside others to playing with them cooperatively.</li>
+        <li><strong>SHARE</strong> - Sharing toys and taking turns improves friendships and helps with leadership roles.</li>
+    </ul>
+
+    <h4>FINE_MOTOR</h4>
+    <ul>
+        <li><strong>DRESS</strong> - Dressing yourself comes with the benefit of wearing non-uniform clothes.</li>
+        <li><strong>OPEN</strong> - Open doors and interact with complex mechanisms like vending machines.</li>
+    </ul>
+
+    <h4>GROSS_MOTOR</h4>
+    <ul>
+        <li><strong>WALK</strong> - Walking without accidents becomes easier as coordination improves.</li>
+        <li><strong>CLIMB</strong> - Climb small ladders to reach higher places like bookshelves and kitchens.</li>
+    </ul>
+
+    <h4>IMAGINATION</h4>
+    <ul>
+        <li><strong>DIRECT</strong> - Direct others in pretend games, guiding the session for fun and cooperation.</li>
+        <li><strong>CREATE</strong> - Create adventures and storylines for others to follow in pretend play.</li>
+    </ul>
+
+    <h4>LEARNING</h4>
+    <ul>
+        <li><strong>READALOUD</strong> - Reading aloud boosts learning, social skills, and shows maturity.</li>
+        <li><strong>WRITE</strong> - Writing develops naturally as a result of learning and fine motor skills.</li>
+    </ul>
+
+    <h4>EMOTIONAL</h4>
+    <ul>
+        <li><strong>SOOTHE_SELF</strong> - Calm yourself down when upset or frustrated.</li>
+        <li><strong>EXPRESS_NEEDS</strong> - Clearly express needs without having to rely on emotional outbursts.</li>
+    </ul>
+
+    <h4>SELF_CARE</h4>
+    <ul>
+        <li><strong>BATHE_SELF</strong> - Wash yourself without help.</li>
+        <li><strong>
+
+<section>
+    <h2>SOCIAL</h2>
+    <ul>
+        <li><strong>SIMPLE_INSTRUCTIONS</strong> - Follow simple instructions like "Go here," "Get that," or "Come back." Any more than that, and you might forget as tasks become more complex.</li>
+        <li><strong>PARALLEL_PLAY</strong> - Play near, but not with others. Engaged in the same activity but not in cooperation. Social play demonstrates a higher return in achievement here at Busy Beavers.</li>
+    </ul>
+
+    <h2>FINE_MOTOR</h2>
+    <ul>
+        <li><strong>DRAW</strong> - Draw simple pictures. An adult might be able to discern the object in question. This artwork might be valuable to the right person.</li>
+        <li><strong>CRAFT</strong> - Make simple craft projects like macaroni artwork and gift cards. Handwritten ones are the best.</li>
+    </ul>
+
+    <h2>GROSS_MOTOR</h2>
+    <ul>
+        <li><strong>TODDLE</strong> - Locomotion is important for navigating the facility. Most rejuves will have this skill, but some may choose not to always walk on their own.</li>
+        <li><strong>CRAWL</strong> - A less accident-prone mode of movement. Crawling or booty-scooting can train muscles that may later be used to walk or run.</li>
+    </ul>
+
+    <h2>IMAGINATION</h2>
+    <ul>
+        <li><strong>PRETEND</strong> - Pretend play is key to relearning adult skills lost in the transition or not yet restored. The brain is primed to improve these skills.</li>
+        <li><strong>PERFORM</strong> - Acting out a play or behaving well sometimes requires a performance mindset. Think less about score and more about faking it until you make it.</li>
+    </ul>
+
+    <h2>LEARNING</h2>
+    <ul>
+        <li><strong>READ</strong> - You likely can already read, but retention of this information is fleeting. Keep texts short, as two pages are more than enough.</li>
+        <li><strong>LISTEN</strong> - Listening helps improve cognitive and social skills, though it can be just as fleeting as reading.</li>
+    </ul>
+
+    <h2>EMOTIONAL</h2>
+    <ul>
+        <li><strong>EMPATHIZE</strong> - Sense distress in others and act accordingly. Not having this skill can limit the social interactions available to you.</li>
+        <li><strong>EXPRESS_DISTRESS</strong> - Express the need for care or aid when in discomfort. Crying when hurt or identifying emotions is important here.</li>
+    </ul>
+
+    <h2>SELF_CARE</h2>
+    <ul>
+        <li><strong>NAP</strong> - Take naps to restore energy, demonstrating a mature approach to self-care and avoiding frustration while restoring resilience.</li>
+        <li><strong>EAT_HELPED</strong> - You should eat in the snack area. If you need help eating to avoid making a mess, please ask for assistance.</li>
+    </ul>
+
+    <h2>COGNITIVE</h2>
+    <ul>
+        <li><strong>SOLVE</strong> - Solve problems by knowing what to do and then putting the plan into action, combining commitment and motor functions.</li>
+        <li><strong>MEMORIZE</strong> - Remember more and forget less. This proficiency is helpful for completing more complex tasks.</li>
+    </ul>
+
+    <h2>COMMUNICATION</h2>
+    <ul>
+        <li><strong>SPEAK</strong> - Use your voice for more than just screeching or giggling. Clear communication is key for success.</li>
+        <li><strong>PAYATTENTION</strong> - In conjunction with memory and listening, your ability to pay attention is crucial for daily activities.</li>
+    </ul>
+</section>
+
+<section>
+    <h3>Higher Core Skill Levels (4+)</h3>
+
+    <h4>SOCIAL</h4>
+    <ul>
+        <li><strong>BEFRIEND</strong> - Transition from playing beside others to playing with them cooperatively.</li>
+        <li><strong>SHARE</strong> - Sharing toys and taking turns improves friendships and helps with leadership roles.</li>
+    </ul>
+
+    <h4>FINE_MOTOR</h4>
+    <ul>
+        <li><strong>DRESS</strong> - Dressing yourself comes with the benefit of wearing non-uniform clothes.</li>
+        <li><strong>OPEN</strong> - Open doors and interact with complex mechanisms like vending machines.</li>
+    </ul>
+
+    <h4>GROSS_MOTOR</h4>
+    <ul>
+        <li><strong>WALK</strong> - Walking without accidents becomes easier as coordination improves.</li>
+        <li><strong>CLIMB</strong> - Climb small ladders to reach higher places like bookshelves and kitchens.</li>
+    </ul>
+
+    <h4>IMAGINATION</h4>
+    <ul>
+        <li><strong>DIRECT</strong> - Direct others in pretend games, guiding the session for fun and cooperation.</li>
+        <li><strong>CREATE</strong> - Create adventures and storylines for others to follow in pretend play.</li>
+    </ul>
+
+    <h4>LEARNING</h4>
+    <ul>
+        <li><strong>READALOUD</strong> - Reading aloud boosts learning, social skills, and shows maturity.</li>
+        <li><strong>WRITE</strong> - Writing develops naturally as a result of learning and fine motor skills.</li>
+    </ul>
+
+    <h4>EMOTIONAL</h4>
+    <ul>
+        <li><strong>SOOTHE_SELF</strong> - Calm yourself down when upset or frustrated.</li>
+        <li><strong>EXPRESS_NEEDS</strong> - Clearly express needs without having to rely on emotional outbursts.</li>
+    </ul>
+
+    <h4>SELF_CARE</h4>
+    <ul>
+        <li><strong>BATHE_SELF</strong> - Wash yourself without help.</li>
+        <li><strong>BRUSH_SELF</strong> - Brush your teeth or hair with minimal assistance.</li>
+    </ul>
+
+    <h4>COGNITIVE</h4>
+    <ul>
+        <li><strong>SOLVE_MEDIUM</strong> - Solve medium-level problems with ease.</li>
+        <li><strong>COMPLEX_INSTRUCTIONS</strong> - Follow and execute complex, multi-step instructions.</li>
+    </ul>
+
+    <h4>COMMUNICATION</h4>
+    <ul>
+        <li><strong>PUBLIC_SPEAK</strong> - Speak confidently in front of groups.</li>
+        <li><strong>LISTEN</strong> - Listen actively and retain information better.</li>
+    </ul>
+</section>
+
+<section>
+    <h3>Advanced Core Skill Levels</h3>
+    Will come as a natural part of development, please have patience.
+</section>
+ 

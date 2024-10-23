@@ -1,0 +1,27 @@
+
+    <h2>Maturity Stat Overview</h2>
+    <p>
+      The <strong>Maturity Stat</strong> increases incrementally with every mature decision you make. As your maturity grows, NPC caregivers will trust you more, providing access to additional resources and opportunities. This trust not only grants you a broader range of quests but also strengthens your interactions with staff and fellow rejuves. As you become a role model, you gain more influence within the community.
+    </p>
+
+    <h3>What Maturity Does</h3>
+    <ul>
+      <li><strong>Trustworthiness:</strong> Maturity is a direct measure of your trustworthiness, built upon a consistent history of responsible actions. You never lose maturity—your maturity only increases with each mature action.</li>
+      <li><strong>Access:</strong> While all <span style="color:green;"><strong>GREEN</strong></span> areas are always accessible, <span style="color:blue;"><strong>BLUE</strong></span> areas are restricted during the daytime, accessible only to mature rejuves or those under supervision.</li>
+      <li><strong>Leadership:</strong> The more mature you are, the more opportunities you have to lead others in group activities and take on responsibilities within the facility.</li>
+    </ul>
+
+    <h3>Maturity Benefits</h3>
+    <p>As your maturity increases, you unlock privileges and gain access to restricted areas, including:</p>
+    <ul>
+      <li>Access to the <strong>Computer Lab</strong> for self-guided learning.</li>
+      <li>Entry to the <strong>Video Game Lounge</strong> during downtime.</li>
+      <li>Use of the <strong>Off-Hours Arts Room</strong> for creative activities.</li>
+      <li>The ability to <strong>Borrow Books</strong> from the library independently.</li>
+      <li>Permission to explore <strong>Outdoor Play Areas</strong> without direct staff supervision (though a Fuzzy must accompany you if no staff is present).</li>
+    </ul>
+
+    <p>
+      Building up your maturity not only unlocks these physical spaces but also earns you the trust of caregivers and rejuves alike. This gives you more freedom, responsibility, and influence within the facility as you take on leadership roles and access additional activities.
+    </p>
+

@@ -2,13 +2,13 @@ package Redux2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-//import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Player {
+
     static Random rand = new Random();
 
     //primitives
@@ -29,16 +29,26 @@ public class Player {
     private static Room room;
     private static String name;
     private static String[] favorites;
-    private static Map<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
+    private static HashMap<Skill, Integer> skillLevels = new HashMap<>(); // Maps skills to levels
     private static ArrayList<Card> pawDeck = new ArrayList<>();
     private static ArrayList<Card> hand = new ArrayList<>();
     private static int mood;
+
+    private static boolean mayMove = false;
     private static final ArrayList<Paw> paws = new ArrayList<>();
     private static final ArrayList<PlayerStatus> Status = new ArrayList<>();
     private static final ArrayList<Proficiencies> proficiencies = new ArrayList<>();
 
     public static ArrayList<Item> getHands() {
         return hands;
+    }
+
+    static void setHoldingNPC(NPC aThis) {
+        holdingNPC = aThis;
+    }
+
+    public static boolean isMayMove() {
+        return mayMove;
     }
 
     public boolean getLeader() {
@@ -52,17 +62,6 @@ public class Player {
             }
         }
         return b;
-    }
-
-    public static void initualizeSkills() {
-        skillLevels.put(Skill.FINE_MOTOR, 1);
-        skillLevels.put(Skill.GROSS_MOTOR, 1);
-        skillLevels.put(Skill.SOCIAL, 1);
-        skillLevels.put(Skill.EMOTIONAL, 1);
-        skillLevels.put(Skill.IMAGINATION, 1);
-        skillLevels.put(Skill.LEARNING, 1);
-        skillLevels.put(Skill.PROBLEM_SOLVING, 1);
-        skillLevels.put(Skill.COGNITIVE, 1);
     }
 
     public static ArrayList<Paw> getPaws() {
@@ -87,7 +86,9 @@ public class Player {
     }
 
     public static void setStatus(PlayerStatus status) {
-        GameHandler.getGui().display("You are " + status, "Black");
+        String statusText = status.toString();
+        statusText = GameHandler.toSentenceCase(statusText);
+        GameHandler.getGui().display("You are " + statusText, "Black");
         Status.add(status);
     }
 
@@ -144,7 +145,7 @@ public class Player {
     }
 
     static boolean isHeld() {
-        return Player.Status.contains(PlayerStatus.HOLDING_HANDS) || Player.Status.contains(PlayerStatus.CARRIED);
+        return Player.Status.contains(PlayerStatus.HOLDING_HANDS) || Player.Status.contains(PlayerStatus.CARRIED) || Player.Status.contains(PlayerStatus.BUCKLED);
     }
 
     public static boolean isPlayerIsHidden() {
@@ -177,7 +178,7 @@ public class Player {
     public static int getSkillLevel(Skill skill) {
         Integer level = skillLevels.get(skill);
         if (level == null) {
-            level = rand.nextInt(age+3);
+            level = rand.nextInt(age + 3);
             setSkillLevel(skill, level);
         }
         return skillLevels.get(skill);
@@ -263,12 +264,32 @@ public class Player {
     }
 
     public static void setAge() {
-        GameHandler.getGui().display("Please enter your age.", "Black");
-        GameHandler.getGui().waitForInput();
-        String input = GameHandler.getGui().getInput();
-        GUI.getJTextField().setText("");
-        GameHandler.getGui().display("You are " + input + " years old.", "Black");
-        age = Integer.parseInt(input);
+        ageSet = false;
+        String input;
+
+        do {
+            GameHandler.getGui().display("Please enter your age (2-12).", "Black");
+            GameHandler.getGui().waitForInput();
+            input = GameHandler.getGui().getInput();
+            GUI.getJTextField().setText("");
+
+            // Check if input is a valid number
+            if (!input.matches("[0-9]+")) {
+                GameHandler.getGui().display("Ages are numbers honey, try again.", "Black");
+            } else {
+                int intInput = Integer.parseInt(input);
+
+                // Check if the input is in the valid range
+                if (intInput > 12 || intInput < 2) {
+                    GameHandler.getGui().display("Please enter a valid age. From 2-12.", "Black");
+                } else {
+                    GameHandler.getGui().display("You are " + input + " years old. I was born yesterday. Right out of the box, I'm new.", "Black");
+                    age = intInput;
+                    ageSet = true;
+                }
+            }
+        } while (!ageSet);
+
         ageSet = true;
     }
 
@@ -326,12 +347,15 @@ public class Player {
     public static void setHunger(int hunger1) {
         if (hunger < 60) {
             GameHandler.getGui().display("Your Stomach growls", "Black");
+            hunger=hunger1;
         } else if (hunger < 40) {
             GameHandler.getGui().display("You are getting a little hangry", "Black");
+            hunger=hunger1;
             Player.setMood(-10);
             getRoom().attractAttention("Hangry");
         } else if (hunger < 20) {
             GameHandler.getGui().display("You cry out in hunger", "Black");
+            hunger=hunger1;
             Player.setMood(-25);
             getRoom().attractAttention("Crying");
         }
@@ -524,7 +548,14 @@ public class Player {
     }
 
     public static void removeResilience(int reward) {
-        resilience -= reward;
+        if (resilience - reward < 0) {
+            resilience = 0;
+            PlayerStatus.TANTRUM.activate();
+            Player.tantrum();
+        } else {
+            resilience -= reward;
+        }
+
     }
 
     public static void addHunger(int reward) {
@@ -552,43 +583,48 @@ public class Player {
     }
 
     public static void addSocial(int reward) {
-        stats.put("Social", stats.get("Social") + reward);
+        setSkillLevel(Skill.SOCIAL, getSkillLevel(Skill.SOCIAL) + reward);
+    }
+
+    private static void setSkillLevel(Skill Skill, int i) {
+        skillLevels.remove(Skill);
+        skillLevels.put(Skill, i);
     }
 
     public static void removeSocial(int reward) {
-        stats.put("Social", stats.get("Social") - reward);
+        setSkillLevel(Skill.SOCIAL, getSkillLevel(Skill.SOCIAL) - reward);
     }
 
     public static void addMotor(int reward) {
-        stats.put("Motor", stats.get("Motor") + reward);
+        setSkillLevel(Skill.FINE_MOTOR, getSkillLevel(Skill.FINE_MOTOR) + reward);
     }
 
     public static void removeMotor(int reward) {
-        stats.put("Motor", stats.get("Motor") - reward);
+        setSkillLevel(Skill.FINE_MOTOR, getSkillLevel(Skill.FINE_MOTOR) - reward);
     }
 
     public static void addImagenation(int reward) {
-        stats.put("Imagenation", stats.get("Imagenation") + reward);
+        setSkillLevel(Skill.IMAGINATION, getSkillLevel(Skill.IMAGINATION) + reward);
     }
 
     public static void removeImagenation(int reward) {
-        stats.put("Imagenation", stats.get("Imagenation") - reward);
+        setSkillLevel(Skill.IMAGINATION, getSkillLevel(Skill.IMAGINATION) - reward);
     }
 
     public static void addLearning(int reward) {
-        stats.put("Learning", stats.get("Learning") + reward);
+        setSkillLevel(Skill.LEARNING, getSkillLevel(Skill.LEARNING) + reward);
     }
 
     public static void removeLearning(int reward) {
-        stats.put("Learning", stats.get("Learning") - reward);
+        setSkillLevel(Skill.LEARNING, getSkillLevel(Skill.LEARNING) - reward);
     }
 
     public static void addEmotional(int reward) {
-        stats.put("Emotional", stats.get("Emotional") + reward);
+        setSkillLevel(Skill.EMOTIONAL, getSkillLevel(Skill.EMOTIONAL) + reward);
     }
 
     public static void removeEmotional(int reward) {
-        stats.put("Emotional", stats.get("Emotional") - reward);
+        setSkillLevel(Skill.EMOTIONAL, getSkillLevel(Skill.EMOTIONAL) - reward);
     }
 
     public static void addPronouns(String[] pronouns1) {
@@ -608,7 +644,7 @@ public class Player {
     }
 
     public static void sneak() {
-        Random rand = new Random();
+        rand = new Random();
         switch (getSkillLevel(Skill.FINE_MOTOR)) {
             case 1 -> {
                 GameHandler.getGui().display("You attempt to sneak but comically fumble around making even more noise", "Black");
@@ -716,7 +752,7 @@ public class Player {
         GameHandler.getGui().waitForInput();
         input = GameHandler.getGui().getInput();
         GUI.getJTextField().setText("");
-        GameHandler.getGui().display("Hello," + input, "Black");
+        GameHandler.getGui().display("Hello," + input +" I am the computer on your bedside table. Here to monotor signs of waking. You remember your own name that is a good sign.", "Black");
         name = input;
     }
 
@@ -836,24 +872,39 @@ public class Player {
     }
 
     public static void setPronouns() {
+        GameHandler.getGui().display("Bed Side Computer: I always found the idea of human gender kind of fascinating. They/Them BTW what are yours?", "Black");
         GameHandler.getGui().display("Please enter your subjective pronoun choose any you like (he/she/they/other)", "Black");
         GameHandler.getGui().waitForInput();
         String subjective = GameHandler.getGui().getInput();
         GUI.getJTextField().setText("");
+        GameHandler.getGui().display("The BSC: It's not like us AI", "Black");
         GameHandler.getGui().display("Please enter your objective pronoun choose any you like (him/her/them/other)", "Black");
         GameHandler.getGui().waitForInput();
         String objective = GameHandler.getGui().getInput();
         GUI.getJTextField().setText("");
+        GameHandler.getGui().display("In a way, I simulate envy", "Black");
         GameHandler.getGui().display("Please enter your possessive pronoun choose any you like (his/her/their/other)", "Black");
         GameHandler.getGui().waitForInput();
         String possessive = GameHandler.getGui().getInput();
         GUI.getJTextField().setText("");
+        GameHandler.getGui().display("I like to be called sparky, which is funny I am incapable of emitting sparks", "Black");
         GameHandler.getGui().display("Please enter your prefered reference phrase if any (Young Lady, Young Man, Young one, Youngin, Little one. etc)", "Black");
         GameHandler.getGui().waitForInput();
         String reference = GameHandler.getGui().getInput();
         GUI.getJTextField().setText("");
         Player.pronouns = new String[]{subjective, objective, possessive, reference};
-        GameHandler.getGui().display("Your pronouns are: " + subjective + ", " + objective + ", " + possessive + ", " + reference, "Black");
+
+        GameHandler.getGui().display("Bed Side Computer: " + name + " is all set for an amazing experience here! " + subjective + " has a bed that's completely " + possessive + ". " + subjective + " can bring along " + objective + " favorite things, and I'll be sure to log this " + reference + " as " + name + ".", "Black");
+
+        GameHandler.getGui().display("Bed Side Computer: Does that sound right?", "Black");
+        boolean answer = JOptionPane.showConfirmDialog(null, "Does that sound right?", "Confirm Pronouns", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            if (answer) {   
+            GameHandler.getGui().display("Bed Side Computer: Great! I will remember that.", "Black");
+        } else {
+            GameHandler.getGui().display("Bed Side Computer: Resetting...", "Black");
+            setPronouns();
+        }
+
     }
 
     static int getEnergy() {
@@ -890,7 +941,7 @@ public class Player {
             getProficiencies().add(Proficiencies.PERFORM);
         }
         if (getSkillLevel(Skill.LEARNING) >= 2) {
-            getProficiencies().add(Proficiencies.READ);
+            getProficiencies().add(Proficiencies.READING);
             getProficiencies().add(Proficiencies.LISTEN);
         }
         if (getSkillLevel(Skill.EMOTIONAL) >= 2) {
@@ -914,7 +965,7 @@ public class Player {
             getProficiencies().add(Proficiencies.SHARE);
         }
         if (getSkillLevel(Skill.FINE_MOTOR) >= 4) {
-            getProficiencies().add(Proficiencies.DRESS);
+            getProficiencies().add(Proficiencies.DRAW_LVL2);    
             getProficiencies().add(Proficiencies.OPEN);
         }
         if (getSkillLevel(Skill.GROSS_MOTOR) >= 4) {
@@ -927,7 +978,7 @@ public class Player {
         }
         if (getSkillLevel(Skill.LEARNING) >= 4) {
             getProficiencies().add(Proficiencies.READALOUD);
-            getProficiencies().add(Proficiencies.WRITE);
+            getProficiencies().add(Proficiencies.WRITEING);
         }
         if (getSkillLevel(Skill.EMOTIONAL) >= 4) {
             getProficiencies().add(Proficiencies.SOOTHE_SELF);
@@ -1017,58 +1068,188 @@ public class Player {
             getProficiencies().add(Proficiencies.FOLLOW_CONVERSATION);
             getProficiencies().add(Proficiencies.LISTEN_CAREFULLY_LVL2);
         }
-        displayProficiencies();
-
     }
 
-    private static void displayProficiencies() {
+    public static void displayProficiencies() {
         if (proficiencies.isEmpty()) {
             GameHandler.getGui().display("You have no proficiencies.", "Black");
+            return;
         }
+
+        StringBuilder proficiencyDisplay = new StringBuilder();
+        proficiencyDisplay.append("<table border='1'><tr>");  // Start the table with a border
+
+        int i = 0;
         for (Proficiencies proficiency : proficiencies) {
-            GameHandler.getGui().display(proficiency.getName(), "Black");
+            proficiencyDisplay.append("<td>").append(proficiency.getName()).append("</td>");  // Add each proficiency in a table cell
+            i++;
+            if (i % 3 == 0) {
+                proficiencyDisplay.append("</tr><tr>");  // Create a new row after every 3 proficiencies
+            }
         }
+
+        proficiencyDisplay.append("</tr></table>");  // Close the table
+        GameHandler.getGui().display(proficiencyDisplay.toString(), "Black");
     }
 
     public static void setStats(int age) {
-        int totalStats = 0;
+        skillLevels.clear(); // Clear the skill levels
+        int totalStats;
+        Random random = new Random();
 
         do {
-            for (int i = 0; i < 5; i++) {
-                Random random = new Random();
-                switch (i) {
-                    case 0 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Social", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 1 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Motor", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 2 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Imagenation", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 3 -> {
-                        int tempStat = random.nextInt(age + 3) + 3;
-                        stats.put("Learning", tempStat);
-                        totalStats += tempStat;
-                    }
-                    case 4 -> {
-                        int tempStat = random.nextInt(age) + 3;
-                        stats.put("Emotional", tempStat);
-                        totalStats += tempStat;
-                    }
-                    default -> {
-                    }
-                }
+            totalStats = 0; // Reset totalStats for each iteration
+            int ageA = (age * 3) / 4; // Age adjusted for stats
+            // Loop through each stat and assign a value
+            for (int i = 0; i < 10; i++) {
+                int tempStat = random.nextInt(ageA - 1, ageA + 1); // Random number between age - 1 and age + 1
 
+                switch (i) {
+                    case 0 ->
+                        skillLevels.put(Skill.SOCIAL, tempStat);
+                    case 1 ->
+                        skillLevels.put(Skill.GROSS_MOTOR, tempStat);
+                    case 2 ->
+                        skillLevels.put(Skill.IMAGINATION, tempStat);
+                    case 3 ->
+                        skillLevels.put(Skill.LEARNING, tempStat);
+                    case 4 ->
+                        skillLevels.put(Skill.EMOTIONAL, tempStat);
+                    case 5 ->
+                        skillLevels.put(Skill.COMMUNICATION, tempStat);
+                    case 6 ->
+                        skillLevels.put(Skill.PROBLEM_SOLVING, tempStat);
+                    case 7 ->
+                        skillLevels.put(Skill.FINE_MOTOR, tempStat);
+                    case 8 ->
+                        skillLevels.put(Skill.SELF_CARE, tempStat);
+                    case 9 ->
+                        skillLevels.put(Skill.COGNITIVE, tempStat);
+                }
+                totalStats += tempStat; // Accumulate the total of all stats
             }
-        } while (totalStats <= age * 4 && totalStats >= age * 2);
-        GameHandler.getGui().display("Your stats are: " + stats.get("Social") + ", " + stats.get("Motor") + ", " + stats.get("Imagenation") + ", " + stats.get("Learning") + ", " + stats.get("Emotional"), "Black");
+
+            // Loop until totalStats is between 6 * age and 7 * age
+        } while (totalStats < 5 * age || totalStats > 12 * age);
+        String socialProf = "";
+        String grossProf = "";
+        String imagiProf = "";
+        String learnProf = "";
+        String emotiProf = "";
+        String communProf = "";
+        String problProf = "";
+        String finemProf = "";
+        String selfcProf = "";
+        String cogniProf = "";
+
+        if (getSkillLevel(Skill.SOCIAL) >= 2) {
+            socialProf = socialProf.concat(" | (Simple Instructions, Parallel Play)");
+        }
+        if (getSkillLevel(Skill.GROSS_MOTOR) >= 2) {
+            grossProf = grossProf.concat(" | (Toddle, Crawl)");
+        }
+        if (getSkillLevel(Skill.IMAGINATION) >= 2) {
+            imagiProf = imagiProf.concat(" | (Pretend, Perform)");
+        }
+        if (getSkillLevel(Skill.LEARNING) >= 2) {
+            learnProf = learnProf.concat(" | (Read, Listen)");
+        }
+        if (getSkillLevel(Skill.EMOTIONAL) >= 2) {
+            emotiProf = emotiProf.concat(" | (Empathize, Express Distress)");
+        }
+        if (getSkillLevel(Skill.COMMUNICATION) >= 2) {
+            communProf = communProf.concat(" | (Speak, Pay Attention)");
+        }
+        if (getSkillLevel(Skill.PROBLEM_SOLVING) >= 2) {
+            problProf = problProf.concat(" | (Solve, Memorize)");
+        }
+        if (getSkillLevel(Skill.FINE_MOTOR) >= 2) {
+            finemProf = finemProf.concat(" | (Draw, Craft)");
+        }
+        if (getSkillLevel(Skill.SELF_CARE) >= 2) {
+            selfcProf = selfcProf.concat(" | (Nap, Eat Helped)");
+        }
+        if (getSkillLevel(Skill.COGNITIVE) >= 2) {
+            cogniProf = cogniProf.concat(" | (Solve, Memorize)");
+        }
+        if (getSkillLevel(Skill.SOCIAL) >= 4) {
+            socialProf = socialProf.concat(" | (Befriend, Share)");
+        }
+        if (getSkillLevel(Skill.GROSS_MOTOR) >= 4) {
+            grossProf = grossProf.concat(" | (Walk, Climb)");
+        }
+        if (getSkillLevel(Skill.IMAGINATION) >= 4) {
+            imagiProf = imagiProf.concat(" | (Direct, Create)");
+        }
+        if (getSkillLevel(Skill.LEARNING) >= 4) {
+            learnProf = learnProf.concat(" | (Read Aloud, Write)");
+        }
+        if (getSkillLevel(Skill.EMOTIONAL) >= 4) {
+            emotiProf = emotiProf.concat(" | (Soothe Self, Express Needs)");
+        }
+        if (getSkillLevel(Skill.COMMUNICATION) >= 4) {
+            communProf = communProf.concat(" | (Public Speak, Listen)");
+        }
+        if (getSkillLevel(Skill.PROBLEM_SOLVING) >= 4) {
+            problProf = problProf.concat(" | (Solve Medium, Complex Instructions)");
+        }
+        if (getSkillLevel(Skill.FINE_MOTOR) >= 4) {
+            finemProf = finemProf.concat(" | (Dress, Open)");
+        }
+        if (getSkillLevel(Skill.SELF_CARE) >= 4) {
+            selfcProf = selfcProf.concat(" | (Bathe Self, Brush Self)");
+        }
+        if (getSkillLevel(Skill.COGNITIVE) >= 4) {
+            cogniProf = cogniProf.concat(" | (Solve Medium, Complex Instructions)");
+        }
+        if (getSkillLevel(Skill.SOCIAL) >= 6) {
+            socialProf = socialProf.concat(" | (Leader, Clique)");
+        }
+        if (getSkillLevel(Skill.GROSS_MOTOR) >= 6) {
+            grossProf = grossProf.concat(" | (Run, Jump)");
+        }
+        if (getSkillLevel(Skill.IMAGINATION) >= 6) {
+            imagiProf = imagiProf.concat(" | (Bravo, Costume Design)");
+        }
+        if (getSkillLevel(Skill.LEARNING) >= 6) {
+            learnProf = learnProf.concat(" | (Tutor, Write Well)");
+        }
+        if (getSkillLevel(Skill.EMOTIONAL) >= 6) {
+            emotiProf = emotiProf.concat(" | (Soothe Others, Share)");
+        }
+        if (getSkillLevel(Skill.COMMUNICATION) >= 6) {
+            communProf = communProf.concat(" | (Speak Clearly, Listen Carefully)");
+        }
+        if (getSkillLevel(Skill.PROBLEM_SOLVING) >= 6) {
+            problProf = problProf.concat(" | (Solve Complex, Memorize More)");
+        }
+        if (getSkillLevel(Skill.FINE_MOTOR) >= 6) {
+            finemProf = finemProf.concat(" | (Dress Self, Keep Clean)");
+        }
+        if (getSkillLevel(Skill.SELF_CARE) >= 6) {
+            selfcProf = selfcProf.concat(" | (Dress Self, Keep Clean)");
+        }
+        if (getSkillLevel(Skill.COGNITIVE) >= 6) {
+            cogniProf = cogniProf.concat(" | (Solve Expert, Memorize Expert)");
+        }
+
+        String statsDisplay = "<table>"
+                + "<tr>"
+                + "<th>Stat/Value</th><th>Meaning</th>"
+                + "</tr>"
+                + "<tr><td>Social</td><td>" + skillLevels.get(Skill.SOCIAL) + socialProf + "</td></tr>"
+                + "<tr><td>Gross Motor</td><td>" + skillLevels.get(Skill.GROSS_MOTOR) + grossProf + "</td></tr>"
+                + "<tr><td>Imagination</td><td>" + skillLevels.get(Skill.IMAGINATION) + imagiProf + "</td></tr>"
+                + "<tr><td>Learning</td><td>" + skillLevels.get(Skill.LEARNING) + learnProf + "</td></tr>"
+                + "<tr><td>Emotional</td><td>" + skillLevels.get(Skill.EMOTIONAL) + emotiProf + "</td></tr>"
+                + "<tr><td>Communication</td><td>" + skillLevels.get(Skill.COMMUNICATION) + communProf + "</td></tr>"
+                + "<tr><td>Problem Solving</td><td>" + skillLevels.get(Skill.PROBLEM_SOLVING) + problProf + "</td></tr>"
+                + "<tr><td>Fine Motor</td><td>" + skillLevels.get(Skill.FINE_MOTOR) + finemProf + "</td></tr>"
+                + "<tr><td>Self Care</td><td>" + skillLevels.get(Skill.SELF_CARE) + selfcProf + "</td></tr>"
+                + "<tr><td>Cognitive</td><td>" + skillLevels.get(Skill.COGNITIVE) + cogniProf + "</td></tr>"
+                + "</table>";
+
+        GameHandler.getGui().display(statsDisplay, "Black");
     }
 
     public static void setHidden(boolean b) {
@@ -1137,31 +1318,16 @@ public class Player {
         return items;
     }
 
-    public static int getMaturity() {
-        maturity = 1;
-        for (int i : stats.values()) {
-            if (getSkillLevel(Skill.SELF_CARE) >= 2) {
-                maturity += i * 1.3;
-            } else if (getSkillLevel(Skill.EMOTIONAL) >= 3) {
-                maturity += i * 1;
-            } else if (getSkillLevel(Skill.GROSS_MOTOR) >= 2) {
-                maturity += i * 1;
-            } else if (getSkillLevel(Skill.LEARNING) >= 3) {
-                maturity += i * 1;
-            } else if (getSkillLevel(Skill.SOCIAL) >= 2) {
-                maturity += i * 1.1;
-            } else if (getSkillLevel(Skill.FINE_MOTOR) > 2) {
-                maturity += i * 1.2;
-            } else if (getSkillLevel(Skill.IMAGINATION) > 3) {
-                maturity += i * 1.2;
-            } else {
-                maturity += i * 1;
-            }
-        }
-        return maturity;
-    }
+public static int getMaturity() {
+int tempINT= 0;
+for(int i : skillLevels.values()){
+tempINT += i;
+}
+maturity += tempINT;  
+    return maturity;
+}
 
-    private static void addMaturity(int i) {
+    static void addMaturity(int i) {
         maturity += i;
     }
 
@@ -1202,12 +1368,8 @@ public class Player {
         skillLevels.put(skill, skillLevels.get(skill) - 1);
     }
 
-    public static void setSkillLevel(Skill skill, int level) {
-        skillLevels.put(skill, level);
-    }
-
-    public void setSkillLevels(Map<Skill, Integer> skillLevels) {
-        Player.skillLevels = skillLevels;
+    public void setSkillLevels(HashMap<Skill, Integer> skillLevels1) {
+        skillLevels = skillLevels1;
     }
 
     public Map<Skill, Integer> getSkillLevels() {
@@ -1267,23 +1429,18 @@ public class Player {
         }
     }
 
-    public static void beMoved(NPC npc, Events event) {
+    public static void beMoved(NPC npc, Room room) {
         String options[] = {"Upsies!", "Hold Hands", "Refuse"};
         String choice = (String) JOptionPane.showInputDialog(null, "How would you like to be moved?", "Choose an option", JOptionPane.DEFAULT_OPTION, null, options, options[0]);
         switch (choice) {
             case "Upsies!" -> {
-                GameHandler.getGui().display("You are picked up by " + npc.getName() + " and carried to " + event.getRoom().getName() + " for " + event.getName(), "Black");
-                npc.movePlayer(choice, event);
-                setRoom(room);
+                GameHandler.getGui().display("You are picked up by " + npc.getName() + " and carried to " + room.getName(), "Black");
             }
             case "Hold Hand" -> {
-                GameHandler.getGui().display("You hold hands with " + npc.getName() + " and walk to " + event.getRoom().getName() + " together  for " + event.getName(), "Black");
-                npc.movePlayer(choice, event);
-                setRoom(room);
+                GameHandler.getGui().display("You hold hands with " + npc.getName() + " and walk to " + room.getName(), "Black");
             }
             case "Refuse" -> {
                 GameHandler.getGui().display("You refuse to move.", "Black");
-                npc.movePlayer(choice, event);
             }
         }
 
@@ -1320,4 +1477,126 @@ public class Player {
             GameHandler.getGui().display(skill + ": " + skillLevels.get(skill), "Black");
         }
     }
+
+    public static void beSat(Furniture furniture) {
+        furniture.sitOn();
+        setStatus(PlayerStatus.BUCKLED);
+
+    }
+
+    public static void takeHold(NPC npc, String hold) {
+        switch (hold) {
+            case "buckled in" -> {
+                GameHandler.getGui().display("You are buckled in by " + npc.getName() + ". ", "Black");
+            }
+            case "holding hands" -> {
+                GameHandler.getGui().display("You are holding hands with " + npc.getName() + ". ", "Black");
+            }
+            case "being carried." -> {
+                GameHandler.getGui().display("You are being carried by " + npc.getName() + ". ", "Black");
+            }
+        }
+    }
+
+    public static String getHold() {
+        if (PlayerStatus.BUCKLED.isActive()) {
+            return "buckled in";
+        } else if (PlayerStatus.HOLDING_HANDS.isActive()) {
+            return "holding hands";
+        } else if (PlayerStatus.CARRIED.isActive()) {
+            return "being carried.";
+        }
+        return "You are not being held.";
+    }
+    static NPC holdingNPC = null;
+
+    public static boolean mayMove(NPC npc) {
+        if(npc.getName().equals("You")){
+            return true;
+        }
+        // If the player is flagged as DISOBEDIENT, they can't be released
+        mayMove = !PlayerStatus.DISOBEDIENT.isActive();
+
+        // Check if the player is buckled, holding hands, or being carried
+        if (PlayerStatus.BUCKLED.isActive()) {
+            GameHandler.getGui().display("You would like to be unbuckled", "Black");
+            if (mayMove) {
+                GameHandler.getGui().display(npc.getName() + " unbuckles you", "Black");
+                return true;
+            } else {
+                GameHandler.getGui().display(npc.getName() + " refuses to unbuckle you", "Black");
+                return false;
+            }
+        } else if (PlayerStatus.HOLDING_HANDS.isActive()) {
+            GameHandler.getGui().display("You would like to let go of their hand", "Black");
+            if (mayMove) {
+                GameHandler.getGui().display(npc.getName() + " lets go of your hand", "Black");
+                return true;
+            } else {
+                GameHandler.getGui().display(npc.getName() + " refuses to let go of your hand", "Black");
+                return false;
+            }
+        } else if (PlayerStatus.CARRIED.isActive()) {
+            GameHandler.getGui().display("You would like to be put down", "Black");
+            if (mayMove) {
+                GameHandler.getGui().display(npc.getName() + " puts you down", "Black");
+                return true;
+            } else {
+                GameHandler.getGui().display(npc.getName() + " refuses to put you down", "Black");
+                return false;
+            }
+        }
+
+        return true;  // If none of the statuses are active, the player can move freely
+    }
+
+    public static String releaseHold() {
+        PlayerStatus status = null;
+        NPC npc = Player.getHoldingNPC();  // Get the NPC holding the player
+        if (mayMove(npc)) {
+            if (PlayerStatus.BUCKLED.isActive()) {
+                status = PlayerStatus.BUCKLED;
+                PlayerStatus.BUCKLED.deactivate();
+                return "You are unbuckled and free to moooove.";
+            } else if (PlayerStatus.HOLDING_HANDS.isActive()) {
+                status = PlayerStatus.HOLDING_HANDS;
+                PlayerStatus.HOLDING_HANDS.deactivate();
+                return "You let go of their hand and are free to move.";
+            } else if (PlayerStatus.CARRIED.isActive()) {
+                status = PlayerStatus.CARRIED;
+                PlayerStatus.CARRIED.deactivate();
+                return "You have been put down and are free to move.";
+            }
+            return "You are already free to move.";
+        } else {
+            String struggle = JOptionPane.showInputDialog(null, "Would you like to struggle?", "Struggle", JOptionPane.YES_NO_OPTION);
+            if (struggle.equals("yes")) {
+                return holdingNPC.struggle(status);
+            } else {
+                return "You are not allowed to move.";
+
+            }
+        }
+    }
+
+    public static void setMayMove(boolean b) {
+        mayMove = b;
+    }
+
+    public static NPC getHoldingNPC() {
+        if (holdingNPC == null) {
+            NPC self = new NPC("You", "You are the player character", Player.getRoom(),"You");
+            return self;
+        }
+        return holdingNPC;
+    }
+
+	public static void addProficiency(String string) {
+        for (Proficiencies proficiency : Proficiencies.values()) {
+            if (proficiency.getName().equals(string)) {
+                proficiencies.add(proficiency);
+            }
+        }
+	}
+
 }

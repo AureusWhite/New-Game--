@@ -45,8 +45,8 @@ class Commands {
                         GameHandler.getGui().display(equips.getName(), "Black");
                     }
                 }
-                case "cry" -> {
-
+                case "besatin" -> {
+                    Player.beSat(GameHandler.getFurnitureByName("Booster Seat"));
                 }
                 case "craft" -> {
                     String[] items = Player.getRoom().getItemChoices();
@@ -75,10 +75,12 @@ class Commands {
                 case "play" -> {
                     pawsAndProwess = new PawsAndProwess();
                 }
-                case "inventory" ->
-                    GameHandler.getGui().display("You checked your inventory", "Black");
-
+                case "mature" -> {
+                    Player.addMaturity(10);
+                    GameHandler.getGui().display(String.valueOf(Player.getMaturity()), "Black");
+                }
                 case "help" -> {
+                    Player.setStatus(PlayerStatus.DISOBEDIENT);
                     NPC helpingNPC = Player.getRoom().randomNPC(true);
                     if (helpingNPC == null) {
                         GameHandler.getGui().display("There is no one to help you", "Black");
@@ -89,7 +91,7 @@ class Commands {
                     switch (choice) {
                         case "Dressing" -> {
                             GameHandler.getGui().display("You asked for help with dressing", "Black");
-                            if (Player.getProficiencies().contains(Proficiencies.DRESS)) {
+                            if (Player.getProficiencies().contains(Proficiencies.DRESSING)) {
                                 GameHandler.getGui().display(helpingNPC.getName() + ": You can dress yourself...", "Black");
                             } else {
                                 GameHandler.getGui().display(helpingNPC.getName() + ": I can help you dress", "Black");
@@ -105,9 +107,10 @@ class Commands {
                             // Add logic for a hug if needed
                         }
                         case "Uppies!" -> {
+                            NPC npc = GameHandler.getNPCByName(helpingNPC.getName());
                             GameHandler.getGui().display("You asked for uppies", "Black");
-                            GameHandler.getGui().display(helpingNPC.getName() + " picked you up", "Black");
-                            Player.setStatus(PlayerStatus.CARRIED);
+                            GameHandler.getGui().display(npc.getName() + " picked you up", "Black");
+                            npc.takeHold("being carried.");
                         }
                     }
                 }

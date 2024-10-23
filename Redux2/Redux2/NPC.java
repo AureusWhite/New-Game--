@@ -1,3 +1,4 @@
+
 package Redux2;
 
 import java.text.DecimalFormat;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import javax.swing.JOptionPane;
+
 
 public class NPC extends Character {
 
@@ -27,6 +29,7 @@ public class NPC extends Character {
         return this.skillLevels;
     }
     private int npcAge;
+    private boolean holdingPlayer;
     private boolean faction;
     private final Map<Integer, Double> pRep = new HashMap<>();
     private boolean confederate;
@@ -38,9 +41,11 @@ public class NPC extends Character {
     private final HashMap<NPCStatus, Boolean> npcStatus = new HashMap<>();
     private Quest currentQuest;
     private final ArrayList<Quest> quests = new ArrayList<>();
+    private HashMap<String, Integer> playerThreshold = new HashMap<>();
 
     public NPC(String name, String description, Room room, String type) {
         super(name, description, room);
+        this.playerThreshold.put("Struggled", 3);
         this.pRep.put(0, 1.33);
         this.pRep.put(1, 1.33);
         this.pRep.put(2, 1.33);
@@ -56,6 +61,58 @@ public class NPC extends Character {
         return this.currentQuest;
     }
 
+    public void takeHold(String hold) {
+        setHoldingPlayer(true, hold);
+        Player.setHoldingNPC(this);  // Link the player with the NPC holding them
+        switch (hold) {
+            case "being carried." -> Player.setStatus(PlayerStatus.CARRIED);
+            case "holding hands." -> Player.setStatus(PlayerStatus.HOLDING_HANDS);
+            case "buckled in." -> Player.setStatus(PlayerStatus.BUCKLED);
+        }
+    }
+    public String struggle(PlayerStatus status){
+        if(Player.getSkillLevel(Skill.GROSS_MOTOR) > 5){
+            Player.removeStatus(status);
+            Player.setHoldingNPC(null);
+            Player.setMayMove(true);
+            return "You struggle and break free";
+        }else{
+            Player.removeResilience(10);
+            removePlayerThreshold(1, "Struggled");
+            
+        }
+        return "You struggle but are unable to break free";
+    }
+    
+    private void removePlayerThreshold(int i, String act) {
+        if(playerThreshold.containsKey(act)){
+            playerThreshold.put(act, playerThreshold.get(act) - i);
+            GameHandler.getGui().display("You have " + playerThreshold.get(act) + " attempts left", "black");
+            if(playerThreshold.get(act) <= 0){
+                GameHandler.playerTimeOut(i, "Not Listening" , this);
+                Player.setMayMove(true);
+                Player.setHoldingNPC(null);
+                Player.removeStatus(PlayerStatus.CARRIED);
+            }
+        }else{
+            playerThreshold.put(act, i);
+        }
+    }
+
+    private void setHoldingPlayer(boolean isHeld, String hold) {
+        PlayerStatus.DISOBEDIENT.activate();
+        holdingPlayer = isHeld;
+        Player.setMayMove(!isHeld);  // Prevent movement if being held
+        String message = switch(hold) {
+            case "being carried." -> "You are being carried by " + this.getName();
+            case "holding hands." -> "You are holding hands with " + this.getName();
+            case "buckled in." -> "You are buckled in by " + this.getName();
+            default -> "You are being held by " + this.getName();
+        };
+        GameHandler.getGui().display(message, "Black");
+    }
+    
+    
     public void wander(RoomType roomType) {
         // Get the current room of the NPC
         Room currentRoom = this.getRoom();
@@ -258,6 +315,9 @@ public class NPC extends Character {
 
     @Override
     public void setRoom(Room room) {
+        if (this.getRoom() != null) {
+        this.getRoom().removeNPC(this);
+        }
         room.addNPC(this);
         this.room = room;
     }
@@ -577,29 +637,36 @@ public class NPC extends Character {
 
     public void guidePlayer(Events event) {
         GameHandler.getGui().display(this.getName() + ": " + Player.getName() + "You need to go to the " + event.getRoom().getName() + " for " + event.getName(), "black");
-        Player.beMoved(this, event);
+        Player.beMoved(this, event.getRoom());
     }
 
-    public void movePlayer(String action, Events event) {
+    public void movePlayer(String action, Room room) {
         switch (action) {
 
             case "Upsies!" -> {
-                GameHandler.getGui().display(this.getName() + " picks you up", "black");
+               Player.beMoved(this, room);
+                Player.setRoom(room);
+                this.setRoom(room);
                 Player.setStatus(PlayerStatus.CARRIED);
+                break;
             }
             case "Downsies!" -> {
+                this.getRoom().removeNPC(this);
                 GameHandler.getGui().display(this.getName() + " puts you down", "black");
                 Player.removeStatus(PlayerStatus.CARRIED);
+                this.setRoom(room);
+                break;
             }
-            case "Hold Hand" -> {
+            case "Hold Hands" -> {
+                Player.setRoom(room);
+                this.setRoom(room);
                 GameHandler.getGui().display(this.getName() + " takes your hand", "black");
                 Player.setStatus(PlayerStatus.HOLDING_HANDS);
+                break;
             }
             case "Refuse" -> {
                 GameHandler.getGui().display(this.getName() + " takes a moment to react to your refusal", "black");
-                if (event.getImportance() < 3) {
-                    GameHandler.getGui().display(this.getName() + " is not happy with your refusal, but leaves you to miss out on " + event.getName(), "black");
-                }
+                break;
             }
         }
     }
@@ -990,7 +1057,7 @@ public class NPC extends Character {
 
     public void react(String performance) {
         GameHandler.getGui().display(this.getName() + " is impressed by your performance", "black");
-        switch (this.getName()) {  
+        switch (this.getName()) {
             case "Dr White" -> {
                 switch (performance) {
                     case "puppets" -> {
@@ -1088,5 +1155,17 @@ public class NPC extends Character {
                 }
             }
         }
+    }
+
+    public boolean isHoldingPlayer() {
+        return holdingPlayer;
+    }
+
+    public HashMap<String, Integer> getPlayerThreshold() {
+        return playerThreshold;
+    }
+
+    public void setPlayerThreshold(HashMap<String, Integer> playerThreshold) {
+        this.playerThreshold = playerThreshold;
     }
 }

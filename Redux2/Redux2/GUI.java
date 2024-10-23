@@ -208,7 +208,7 @@ public class GUI extends JFrame {
                 synchronized (this) {
                     notify();
                     if (Player.isHeld()) {
-                        GameHandler.getGui().display("You are being held and can't move", "Black");
+                        GameHandler.getGui().display("You are "+Player.getHold()+" and can't move", "Black");
                         String[] choices = {"Yes", "No"};
                         int selectedOption = JOptionPane.showOptionDialog(null,
                                 "Do you want to be put down?",
@@ -220,9 +220,13 @@ public class GUI extends JFrame {
                                 choices[0]);
                         switch (selectedOption) {
                             case 0 -> {
-                                GameHandler.getGui().display("You are put down and let go", "Black");
-                                Player.removeStatus(PlayerStatus.CARRIED);
-                                Player.removeStatus(PlayerStatus.HOLDING_HANDS);
+                                if(Player.mayMove(Player.getHoldingNPC())){
+                            
+                                }
+                                else{
+                                    GameHandler.getGui().display("You are still being held", "Black");
+                                }
+                                GameHandler.getGui().display(Player.releaseHold(), "Black");
                             }
                             case 1 -> {
                                 GameHandler.getGui().display("You are still being held", "Black");
@@ -666,6 +670,7 @@ public class GUI extends JFrame {
             updateSidePanels();
         });
         inventoryButton.addActionListener(e -> {
+            Item item;
             if (!locked) {
                 synchronized (this) {
                     notify();
@@ -683,7 +688,8 @@ public class GUI extends JFrame {
                             null,
                             inventory,
                             inventory[0]);
-                    if (selectedItem != null && !selectedItem.contains("-")) {
+                            item = GameHandler.getItemByName(selectedItem);
+                    if (item != null && !selectedItem.contains("-")) {
                         int action = JOptionPane.showOptionDialog(null,
                                 "What do you want to do with the " + selectedItem + "?",
                                 "Inventory",
@@ -695,19 +701,19 @@ public class GUI extends JFrame {
                         switch (action) {
                             case 0 -> {
                                 notify();
-                                Item item = GameHandler.getItemByName(selectedItem);
+                                
                                 item.use();
                             }
                             case 1 -> {
                                 notify();
-                                Item item = GameHandler.getItemByName(selectedItem);
+                                
                                 Player.removeItem(item);
                                 Player.getRoom().addItem(item);
                                 GameHandler.getGui().display("You drop the " + selectedItem + ".", "Black");
                             }
                             case 2 -> {
                                 notify();
-                                Item item = GameHandler.getItemByName(selectedItem);
+                                
                                 Player.removeItem(item);
                                 GameHandler.getGui().display("You throw away the " + selectedItem + ".", "Black");
                             }
@@ -758,7 +764,7 @@ public class GUI extends JFrame {
                                         npcs[0]);
                                 if (selectedNPC != null && !selectedNPC.equals("Nobody")) {
                                     NPC npc = GameHandler.getNPCByName(selectedNPC.replace(" ", "_"));
-                                    Item item = GameHandler.getItemByName(selectedItem);
+                                    
                                     npc.reciveItem(item);
                                     npc.displayInventory();
                                     Player.removeItem(item);
@@ -777,12 +783,12 @@ public class GUI extends JFrame {
                                 }
                             }
                             default -> {
+                                item.use();
                                 notify();
                                 GameHandler.getGui().display("You have nothing in your pockets", "Black");
                             }
                         }
                     } else {
-                        GameHandler.getGui().display("You can't do that.", "");
                         notify();
                     }
                 }
@@ -1049,6 +1055,7 @@ public class GUI extends JFrame {
             );
 
         takeButton.addActionListener(e -> {
+            Item item;
                 if (!locked) {
                     synchronized (this) {
                         notify();
@@ -1072,8 +1079,9 @@ public class GUI extends JFrame {
                                 null,
                                 items,
                                 items[0]);
+                        item = GameHandler.getItemByName(selectedItem);
                         if (selectedItem != null) {
-                            Item item = GameHandler.getItemByName(selectedItem);
+                            
                             if (item.getTypes().get(ItemType.TAKEABLE) == false) {
                                 GameHandler.getGui().display("You can't pick that up item.", "Black");
                                 return;

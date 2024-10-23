@@ -1,0 +1,15 @@
+<div class="scene">
+  <p><strong>*Knock, knock.*</strong></p>
+  
+  <p>Before you can respond, a plush teddy bear on wheels rolls through the door. It swivels to face you, arms outstretched for a hug, its soft voice chiming, <em>"We need to get you dressed. Don’t worry, this one’s on the house!"</em> The android, Fuzzy, stands still, its cameras temporarily off. It holds out a pair of underpants, waiting patiently for you to step in.</p>
+  
+  <p><strong>Fuzzy:</strong> <em>"Righteo, the rest is a cinch! Pants on, shirt over, socks snug, shoes tight... now look at you—ready to conquer the day!"</em></p>
+
+  <p>With a soft beep, Fuzzy signals the door as its button turns green. The door pops open, and Fuzzy extends a hand for you to hold, guiding you toward the main room.</p>
+
+  <p><em>"Things are fun here, but there’s been a little hiccup,"</em> Fuzzy explains with a cheery tone. <em>"Some naughty rejuves made quite the masterpiece of the arts room. Graffiti everywhere! At least it’s <strong>art</strong>, right?"</em> Fuzzy’s tone shifts slightly, like it's sharing a secret. <em>"Jim, the building supervisor, will eventually fix what’s broken... but we're leaving the graffiti up. Dawn says, 'Art is art,' and Jim... well, Jim says, 'Less work is less work.' And you really can’t argue with Jim, not with all the boiling toilets and everything."</em></p>
+
+  <p>Fuzzy gives a small nod as if recalling the oddities of this place before continuing, <em>"Now, it’s your first day here, and there’s a lot of paperwork. You’re excused from school today, if you’d like. I could guide you to breakfast in the snack room—it’s just on the other side of this big room. I’m your Fuzzy. There are many of us, but this one’s yours."</em></p>
+
+  <p>Fuzzy looks up at you, hopeful yet gentle. <em>"I’d like to follow you, if that’s alright... Will you be my friend?"</em></p>
+</div>

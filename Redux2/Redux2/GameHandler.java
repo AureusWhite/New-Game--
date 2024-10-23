@@ -37,8 +37,8 @@ public class GameHandler {
     }
 
     static void storyTime() {
-    Events event = Events.STORY_TIME;
-    event.display();
+        Events event = Events.STORY_TIME;
+        event.display();
     }
 
     private Container box, foodTray;
@@ -64,49 +64,52 @@ public class GameHandler {
             mouse, monitor, printer, scanner, projector, whiteboard, chalkboard,
             smartboard, globe, map, calendar, compass, protractor, nulearPotato,
             canvas, snackShop, pickapaw, pawFigure, limitedEditionPaw, questBoard,
-            mess, spill, puddle, mcGuffin, jukeBox,smashedDollOnAStick, cheese, stick, 
-            cheeseOnAStick,diaperOnAStick, rock, stickOnAStick, cheezeOnAStick, cheeseCoveredRock, 
-            diaperWithRock, diaperWithCheese, doll, dollWithCheese, dollWithDiaper, smashedDoll, 
+            mess, spill, puddle, mcGuffin, jukeBox, smashedDollOnAStick, cheese, stick,
+            cheeseOnAStick, diaperOnAStick, rock, stickOnAStick, cheezeOnAStick, cheeseCoveredRock,
+            diaperWithRock, diaperWithCheese, doll, dollWithCheese, dollWithDiaper, smashedDoll,
             smashedDollWithCheeze;
 
     private static Item foodTrayDispenser;
     private Puzzle jigSaw, crossword, shapes, colors;
-
     private Book marytherejuve, theAdventuresOfFuzzy, theAdventuresOfFuzzy2, SoYoureARejuve, theAdventuresOfFuzzy3, careforrejuves;
-
+    private Furniture boosterSeat;
     private NPC msSagely, dawn, taliber, susy, farah, drWhite, msWhite, aureus,
             jessiem, researchStudent1, researchStudent2, jimthejanitor, joy, jessief, jim, fuzzy;
+
     public void createItems() {
 
-       jigSaw = new Puzzle("Jig Saw", "A puzzle that requires fine motor skills", 0, "Jigsaw");
+        boosterSeat = new Furniture(FurnitureType.BOOSTERSEAT, "Booster Seat", "A booster seat for you to sit on.", "Sit on the booster seat.");
+        items.put("Booster Seat", boosterSeat);
+        boosterSeat.getTypes().put(ItemType.TAKEABLE, true);
+        boosterSeat.getTypes().put(ItemType.FURNITURE, true);
+        boosterSeat.getTypes().put(ItemType.SEAT, true);
+
+        jigSaw = new Puzzle("Jig Saw", "A puzzle that requires fine motor skills", 0, "Jigsaw");
         items.put("Jig Saw", jigSaw);
         jigSaw.getTypes().put(ItemType.TAKEABLE, true);
         jigSaw.getTypes().put(ItemType.PUZZLE, true);
         jigSaw.getTypes().put(ItemType.TOY, true);
 
-       crossword = new Puzzle("Crossword", "A puzzle that requires cognitive skills", 0, "Crossword");
+        crossword = new Puzzle("Crossword", "A puzzle that requires cognitive skills", 0, "Crossword");
         items.put("Crossword", crossword);
         crossword.getTypes().put(ItemType.TAKEABLE, true);
         crossword.getTypes().put(ItemType.PUZZLE, true);
         crossword.getTypes().put(ItemType.TOY, true);
 
-       shapes = new Puzzle("Shapes", "A puzzle that requires gross motor skills", 0, "Shapes");
+        shapes = new Puzzle("Shapes", "A puzzle that requires gross motor skills", 0, "Shapes");
         items.put("Shapes", shapes);
         shapes.getTypes().put(ItemType.TAKEABLE, true);
         shapes.getTypes().put(ItemType.PUZZLE, true);
         shapes.getTypes().put(ItemType.TOY, true);
 
-       colors = new Puzzle("Colors", "A puzzle that requires cognitive skills", 0, "Colors");
+        colors = new Puzzle("Colors", "A puzzle that requires cognitive skills", 0, "Colors");
         items.put("Colors", colors);
         colors.getTypes().put(ItemType.TAKEABLE, true);
         colors.getTypes().put(ItemType.PUZZLE, true);
         colors.getTypes().put(ItemType.TOY, true);
 
-
-        
         smashedDollOnAStick = new Item("Smashed Doll on a Stick", "A stick with a smashed doll on it", "Crafting", true);
         items.put("Smashed Doll on a Stick", smashedDollOnAStick);
-
 
         diaperOnAStick = new Item("Diaper on a Stick", "A stick with a diaper on it", "Crafting", true);
         items.put("Diaper on a Stick", diaperOnAStick);
@@ -365,6 +368,7 @@ public class GameHandler {
         underPants.setSlot("Underpants");
 
     }
+
     static void generateRandomQuests(Item aThis) {
         Room randomRoom = getRandomRoom(RoomType.GREEN);
         NPC randomNPC = getRandomNPC(NPCType.REJUVE);
@@ -403,7 +407,7 @@ public class GameHandler {
     public void setRequiredItems(ArrayList<Item> requiredItems) {
         this.requiredItems = requiredItems;
     }
-    
+
     public void setUpNPCs() {
         fuzzy = new NPC("Fuzzy", "A large stuffed bear, he is always around and always seems to be watching.", foyer, "companion");
         npcs.put("Fuzzy", fuzzy);
@@ -682,6 +686,13 @@ public class GameHandler {
         demoRoom.addItem(crossword);
         demoRoom.addItem(colors);
         demoRoom.addItem(shapes);
+        //demoRoom.addItem(puzzles);
+        //demoRoom.addItem(letters);
+        //demoRoom.addItem(numbers);
+        //demoRoom.addItem(animals);
+        //demoRoom.addItem(vehicles);
+        //demoRoom.addItem(people);
+        demoRoom.addItem(boosterSeat);
 
     }
 
@@ -923,35 +934,95 @@ public class GameHandler {
     }
 
     public void setupPlayer() {
-        dressPlayer();
-        Player.setMoney(9);
+        givePlayerStuff();
         setCharacterBio();
         updateStatus();
         Game.setRunning(true);
         getGui().unlockButtons();
     }
 
-    private void dressPlayer() {
-        if (!Player.getEquipment().containsKey("Underpants")) {
-            Player.equip(new Equipment("Underwear", "Clean Underwear", "underpants"), "Underpants");
-        }
-        if (!Player.getEquipment().containsKey("Top")) {
-            Player.equip(new Equipment("Uniform Shirt", "Clean Shirt", "Top"), "Top");
-        }
-        if (!Player.getEquipment().containsKey("Bottom")) {
-            Player.equip(new Equipment("Uniform Pants", "Clean Pants", "Bottom"), "Bottom");
-        }
-        if (!Player.getEquipment().containsKey("Socks")) {
-            Player.equip(new Equipment("Uniform Socks", "Clean Socks", "Socks"), "Socks");
-        }
-        if (!Player.getEquipment().containsKey("Shoes")) {
-            Player.equip(new Equipment("Uniform Shoes", "Clean Shoes", "Shoes"), "Shoes");
-        }
+    private void givePlayerStuff() {
+        Player.setMoney(9);
+        Player.setExperience(0);
+        Player.setHunger(50);
+        Player.setThirst(50);
+        Player.setResilience(100);
     }
 
+    private void dressPlayer() {
+        readFile("introFuzzy");
+
+        if (!Player.getEquipment().containsKey("Underpants")) {
+            if (Player.isPottyTrained()) {
+                Player.equip(new Equipment("Big Kid Underwear", "Classic Breif style with a design on them.", "underpants"), "Underpants");
+            } else {
+                Player.equip(diaper, "Underpants");
+
+            }
+        }
+        if (!Player.getEquipment().containsKey("Top")) {
+            Player.equip(new Equipment("Uniform Shirt", "A oversized tee with a beaver holding a paint brush on it.", "Top"), "Top");
+        }
+        if (!Player.getEquipment().containsKey("Bottom")) {
+            if (Player.isPottyTrained()) {
+                Player.equip(new Equipment("Uniform Pants", "Pants in a selection of colors", "Bottom"), "Bottom");
+            } else {
+                Equipment snapPants = new Equipment("Snap Pants", "Clean pants with bright red snaps running up one inner leg and down the other.", "Bottom");
+                snapPants.setCondition(ItemCondition.CLEAN, true);
+                snapPants.setCondition(ItemCondition.BUTTONS, true);
+                Player.equip(snapPants, "Bottom");
+            }
+            if (!Player.getEquipment().containsKey("Socks")) {
+                Player.equip(new Equipment("Uniform Socks", "White socks whith a paintbush holding cartoon beaver on them.", "Socks"), "Socks");
+            }
+            if (!Player.getEquipment().containsKey("Shoes")) {
+                if (Player.getProficiencies().contains(Proficiencies.DRESSING)) {
+                    Player.equip(new Equipment("Uniform Shoes", "Lavender colored with thick laces they are a little loose.", "Shoes"), "Shoes");
+
+                } else {
+
+                    Player.equip(new Equipment("Velcro Shoes", "Lavender colored shoes with velcro instead of laces", "Shoes"), "Shoes");
+                }
+            }
+        }
+        assignFollower(fuzzy);
+        fuzzy.setRoom(Player.getRoom());
+        fuzzy.movePlayer("Hold Hands", snackArea);
+    }
+
+    private void assignFollower(NPC requestingNPC) {
+        if (requestingNPC.getType().containsKey(NPCType.COMPANION)) {
+            String[] choices = {"Okay!", "No thanks.", "F*** off, crazy andriod"};
+
+            int choice = JOptionPane.showOptionDialog(null, "Would you like to be friends with " + requestingNPC.getName() + "?", "Friend Request", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+            switch (choice) {
+                case 0 -> {
+                    Player.setHoldingNPC(requestingNPC);
+                    PlayerStatus.HOLDING_HANDS.activate();
+                    getGui().display("You are now friends with " + requestingNPC.getName(), "Black");
+                    updateAchievementsForNPC(requestingNPC, NPCStatus.FRIEND);
+
+                }
+                case 1 -> {
+                    getGui().display("Awee, *Fuzzy looks a little sad* okay, well have fun doing things without fuzzy, I will be here if you need me." + requestingNPC.getName(), "Black");
+                    PlayerStatus.HOLDING_HANDS.deactivate();
+                    PlayerStatus.CARRIED.deactivate();
+                    Player.setHoldingNPC(null);
+                }
+                case 2 -> {
+                    getGui().display("Awee, *Fuzzy looks a little sad* okay, well have fun doing things without fuzzy, I will be here if you need me." + requestingNPC.getName(), "Black");
+                    PlayerStatus.HOLDING_HANDS.deactivate();
+                    PlayerStatus.CARRIED.deactivate();
+                    Player.setHoldingNPC(null);
+                }
+            }
+        }
+    }   
+
+
+    
     public void giveItems() {
         drWhite.addItem(box);
-
 
         foyer.addItem(box);
         foyer.addItem(trash);
@@ -1247,7 +1318,7 @@ public class GameHandler {
 
         while (!apology) {
             String response;
-            String[] acts = {"stealing", "pranking", "Vandalism", "Skipped", "Trespassing", "Sneaking", "climbed", "I don't know"};
+            String[] acts = {"stealing", "pranking", "Vandalism", "Skipped", "Trespassing", "Sneaking", "climbed", "I don't know", "Not Listening"};
             response = (String) JOptionPane.showInputDialog(null,
                     "What did you do?",
                     "Choose", JOptionPane.QUESTION_MESSAGE,
@@ -1311,6 +1382,27 @@ public class GameHandler {
                     String[] reasons = {"Fun", "Profit"};
                     response = (String) JOptionPane.showInputDialog(null,
                             "Why did you vandalize?",
+                            "Choose", JOptionPane.QUESTION_MESSAGE,
+                            null, reasons, reasons[0]);
+
+                    if (response == null) {
+                        getGui().display("You Will stay here until you give the correct answers.", "Red");
+                        attempts++;
+                        i += 5;
+                        continue;
+                    }
+                    if (response.equals("Fun") || response.equals("Profit")) {
+                        apology = true;
+                    }
+                }
+                case "Not Listening" -> {
+                    if (!act.equalsIgnoreCase("Not Listening")) {
+                        getGui().display("That's not what you did", "Red");
+                        break;
+                    }
+                    String[] reasons = {"Fun", "Profit"};
+                    response = (String) JOptionPane.showInputDialog(null,
+                            "Why did you not listen?",
                             "Choose", JOptionPane.QUESTION_MESSAGE,
                             null, reasons, reasons[0]);
 
@@ -1456,8 +1548,6 @@ public class GameHandler {
         }
         return null;
     }
-    private String[] toyBuffs = {"Social", "Motor", "Imagenation", "Learning", "Emotional"};
-    private String[] stuffyBuffs = {"Calms me down", "Helps me play pretend", "Helps me make friends", "Keeps me focused", "I dress it"};
     private RoutineManager routineManager;
 
     public GameHandler(GUI gui1, Game game1) {
@@ -1498,25 +1588,80 @@ public class GameHandler {
         }
     }
 
-    public String[] getToyBuffs() {
-        return toyBuffs;
-    }
-
-    public void setToyBuffs(String[] toyBuffs) {
-        this.toyBuffs = toyBuffs;
-    }
-
-    public String[] getStuffyBuffs() {
-        return stuffyBuffs;
-    }
-
-    public void setStuffyBuffs(String[] stuffyBuffs) {
-        this.stuffyBuffs = stuffyBuffs;
-    }
-
     public void setCharacterBio() {
         explainCharacterBio();
         setupPlayerBio();
+    }
+
+    private void getSelfCare() {
+        //are you potty trained?
+        GameHandler.getGui().display("Bed Side Computer: Are you potty trained?", "Black");
+        String response;
+        String[] dialogOptions = {"Yes", "No"};
+        response = (String) JOptionPane.showInputDialog(null,
+                "Are you potty trained?",
+                "Choose", JOptionPane.QUESTION_MESSAGE,
+                null, dialogOptions, dialogOptions[0]);
+        if (response.equalsIgnoreCase("No")) {
+            Player.setPottyTrained(false);
+        } else {
+            Player.setPottyTrained(true);
+            GameHandler.getGui().display("If you need help, just ask.", "Black");
+        }
+        GameHandler.getGui().display("Bed Side Computer: You okay with a fork? Could you use some practice?", "Black");
+        response = (String) JOptionPane.showInputDialog(null,
+                "Do you need help with eating with out making a mess?",
+                "Choose", JOptionPane.QUESTION_MESSAGE,
+                null, dialogOptions, dialogOptions[0]);
+        if (response.equalsIgnoreCase("No")) {
+            Player.addProficiency("Eating");
+            for (Proficiencies proficiency : Player.getProficiencies()) {
+                if (proficiency.getName().equalsIgnoreCase("Eating")) {
+                    GameHandler.getGui().display("You have gained proficiency in " + proficiency.getName(), "Black");
+                } else {
+
+                }
+
+            }
+        } else {
+            GameHandler.getGui().display("If you need help, just ask.", "Black");
+        }
+        GameHandler.getGui().display("Bed Side Computer: Do you want help bathing?", "Black");
+        response = (String) JOptionPane.showInputDialog(null,
+                "Do you need help with bathing?",
+                "Choose", JOptionPane.QUESTION_MESSAGE,
+                null, dialogOptions, dialogOptions[0]);
+        if (response.equalsIgnoreCase("No")) {
+            Player.addProficiency("Bathing");
+            for (Proficiencies proficiency : Player.getProficiencies()) {
+                if (proficiency.getName().equalsIgnoreCase("Bathing")) {
+                    GameHandler.getGui().display("You have gained proficiency in " + proficiency.getName(), "Black");
+                } else {
+
+                }
+
+            }
+        } else {
+            GameHandler.getGui().display("If you need help, just ask.", "Black");
+        }
+        GameHandler.getGui().display("Bed Side Computer: Do you need help dressing?", "Black");
+        response = (String) JOptionPane.showInputDialog(null,
+                "Do you need help with dressing?",
+                "Choose", JOptionPane.QUESTION_MESSAGE,
+                null, dialogOptions, dialogOptions[0]);
+        if (response.equalsIgnoreCase("No")) {
+            Player.addProficiency("Dressing");
+            for (Proficiencies proficiency : Player.getProficiencies()) {
+                if (proficiency.getName().equalsIgnoreCase("Dressing")) {
+                    GameHandler.getGui().display("You have gained proficiency in " + proficiency.getName(), "Black");
+                } else {
+
+                }
+            }
+        } else {
+            GameHandler.getGui().display("If you need help, just ask.", "Black");
+        }
+        GameHandler.getGui().display("If you need help, just ask.", "Black");
     }
 
     public static void makeFoodTray() {
@@ -1616,9 +1761,9 @@ public class GameHandler {
 
     public static void writeFile(String concat, String text) {
         try {
-            FileWriter writer = new FileWriter(concat + ".txt");
-            writer.write(text);
-            writer.close();
+            try (FileWriter writer = new FileWriter(concat + ".txt")) {
+                writer.write(text);
+            }
         } catch (IOException e) {
             getGui().display("Error writing file.", "Red");
         }
@@ -1647,21 +1792,55 @@ public class GameHandler {
     }
 
     private void setupPlayerBio() {
-    // ask name
-    Player.setName("Little One");
-    
-    //ask age
-    Player.setAge();
-    
-    // ask pronouns
-    Player.setPronouns();
+        // ask name
+        Player.setName("Little One");
 
-    // set stats
-    Player.setStats(Player.getAge());
+        //ask age
+        Player.setAge();
 
-    // set profeciencies
-    Player.initualizeSkills();
-    Player.getMaturity();
-    Player.setProficiencies();
+        // ask pronouns
+        explainPronouns();
+        Player.setPronouns();
+        getGui().waitForInput();
+
+        // set stats
+        getGui().display("BSC: Your abilities have been assessed as ", "Black");
+        Player.setStats(Player.getAge());
+        explainMaturity();
+
+        GameHandler.getGui().display(String.valueOf(Player.getMaturity()), "Black");
+
+        // set profeciencies
+        explainSkillsAndProficiencies();
+        getGui().waitForInput();
+
+        // set maturity
+        Player.getMaturity();
+        Player.setProficiencies();
+        getSelfCare();
+        dressPlayer();
+    }
+
+    private void explainMaturity() {
+        readFile("maturity");
+    }
+
+    private void explainSkillsAndProficiencies() {
+        readFile("skillsAndProficiencies");
+    }
+
+    private void explainPronouns() {
+        readFile("pronouns");
+    }
+
+    public static Furniture getFurnitureByName(String argument) {
+        for (Item item : items.values()) {
+            if (item instanceof Furniture furniture) {
+                if (furniture.getName().equalsIgnoreCase(argument)) {
+                    return furniture;
+                }
+            }
+        }
+        return null;
     }
 }

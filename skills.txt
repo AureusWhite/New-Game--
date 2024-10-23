@@ -1,0 +1,67 @@
+<div class="welcome-section">
+    <h1>Welcome to Busy Beavers' Rejuve Care Home</h1>
+    <p>Developing key skills is the foundation for your journey through rejuvenation. Below, we will outline the core skills you’ll need to focus on during your time here. Please read carefully, as these skills are crucial for both your progress and eventual return to adult life.</p>
+    
+    <h2>First, we introduce the S.M.I.L.E. Framework:</h2>
+    <ul>
+        <li>Social</li>
+        <li>Motor</li>
+        <li>Imagination</li>
+        <li>Learning</li>
+        <li>Emotional</li>
+    </ul>
+    <p>Initially, "Motor" skills were categorized together, but over time they were split into Fine Motor and Gross Motor. Alongside these, several additional skills have been included to give a fuller picture of your development.</p>
+    
+    <h3>Major Skills</h3>
+    <p>These are the primary areas used to assess your abilities, and they play a key role in shaping the rest of your progress. Major skills are given a random bonus of +1 or +2 based on your current rejuvenated age. Ironically, while they are the "core" skills, it's the finer details, or "minor" skills, that often carry the most influence.</p>
+
+    <ul>
+        <li>
+            <strong>Social</strong>
+            <p>Your ability to interact and engage in prosocial behavior. A low social score might make sharing toys or taking turns more difficult, potentially hindering relationship-building with other rejuves.</p>
+        </li>
+        <li>
+            <strong>Fine Motor</strong>
+            <p>This measures your precision in handling objects and performing delicate tasks like dressing yourself. Some tasks, such as buttoning a shirt or brushing your teeth, require a certain minimum score in this area. If your fine motor skills are lacking, you may need assistance with these tasks.</p>
+        </li>
+        <li>
+            <strong>Gross Motor</strong>
+            <p>Your ability to move through the environment smoothly. While we’ve designed the care home with safety in mind—everything is child-proofed and soft-cornered—low gross motor skills may make you clumsy and limit access to activities that require good coordination. For example, you won't be allowed in the kitchen if this score is too low.</p>
+        </li>
+        <li>
+            <strong>Imagination</strong>
+            <p>Imagination helps you engage in pretend play, which is not only fun but also aids in learning new skills. Whether you’re playing the role of a shopkeeper or a tea party host, a strong imagination makes learning quicker and more enjoyable.</p>
+        </li>
+        <li>
+            <strong>Learning</strong>
+            <p>This represents how effectively you absorb new information. The more points you allocate here, the faster you’ll be able to move through your studies and work towards returning to your adult life. Teachers will certainly appreciate your efforts in this area!</p>
+        </li>
+        <li>
+            <strong>Emotional</strong>
+            <p>Emotional skills are crucial for self-regulation. They help you recognize and manage feelings like frustration before they lead to outbursts. If you have a lower score in this area, expect more frequent tantrums, which are an accepted part of being a rejuve but may slow your progress.</p>
+        </li>
+    </ul>
+
+    <h3>Minor Skills</h3>
+    <p>While these skills may seem secondary, they are critical for fine-tuning your development and preparing you for graduation.</p>
+    <ul>
+        <li>
+            <strong>Cognitive</strong>
+            <p>Our staff encourages you to learn at your own pace, balancing playtime and study. The more you engage in educational activities, the higher your cognitive score will grow.</p>
+        </li>
+        <li>
+            <strong>Communication</strong>
+            <p>Being able to clearly express your needs is essential for your success here. Whether it's asking for help or explaining what you want, good communication skills will smooth your way through the rejuve process.</p>
+        </li>
+        <li>
+            <strong>Self-Care</strong>
+            <p>One of the key qualifications for graduating is the ability to take care of yourself. While things like tying your shoes or making it to the toilet are important, this skill focuses more on your initiative—whether you seek help when needed, rather than whether you can do it all alone.</p>
+        </li>
+        <li>
+            <strong>Problem-Solving</strong>
+            <p>During rejuvenation, your adult memories may not return fully right away, and you’ll find yourself relearning many basic skills. The ability to persist through challenges and think outside the box is vital for overcoming obstacles during this phase.</p>
+        </li>
+    </ul>
+
+    <p>Take these skills seriously, as mastering them is key to your growth and future independence. The journey may be tough, but the support from Busy Beavers is here to guide you every step of the way.</p>
+</div>

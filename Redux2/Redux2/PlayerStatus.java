@@ -25,7 +25,7 @@ public enum PlayerStatus {
     ,TIRED
     ,HUNGRY
     ,THIRSTY
-    ,SICK, HIDDEN, LEADER;
+    ,SICK, HIDDEN, LEADER, BUCKLED;
     public void activate() {
         Player.getStatus().add(this);
     }

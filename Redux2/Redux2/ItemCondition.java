@@ -24,7 +24,7 @@ public enum ItemCondition {
         ,HIDDEN
         ,OPEN
         ,CLOSED
-        ,UNLOCKED
+        ,UNLOCKED, BUTTONS
 
     }
     
